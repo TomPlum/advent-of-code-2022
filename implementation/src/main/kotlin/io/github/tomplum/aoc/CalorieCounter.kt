@@ -16,4 +16,19 @@ class CalorieCounter(private val list: List<String>) {
         }
         return highest
     }
+
+    fun getTopThreeCalorieCounts(): List<Int> {
+        val counts = mutableListOf<Int>()
+        var current = 0
+        list.forEach { count ->
+            if (count == "") {
+                counts.add(current)
+                current = 0
+            } else {
+                current += count.toInt()
+            }
+        }
+        counts.add(current)
+        return counts.sortedDescending().take(3)
+    }
 }

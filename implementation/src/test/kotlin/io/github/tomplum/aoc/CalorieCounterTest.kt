@@ -12,4 +12,11 @@ class CalorieCounterTest {
         val calorieCounter = CalorieCounter(input)
         assertThat(calorieCounter.getHighestCalorieCount()).isEqualTo(24000)
     }
+
+    @Test
+    fun exampleOnePartTwo() {
+        val input = TestInputReader.read<String>("day1/example.txt").value
+        val calorieCounter = CalorieCounter(input)
+        assertThat(calorieCounter.getTopThreeCalorieCounts().sum()).isEqualTo(45000)
+    }
 }
