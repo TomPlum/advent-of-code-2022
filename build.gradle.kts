@@ -34,7 +34,9 @@ allprojects {
     dependencies {
         implementation(kotlin("stdlib-jdk8"))
         implementation(kotlin("reflect"))
-        implementation("io.github.tomplum:advent-of-code-libs:2.3.0")
+        implementation("io.github.tomplum:advent-of-code-libs:2.3.0") {
+            exclude("org.slf4j", "slf4j-api")
+        }
     }
 
     tasks.withType<KotlinCompile> {
