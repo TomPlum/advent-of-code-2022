@@ -1,13 +1,18 @@
 package io.github.tomplum.aoc
 
 class CalorieCounter(private val list: List<String>) {
+    /**
+     * Calculates the highest sum of calories from the
+     * given [list] of Elves calorific data.
+     * @param n The number of values to sum from the top of the list.
+     */
     fun getHighestNSum(n: Int): Int = list
-        .fold(mutableListOf(0)) { acc, value ->
+        .fold(mutableListOf(0)) { sums, value ->
             when {
-                value.isNotEmpty() -> acc[acc.lastIndex] = value.toInt() + acc.last()
-                else -> acc.add(0)
+                value.isNotEmpty() -> sums[sums.lastIndex] = value.toInt() + sums.last()
+                else -> sums.add(0)
             }
-            acc
+            sums
         }
         .sortedDescending()
         .take(n)
