@@ -17,6 +17,6 @@ class Day1 : Solution<Int, Int> {
     }
 
     override fun part2(): Int {
-        return 0
+        return calorieCounter.getTopThreeCalorieCounts().sum()
     }
 }
