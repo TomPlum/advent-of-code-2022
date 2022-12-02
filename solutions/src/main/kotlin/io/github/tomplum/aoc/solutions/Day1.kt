@@ -8,7 +8,6 @@ import io.github.tomplum.libs.solutions.Solution
 class Day1 : Solution<Int, Int> {
 
     private val input = InputReader.read<String>(Day(1)).value
-
     private val calorieCounter = CalorieCounter(input)
 
     override fun part1(): Int {

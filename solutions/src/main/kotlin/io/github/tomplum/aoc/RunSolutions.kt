@@ -4,5 +4,5 @@ import io.github.tomplum.aoc.solutions.*
 import io.github.tomplum.libs.solutions.SolutionRunner
 
 fun main() {
-    SolutionRunner.run(Day1())
+    SolutionRunner.run(Day1(), Day2())
 }
