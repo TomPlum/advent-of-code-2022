@@ -3,6 +3,10 @@ package io.github.tomplum.aoc.game.strategy
 import io.github.tomplum.aoc.game.RoundOutcome
 import io.github.tomplum.aoc.game.Throw
 
+/**
+ * A naive strategy guide implementation that makes assumptions
+ * about how your responding throws work.
+ */
 class AssumedStrategyGuide : StrategyGuide {
     override fun determineRoundScore(opponentsThrow: Throw, yourResponse: Throw): Int {
         val outcome = determineOutcome(opponentsThrow, yourResponse)

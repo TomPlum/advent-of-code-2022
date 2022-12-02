@@ -3,6 +3,10 @@ package io.github.tomplum.aoc.game.strategy
 import io.github.tomplum.aoc.game.RoundOutcome
 import io.github.tomplum.aoc.game.Throw
 
+/**
+ * The correct strategy guide as confirmed by the Elves.
+ * Improves on the original [AssumedStrategyGuide].
+ */
 class CorrectStrategyGuide : StrategyGuide {
     override fun determineRoundScore(opponentsThrow: Throw, yourResponse: Throw): Int {
         val neededOutcome = determineNeededOutcome(yourResponse)
