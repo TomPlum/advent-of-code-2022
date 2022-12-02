@@ -8,6 +8,12 @@ class RockPaperScissors(private val strategyGuide: List<String>) {
         outcome.score + yourThrow.score
     }.sum()
 
+    fun playNewRules() = strategyGuide.map { round ->
+        val opponentsThrow = getThrow(round.first())
+        val neededOutcome = determineNeededOutcome(getThrow(round.last()))
+        val yourThrow = calculateThrowForOutcome(neededOutcome, opponentsThrow)
+        neededOutcome.score + yourThrow.score
+    }.sum()
     
     private fun getThrow(code: Char) = when(code) {
         'A' -> Throw.ROCK
@@ -17,6 +23,28 @@ class RockPaperScissors(private val strategyGuide: List<String>) {
         'C' -> Throw.SCISSORS
         'Z' -> Throw.SCISSORS
         else -> throw IllegalAccessException("Unknown Throw Code [$code]")
+    }
+
+    private fun determineNeededOutcome(yourResponse: Throw): RoundOutcome = when(yourResponse) {
+        Throw.ROCK -> RoundOutcome.LOSS
+        Throw.PAPER -> RoundOutcome.DRAW
+        Throw.SCISSORS -> RoundOutcome.WIN
+    }
+
+    private fun calculateThrowForOutcome(outcome: RoundOutcome, opponentsThrow: Throw): Throw {
+        return when(outcome) {
+            RoundOutcome.WIN -> when(opponentsThrow) {
+                Throw.ROCK -> Throw.PAPER
+                Throw.PAPER -> Throw.SCISSORS
+                Throw.SCISSORS -> Throw.ROCK
+            }
+            RoundOutcome.DRAW -> opponentsThrow
+            RoundOutcome.LOSS -> when(opponentsThrow) {
+                Throw.ROCK -> Throw.SCISSORS
+                Throw.PAPER -> Throw.ROCK
+                Throw.SCISSORS -> Throw.PAPER
+            }
+        }
     }
     
     private fun determineOutcome(opponentsThrow: Throw, yourResponse: Throw): RoundOutcome {

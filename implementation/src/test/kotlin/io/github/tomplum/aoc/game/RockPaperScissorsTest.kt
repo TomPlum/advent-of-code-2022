@@ -12,4 +12,11 @@ class RockPaperScissorsTest {
         val game = RockPaperScissors(input)
         assertThat(game.play()).isEqualTo(15)
     }
+
+    @Test
+    fun exampleTwo() {
+        val input = TestInputReader.read<String>("day2/example.txt").value
+        val game = RockPaperScissors(input)
+        assertThat(game.playNewRules()).isEqualTo(12)
+    }
 }
