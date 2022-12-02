@@ -13,4 +13,8 @@ class Day2 : Solution<Int, Int> {
     override fun part1(): Int? {
         return rockPaperScissors.play()
     }
+
+    override fun part2(): Int? {
+        return rockPaperScissors.playNewRules()
+    }
 }

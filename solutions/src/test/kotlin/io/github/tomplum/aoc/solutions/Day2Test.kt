@@ -11,4 +11,9 @@ class Day2Test {
     fun partOne() {
         assertThat(solution.part1()).isEqualTo(11449)
     }
+
+    @Test
+    fun partTwo() {
+        assertThat(solution.part2()).isEqualTo(13187)
+    }
 }
