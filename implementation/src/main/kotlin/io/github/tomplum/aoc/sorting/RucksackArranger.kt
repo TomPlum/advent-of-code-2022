@@ -1,17 +1,10 @@
 package io.github.tomplum.aoc.sorting
 
-import io.github.tomplum.libs.logging.AdventLogger
-
 class RucksackArranger(private val rucksacks: List<String>) {
     fun getDuplicateItemPrioritySum(): Int = rucksacks.sumOf { rucksack ->
-        AdventLogger.debug("Finding cross-compartment duplicate from [$rucksack]")
         val compartments = rucksack.chunked(rucksack.length / 2)
-        val duplicate = compartments[0].find { firstChar ->
-            compartments[1].contains(firstChar)
-        }
-        val priority = duplicate!!.getAlphabetIndex()
-        AdventLogger.debug("Found duplicate [$duplicate] with priority [$priority]")
-        priority
+        val duplicate = compartments[0].find { fromFirst -> compartments[1].contains(fromFirst) }
+        duplicate!!.getAlphabetIndex()
     }
 
     fun getGroupCommonItemsPrioritySum(): Int = rucksacks.chunked(3).map { group ->
