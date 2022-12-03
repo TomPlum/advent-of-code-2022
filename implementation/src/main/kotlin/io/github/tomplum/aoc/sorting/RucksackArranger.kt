@@ -14,6 +14,12 @@ class RucksackArranger(private val rucksacks: List<String>) {
         priority
     }
 
+    fun getGroupCommonItemsPrioritySum(): Int = rucksacks.chunked(3).map { group ->
+        val distinctItems = group.joinToString().toList().distinct()
+        val badge = distinctItems.find { item -> group.all { rucksack -> rucksack.contains(item) } }
+        badge!!
+    }.sumOf { badge -> badge.getAlphabetIndex() }
+
     private fun Char.getAlphabetIndex(): Int {
         val startingIndex = 'a'.code
         val index = this.lowercase().first().code - startingIndex + 1

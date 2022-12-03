@@ -12,4 +12,11 @@ class RucksackArrangerTest {
         val rucksackArranger = RucksackArranger(rucksacks)
         assertThat(rucksackArranger.getDuplicateItemPrioritySum()).isEqualTo(157)
     }
+
+    @Test
+    fun examplePartTwo() {
+        val rucksacks = TestInputReader.read<String>("/day3/example.txt").value
+        val rucksackArranger = RucksackArranger(rucksacks)
+        assertThat(rucksackArranger.getGroupCommonItemsPrioritySum()).isEqualTo(70)
+    }
 }
