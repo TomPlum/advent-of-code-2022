@@ -1,6 +1,8 @@
 package io.github.tomplum.aoc.solutions
 
 import io.github.tomplum.aoc.sorting.RucksackArranger
+import io.github.tomplum.aoc.sorting.strategy.CommonCompartment
+import io.github.tomplum.aoc.sorting.strategy.GroupBadgePriority
 import io.github.tomplum.libs.input.Day
 import io.github.tomplum.libs.input.InputReader
 import io.github.tomplum.libs.solutions.Solution
@@ -10,10 +12,10 @@ class Day3 : Solution<Int, Int> {
     private val arranger = RucksackArranger(rucksacks)
 
     override fun part1(): Int {
-        return arranger.getDuplicateItemPrioritySum()
+        return arranger.calculateItemPrioritySum(CommonCompartment())
     }
 
     override fun part2(): Int {
-        return arranger.getGroupCommonItemsPrioritySum()
+        return arranger.calculateItemPrioritySum(GroupBadgePriority())
     }
 }
