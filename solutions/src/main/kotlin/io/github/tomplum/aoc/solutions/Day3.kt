@@ -9,7 +9,11 @@ class Day3 : Solution<Int, Int> {
     private val rucksacks = InputReader.read<String>(Day(3)).value
     private val arranger = RucksackArranger(rucksacks)
 
-    override fun part1(): Int? {
+    override fun part1(): Int {
         return arranger.getDuplicateItemPrioritySum()
+    }
+
+    override fun part2(): Int {
+        return arranger.getGroupCommonItemsPrioritySum()
     }
 }
