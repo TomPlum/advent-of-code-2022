@@ -2,6 +2,8 @@ package io.github.tomplum.aoc.assignment
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import io.github.tomplum.aoc.assignment.strategy.DuplicateAssignmentFinder
+import io.github.tomplum.aoc.assignment.strategy.OverlappingAssignmentFinder
 import io.github.tomplum.aoc.input.TestInputReader
 import org.junit.jupiter.api.Test
 
@@ -12,13 +14,15 @@ class CleaningAssignerTest {
 
     @Test
     fun exampleOne() {
-        val duplicateAssignmentPairs = assigner.findDuplicateAssignmentPairs()
+        val strategy = DuplicateAssignmentFinder()
+        val duplicateAssignmentPairs = assigner.countRedundantAssignments(strategy)
         assertThat(duplicateAssignmentPairs).isEqualTo(2)
     }
 
     @Test
     fun exampleTwo() {
-        val overlappingAssignmentPairs = assigner.findOverlappingAssignmentPairs()
+        val strategy = OverlappingAssignmentFinder()
+        val overlappingAssignmentPairs = assigner.countRedundantAssignments(strategy)
         assertThat(overlappingAssignmentPairs).isEqualTo(4)
     }
 }
