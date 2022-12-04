@@ -6,10 +6,19 @@ import io.github.tomplum.aoc.input.TestInputReader
 import org.junit.jupiter.api.Test
 
 class CleaningAssignerTest {
+
+    private val sectionAssignments = TestInputReader.read<String>("/day4/example.txt").value
+    private val assigner = CleaningAssigner(sectionAssignments)
+
     @Test
     fun exampleOne() {
-        val sectionAssignments = TestInputReader.read<String>("/day4/example.txt").value
-        val assigner = CleaningAssigner(sectionAssignments)
-        assertThat(assigner.findDuplicateAssignmentPairs()).isEqualTo(2)
+        val duplicateAssignmentPairs = assigner.findDuplicateAssignmentPairs()
+        assertThat(duplicateAssignmentPairs).isEqualTo(2)
+    }
+
+    @Test
+    fun exampleTwo() {
+        val overlappingAssignmentPairs = assigner.findOverlappingAssignmentPairs()
+        assertThat(overlappingAssignmentPairs).isEqualTo(4)
     }
 }
