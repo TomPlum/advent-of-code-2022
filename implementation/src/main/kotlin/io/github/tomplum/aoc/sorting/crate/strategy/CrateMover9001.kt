@@ -3,6 +3,9 @@ package io.github.tomplum.aoc.sorting.crate.strategy
 import io.github.tomplum.aoc.sorting.crate.Instruction
 import java.util.*
 
+/**
+ * This model of cargo crane moves multiple crates at a time.
+ */
 class CrateMover9001 : CrateSortingStrategy {
     override fun sort(instructions: List<Instruction>, stacks: List<Stack<Char>>) =
         instructions.fold(stacks) { acc, instruction ->
