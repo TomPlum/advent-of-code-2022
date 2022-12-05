@@ -3,6 +3,8 @@ package io.github.tomplum.aoc.sorting.crate
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import io.github.tomplum.aoc.input.TestInputReader
+import io.github.tomplum.aoc.sorting.crate.strategy.CrateMover9000
+import io.github.tomplum.aoc.sorting.crate.strategy.CrateMover9001
 import org.junit.jupiter.api.Test
 
 class CrateArrangerTest {
@@ -12,13 +14,15 @@ class CrateArrangerTest {
 
     @Test
     fun exampleOne() {
-        val topRowCrates = arranger.consolidate()
+        val sortingStrategy = CrateMover9000()
+        val topRowCrates = arranger.consolidate(sortingStrategy)
         assertThat(topRowCrates).isEqualTo("CMZ")
     }
 
     @Test
     fun exampleTwo() {
-        val topRowCrates = arranger.consolidate9001()
+        val sortingStrategy = CrateMover9001()
+        val topRowCrates = arranger.consolidate(sortingStrategy)
         assertThat(topRowCrates).isEqualTo("MCD")
     }
 }

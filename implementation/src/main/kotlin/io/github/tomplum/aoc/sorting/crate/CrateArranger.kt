@@ -1,31 +1,15 @@
 package io.github.tomplum.aoc.sorting.crate
 
-import io.github.tomplum.libs.logging.AdventLogger
+import io.github.tomplum.aoc.sorting.crate.strategy.CrateSortingStrategy
 import java.util.Stack
 
 class CrateArranger(private val stackDrawing: List<String>) {
-    fun consolidate(): String {
+    fun consolidate(strategy: CrateSortingStrategy): String {
         val ( crateStacks, instructions ) = parseDrawing()
 
-        instructions.forEach { instruction ->
-            repeat(instruction.quantity) {
-                val crate = crateStacks[instruction.from].pop()
-                crateStacks[instruction.to].push(crate)
-            }
-        }
+        val sortedCrateStacks = strategy.sort(instructions, crateStacks)
 
-        return crateStacks.map { stack -> stack.peek() }.joinToString("")
-    }
-
-    fun consolidate9001(): String {
-        val ( crateStacks, instructions ) = parseDrawing()
-
-        instructions.forEach { instruction ->
-            val crates = (1..instruction.quantity).map { crateStacks[instruction.from].pop() }.reversed()
-            crates.forEach { crate -> crateStacks[instruction.to].push(crate) }
-        }
-
-        return crateStacks.map { stack -> stack.peek() }.joinToString("")
+        return sortedCrateStacks.map { stack -> stack.peek() }.joinToString("")
     }
 
     private fun parseDrawing(): Pair<List<Stack<Char>>, List<Instruction>> {
@@ -45,13 +29,12 @@ class CrateArranger(private val stackDrawing: List<String>) {
             }
         }
 
-        val s = "[D] [H] [L] [N] [N] [M] [D] [D] [B]"
         val stackQuantity = (crates.first().length / 3)
         val stacks = (1..stackQuantity).map { Stack<Char>() }
 
         crates.reversed().drop(1).forEach { row ->
             var n = 1
-            var indices = mutableListOf(n)
+            val indices = mutableListOf(n)
             while (n + 4 <= row.length) {
                 n += 4
                 indices.add(n)
@@ -62,53 +45,6 @@ class CrateArranger(private val stackDrawing: List<String>) {
             }
         }
 
-
-        /*val stackQuantity = (crates.first().length / 3)
-        val stacks = (1..stackQuantity).map { Stack<Char>() }
-        crates.reversed().drop(1).forEach row@{ row ->
-            var targetStack = 1
-            var lastWasStackEnd = false
-            var inBetweenStacks = false
-            var emptyCount = 0
-            row.forEach { char ->
-                if (char.isAlpha()) {
-                    stacks[targetStack - 1].add(char)
-                }
-
-                if (char == '[') {
-                    emptyCount = 0
-                    inBetweenStacks = false
-                    lastWasStackEnd = false
-                }
-
-                if (char == ']') {
-                    lastWasStackEnd = true
-                    return@forEach
-                }
-
-                if (char == ' ' && !inBetweenStacks) {
-
-                    if (lastWasStackEnd) {
-                        targetStack++
-                        lastWasStackEnd = false
-                        return@forEach
-                    }
-
-                    // Only count for the three chars where [X] are
-                    emptyCount++
-
-                    if (emptyCount == 3) {
-                        // If we've seen 5 empties (in place of " [X] "), we're on another empty column
-                        targetStack++
-                        emptyCount = 0
-                    }
-
-                    inBetweenStacks = true
-                    //targetStack++
-                }
-            }
-        }*/
-
         val parsedInstructions = instructions.map { line ->
             val quantity = line.substringAfter("move ").substringBefore(" from").toInt()
             val sourceStackIndex = line.substringAfter("from ").substringBefore(" to").toInt() - 1
@@ -118,8 +54,4 @@ class CrateArranger(private val stackDrawing: List<String>) {
 
         return Pair(stacks.filter { it.isNotEmpty() }, parsedInstructions)
     }
-
-    private data class Instruction(val quantity: Int, val from: Int, val to: Int)
-
-    private fun Char.isAlpha() = this.code in 97..122 || this.code in 65..90
 }
