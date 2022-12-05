@@ -1,4 +1,4 @@
-package io.github.tomplum.aoc.sorting.strategy
+package io.github.tomplum.aoc.sorting.rucksack
 
 interface PrioritySummationStrategy {
     fun calculate(rucksacks: List<String>): Int

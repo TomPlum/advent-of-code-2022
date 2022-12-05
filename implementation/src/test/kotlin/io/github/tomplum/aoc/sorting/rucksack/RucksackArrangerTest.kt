@@ -1,10 +1,11 @@
-package io.github.tomplum.aoc.sorting
+package io.github.tomplum.aoc.sorting.rucksack
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import io.github.tomplum.aoc.input.TestInputReader
-import io.github.tomplum.aoc.sorting.strategy.CommonCompartment
-import io.github.tomplum.aoc.sorting.strategy.GroupBadgePriority
+import io.github.tomplum.aoc.sorting.rucksack.CommonCompartment
+import io.github.tomplum.aoc.sorting.rucksack.GroupBadgePriority
+import io.github.tomplum.aoc.sorting.rucksack.RucksackArranger
 import org.junit.jupiter.api.Test
 
 class RucksackArrangerTest {

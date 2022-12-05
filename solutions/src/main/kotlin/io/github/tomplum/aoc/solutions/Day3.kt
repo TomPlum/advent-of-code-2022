@@ -1,8 +1,8 @@
 package io.github.tomplum.aoc.solutions
 
-import io.github.tomplum.aoc.sorting.RucksackArranger
-import io.github.tomplum.aoc.sorting.strategy.CommonCompartment
-import io.github.tomplum.aoc.sorting.strategy.GroupBadgePriority
+import io.github.tomplum.aoc.sorting.rucksack.RucksackArranger
+import io.github.tomplum.aoc.sorting.rucksack.CommonCompartment
+import io.github.tomplum.aoc.sorting.rucksack.GroupBadgePriority
 import io.github.tomplum.libs.input.Day
 import io.github.tomplum.libs.input.InputReader
 import io.github.tomplum.libs.solutions.Solution

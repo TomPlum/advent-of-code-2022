@@ -1,4 +1,4 @@
-package io.github.tomplum.aoc.sorting.strategy
+package io.github.tomplum.aoc.sorting.rucksack
 
 class GroupBadgePriority : PrioritySummationStrategy {
     override fun calculate(rucksacks: List<String>): Int = rucksacks.chunked(3).map { group ->
