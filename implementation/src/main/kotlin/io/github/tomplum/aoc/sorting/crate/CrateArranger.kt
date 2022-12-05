@@ -15,7 +15,7 @@ class CrateArranger(private val stackDrawing: List<String>) {
         val crates = stackDrawing.subList(0, dividerIndex)
         val instructions = stackDrawing.subList(dividerIndex + 1, stackDrawing.lastIndex + 1)
 
-        val stackQuantity = (crates.first().length / 3)
+        val stackQuantity = crates.last().trim().last().toString().toInt()
         val stacks = (1..stackQuantity).map { Stack<Char>() }
 
         crates.reversed().drop(1).forEach { row ->
@@ -31,6 +31,6 @@ class CrateArranger(private val stackDrawing: List<String>) {
             Instruction(quantity, sourceStackIndex, targetStackIndex)
         }
 
-        return Pair(stacks.filter { it.isNotEmpty() }, parsedInstructions)
+        return Pair(stacks, parsedInstructions)
     }
 }
