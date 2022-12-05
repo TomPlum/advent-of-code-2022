@@ -6,28 +6,14 @@ import java.util.Stack
 class CrateArranger(private val stackDrawing: List<String>) {
     fun consolidate(strategy: CrateSortingStrategy): String {
         val ( crateStacks, instructions ) = parseDrawing()
-
         val sortedCrateStacks = strategy.sort(instructions, crateStacks)
-
         return sortedCrateStacks.map { stack -> stack.peek() }.joinToString("")
     }
 
     private fun parseDrawing(): Pair<List<Stack<Char>>, List<Instruction>> {
-        val crates = mutableListOf<String>()
-        val instructions = mutableListOf<String>()
-        var finishedCrates = false
-        stackDrawing.forEach { line ->
-            if (line.isEmpty()) {
-                finishedCrates = true
-                return@forEach
-            }
-
-            if (!finishedCrates) {
-                crates.add(line)
-            } else {
-                instructions.add(line)
-            }
-        }
+        val dividerIndex = stackDrawing.indexOf("")
+        val crates = stackDrawing.subList(0, dividerIndex)
+        val instructions = stackDrawing.subList(dividerIndex + 1, stackDrawing.lastIndex + 1)
 
         val stackQuantity = (crates.first().length / 3)
         val stacks = (1..stackQuantity).map { Stack<Char>() }
