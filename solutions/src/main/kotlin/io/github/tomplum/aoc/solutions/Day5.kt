@@ -13,4 +13,8 @@ class Day5 : Solution<String, String> {
     override fun part1(): String {
         return arranger.consolidate()
     }
+
+    override fun part2(): String? {
+        return arranger.consolidate9001()
+    }
 }
