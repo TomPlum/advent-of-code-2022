@@ -6,15 +6,23 @@ import java.util.Stack
 class CrateArranger(private val stackDrawing: List<String>) {
     fun consolidate(): String {
         val ( crateStacks, instructions ) = parseDrawing()
-        crateStacks.forEachIndexed { i, stack ->
-            AdventLogger.debug("${i + 1} ${stack.joinToString(" ") { "[$it]" }}")
-        }
+
         instructions.forEach { instruction ->
-            AdventLogger.debug("Executing instruction: move ${instruction.quantity} from ${instruction.from + 1} to ${instruction.to}")
             repeat(instruction.quantity) {
                 val crate = crateStacks[instruction.from].pop()
                 crateStacks[instruction.to].push(crate)
             }
+        }
+
+        return crateStacks.map { stack -> stack.peek() }.joinToString("")
+    }
+
+    fun consolidate9001(): String {
+        val ( crateStacks, instructions ) = parseDrawing()
+
+        instructions.forEach { instruction ->
+            val crates = (1..instruction.quantity).map { crateStacks[instruction.from].pop() }.reversed()
+            crates.forEach { crate -> crateStacks[instruction.to].push(crate) }
         }
 
         return crateStacks.map { stack -> stack.peek() }.joinToString("")
