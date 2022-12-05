@@ -12,19 +12,20 @@ class CrateArranger(private val stackDrawing: List<String>) {
 
     private fun parseDrawing(): Pair<List<Stack<Char>>, List<Instruction>> {
         val dividerIndex = stackDrawing.indexOf("")
+
         val crates = stackDrawing.subList(0, dividerIndex)
-        val instructionStrings = stackDrawing.subList(dividerIndex + 1, stackDrawing.lastIndex + 1)
-
         val stackQuantity = crates.last().trim().last().toString().toInt()
-        val stacks = (1..stackQuantity).map { Stack<Char>() }
-
-        crates.reversed().drop(1).forEach { row ->
-            (1..row.length step 4).map { i -> row[i] }.forEachIndexed { i, crate ->
-                if (crate != ' ') stacks[i].add(crate)
+        val emptyStacks = (1..stackQuantity).map { Stack<Char>() }
+        val stacks = crates.reversed().drop(1).fold(emptyStacks) { stacks, row ->
+            val crateIndices = 1..row.length step 4
+            crateIndices.map { crateIndex -> row[crateIndex] }.forEachIndexed { stackIndex, crate ->
+                if (crate != ' ') stacks[stackIndex].add(crate)
             }
+            stacks
         }
 
-        val instructions = instructionStrings.map { value -> Instruction.fromString(value) }
+        val instructions = stackDrawing.subList(dividerIndex + 1, stackDrawing.lastIndex + 1)
+            .map { value -> Instruction.fromString(value) }
 
         return Pair(stacks, instructions)
     }

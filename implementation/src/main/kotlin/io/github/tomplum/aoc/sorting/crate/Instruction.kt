@@ -1,6 +1,6 @@
 package io.github.tomplum.aoc.sorting.crate
 
-data class Instruction private constructor(val quantity: Int, val from: Int, val to: Int) {
+class Instruction private constructor(val quantity: Int, val from: Int, val to: Int) {
     companion object {
         fun fromString(value: String): Instruction {
             val quantity = value.substringAfter("move ").substringBefore(" from").toInt()
