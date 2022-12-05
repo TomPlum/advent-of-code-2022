@@ -13,7 +13,7 @@ class CrateArranger(private val stackDrawing: List<String>) {
     private fun parseDrawing(): Pair<List<Stack<Char>>, List<Instruction>> {
         val dividerIndex = stackDrawing.indexOf("")
         val crates = stackDrawing.subList(0, dividerIndex)
-        val instructions = stackDrawing.subList(dividerIndex + 1, stackDrawing.lastIndex + 1)
+        val instructionStrings = stackDrawing.subList(dividerIndex + 1, stackDrawing.lastIndex + 1)
 
         val stackQuantity = crates.last().trim().last().toString().toInt()
         val stacks = (1..stackQuantity).map { Stack<Char>() }
@@ -24,13 +24,8 @@ class CrateArranger(private val stackDrawing: List<String>) {
             }
         }
 
-        val parsedInstructions = instructions.map { line ->
-            val quantity = line.substringAfter("move ").substringBefore(" from").toInt()
-            val sourceStackIndex = line.substringAfter("from ").substringBefore(" to").toInt() - 1
-            val targetStackIndex = line.substringAfter("to ").trim().toInt() - 1
-            Instruction(quantity, sourceStackIndex, targetStackIndex)
-        }
+        val instructions = instructionStrings.map { value -> Instruction.fromString(value) }
 
-        return Pair(stacks, parsedInstructions)
+        return Pair(stacks, instructions)
     }
 }
