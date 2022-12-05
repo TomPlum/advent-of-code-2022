@@ -19,14 +19,7 @@ class CrateArranger(private val stackDrawing: List<String>) {
         val stacks = (1..stackQuantity).map { Stack<Char>() }
 
         crates.reversed().drop(1).forEach { row ->
-            var n = 1
-            val indices = mutableListOf(n)
-            while (n + 4 <= row.length) {
-                n += 4
-                indices.add(n)
-            }
-
-            indices.map { i -> row[i] }.forEachIndexed { i, crate ->
+            (1..row.length step 4).map { i -> row[i] }.forEachIndexed { i, crate ->
                 if (crate != ' ') stacks[i].add(crate)
             }
         }
