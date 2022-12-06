@@ -1,6 +1,8 @@
 package io.github.tomplum.aoc.solutions
 
 import io.github.tomplum.aoc.communication.PacketInterceptor
+import io.github.tomplum.aoc.communication.strategy.MessageStartMarkerFinder
+import io.github.tomplum.aoc.communication.strategy.PacketStartMarkerFinder
 import io.github.tomplum.libs.input.Day
 import io.github.tomplum.libs.input.InputReader
 import io.github.tomplum.libs.solutions.Solution
@@ -10,10 +12,12 @@ class Day6 : Solution<Int, Int> {
     private val packetInterceptor = PacketInterceptor(dataStream)
 
     override fun part1(): Int {
-        return packetInterceptor.findStartOfPacketMarker()
+        val strategy = PacketStartMarkerFinder()
+        return packetInterceptor.locateMarkerStartingLocation(strategy)
     }
 
     override fun part2(): Int {
-        return packetInterceptor.findStartOfMessageMarker()
+        val strategy = MessageStartMarkerFinder()
+        return packetInterceptor.locateMarkerStartingLocation(strategy)
     }
 }
