@@ -12,4 +12,8 @@ class Day6 : Solution<Int, Int> {
     override fun part1(): Int {
         return packetInterceptor.findStartOfPacketMarker()
     }
+
+    override fun part2(): Int {
+        return packetInterceptor.findStartOfMessageMarker()
+    }
 }
