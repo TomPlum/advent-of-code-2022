@@ -11,7 +11,7 @@ class FileSystem(private val terminalOutput: List<String>) {
 
         terminalOutput.forEach { line ->
             if (line.startsWith("$")) {
-                when(line.substring(2, 4)) {
+                when (line.substring(2, 4)) {
                     "cd" -> {
                         isListing = false
                         val command = ChangeDirectory(line)
@@ -22,6 +22,7 @@ class FileSystem(private val terminalOutput: List<String>) {
                             breadCrumbs.push(newTargetDirName)
                         }
                     }
+
                     "ls" -> {
                         isListing = true
                         return@forEach
@@ -50,6 +51,6 @@ class FileSystem(private val terminalOutput: List<String>) {
 
         AdventLogger.debug(root.print())
 
-        return root.getSumThing(maxDirFileSize).sum()
+        return root.findChildren().filter { dir -> dir.getSize() <= maxDirFileSize }.sumOf { dir -> dir.getSize() }
     }
 }

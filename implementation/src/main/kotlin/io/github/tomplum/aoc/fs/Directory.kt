@@ -1,7 +1,5 @@
 package io.github.tomplum.aoc.fs
 
-import io.github.tomplum.libs.logging.AdventLogger
-
 data class Directory(val name: String, val files: MutableList<File>, val directories: MutableList<Directory>) {
 
     companion object {
@@ -30,6 +28,14 @@ data class Directory(val name: String, val files: MutableList<File>, val directo
             }
         }
         return null
+    }
+
+    fun findChildren(): List<Directory> {
+        return directories + directories.flatMap { dir -> dir.findChildren() }
+    }
+
+    fun getSize(): Long {
+        return files.sumOf { file -> file.size } + directories.sumOf { dir -> dir.getSize() }
     }
 
     private fun getSizeRecursively(): Long {
