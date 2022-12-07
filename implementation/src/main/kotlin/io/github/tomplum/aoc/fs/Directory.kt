@@ -1,10 +1,10 @@
 package io.github.tomplum.aoc.fs
 
-data class Directory(val name: String, val files: MutableList<File>, val directories: MutableList<Directory>) {
+data class Directory(val name: String, val files: MutableList<File>, val parentDir: Directory?, val directories: MutableList<Directory>) {
 
     companion object {
-        fun fromName(name: String): Directory {
-            return Directory(name, mutableListOf(), mutableListOf())
+        fun of(name: String, parentDir: Directory?): Directory {
+            return Directory(name, mutableListOf(), parentDir, mutableListOf())
         }
     }
 
@@ -40,10 +40,15 @@ data class Directory(val name: String, val files: MutableList<File>, val directo
 
     fun print(indent: Int = 0): String {
         val s = StringBuilder("")
-        val indentString = (1..indent).joinToString("") { " " }
+        var indentTarget = indent
+        if (indent == 0) {
+            s.append("\n- / (dir)\n")
+            indentTarget += 2
+        }
+        val indentString = (1..indentTarget).joinToString("") { " " }
         directories.forEach { dir ->
             s.append("$indentString$dir\n")
-            s.append(dir.print(indent + 2))
+            s.append(dir.print(indentTarget + 2))
         }
         files.forEach { file ->
             s.append("$indentString$file\n")

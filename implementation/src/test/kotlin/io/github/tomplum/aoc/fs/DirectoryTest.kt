@@ -1,6 +1,8 @@
 package io.github.tomplum.aoc.fs
 
 import assertk.assertThat
+import assertk.assertions.containsExactlyInAnyOrder
+import assertk.assertions.extracting
 import assertk.assertions.isEqualTo
 import io.github.tomplum.aoc.input.TestInputReader
 import org.junit.jupiter.api.Nested
@@ -11,8 +13,8 @@ class DirectoryTest {
     inner class FindDirectory {
         @Test
         fun directDescendant() {
-            val root = Directory.fromName("/")
-            root.addSubDirectory(Directory.fromName("a"))
+            val root = Directory.of("/", null)
+            root.addSubDirectory(Directory.of("a", root))
 
             val found = root.findDirectory("a")
 
@@ -21,10 +23,10 @@ class DirectoryTest {
 
         @Test
         fun nestedChild() {
-            val root = Directory.fromName("/")
-            val immediateChild = Directory.fromName("a")
+            val root = Directory.of("/", null)
+            val immediateChild = Directory.of("a", root)
             root.addSubDirectory(immediateChild)
-            immediateChild.addSubDirectory(Directory.fromName("b"))
+            immediateChild.addSubDirectory(Directory.of("b", immediateChild))
 
             val found = root.findDirectory("b")
 
@@ -56,6 +58,18 @@ class DirectoryTest {
         @Test
         fun exampleOneRootDirectory() {
             assertThat(root.getSize()).isEqualTo(48381165)
+        }
+    }
+
+    @Nested
+    inner class FindChildren {
+        private val terminalOutput = TestInputReader.read<String>("day7/example.txt").value
+        private val fs = FileSystem(terminalOutput)
+        private val root = fs.parseTerminalOutput()
+
+        @Test
+        fun exampleOneStructure() {
+            assertThat(root.findChildren()).extracting { dir -> dir.name }.containsExactlyInAnyOrder("a", "e", "d")
         }
     }
 }
