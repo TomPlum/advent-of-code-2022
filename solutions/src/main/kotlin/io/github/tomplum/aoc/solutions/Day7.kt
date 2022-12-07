@@ -12,4 +12,8 @@ class Day7 : Solution<Long, Long> {
     override fun part1(): Long {
         return fs.getTotalFileSizeFromDirsNoGreaterThan(100000)
     }
+
+    override fun part2(): Long {
+        return fs.getSmallestDeletableDirectoryToFreeEnoughSpace().getSize()
+    }
 }
