@@ -5,6 +5,11 @@ import java.util.Stack
 
 class FileSystem(private val terminalOutput: List<String>) {
     fun getTotalFileSizeFromDirsNoGreaterThan(maxDirFileSize: Long): Long {
+        val root = parseTerminalOutput()
+        return root.findChildren().filter { dir -> dir.getSize() <= maxDirFileSize }.sumOf { dir -> dir.getSize() }
+    }
+
+    fun parseTerminalOutput(): Directory {
         val root = Directory.fromName("/")
         val breadCrumbs = Stack<String>()
         var isListing = false
@@ -51,6 +56,6 @@ class FileSystem(private val terminalOutput: List<String>) {
 
         AdventLogger.debug(root.print())
 
-        return root.findChildren().filter { dir -> dir.getSize() <= maxDirFileSize }.sumOf { dir -> dir.getSize() }
+        return root
     }
 }

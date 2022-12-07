@@ -38,23 +38,6 @@ data class Directory(val name: String, val files: MutableList<File>, val directo
         return files.sumOf { file -> file.size } + directories.sumOf { dir -> dir.getSize() }
     }
 
-    private fun getSizeRecursively(): Long {
-        return files.sumOf { file -> file.size } + directories.sumOf { dir -> dir.getSizeRecursively() }
-    }
-
-    fun getSumThing(maxSize: Long, sizes: MutableList<Long> = mutableListOf()): MutableList<Long> {
-        val sizeRecursively = getSizeRecursively()
-        if (sizeRecursively <= maxSize) {
-            sizes.add(sizeRecursively)
-        }
-
-        directories.map { dir ->
-            dir.getSumThing(maxSize, sizes)
-        }
-
-        return sizes
-    }
-
     fun print(indent: Int = 0): String {
         val s = StringBuilder("")
         val indentString = (1..indent).joinToString("") { " " }
