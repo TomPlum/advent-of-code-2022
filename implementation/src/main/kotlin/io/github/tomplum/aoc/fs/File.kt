@@ -1,6 +1,6 @@
 package io.github.tomplum.aoc.fs
 
-class File(val name: String, val extension: String, val size: Long) {
+class File(private val name: String, private val extension: String, val size: Long) {
     companion object {
         fun of(string: String, size: Long): File {
             return if (string.contains(".")) {

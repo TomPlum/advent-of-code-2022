@@ -1,5 +1,7 @@
 package io.github.tomplum.aoc.fs
 
+import io.github.tomplum.libs.logging.AdventLogger
+
 data class Directory(val name: String, val files: MutableList<File>, val directories: MutableList<Directory>) {
 
     companion object {
@@ -16,17 +18,21 @@ data class Directory(val name: String, val files: MutableList<File>, val directo
         directories.add(directory)
     }
 
-    fun findDirectory(path: String): Directory? {
-        return if (path == name) {
-            this
+    fun findDirectory(path: String, dir: Directory = this): Directory? {
+        if (path == dir.name) {
+            return dir
         } else {
-            directories.find { subDir ->
-                return subDir.findDirectory(path)
+            dir.directories.forEach { subDir ->
+                val found = findDirectory(path, subDir)
+                if (found != null) {
+                    return found
+                }
             }
         }
+        return null
     }
 
-    fun getSizeRecursively(): Long {
+    private fun getSizeRecursively(): Long {
         return files.sumOf { file -> file.size } + directories.sumOf { dir -> dir.getSizeRecursively() }
     }
 
@@ -43,17 +49,20 @@ data class Directory(val name: String, val files: MutableList<File>, val directo
         return sizes
     }
 
-    override fun toString(): String {
-        var indent = 0
-        val s = StringBuilder("- $name (dir)").append("\n")
+    fun print(indent: Int = 0): String {
+        val s = StringBuilder("")
+        val indentString = (1..indent).joinToString("") { " " }
         directories.forEach { dir ->
-            indent += 2
-            s.append("- ${dir.name} (dir)\n")
-            dir.directories.forEach { subDir -> s.append(subDir.toString()) }
-            dir.files.forEach { file ->
-                s.append("- ${file.name} (file, size=${file.size})\n")
-            }
+            s.append("$indentString$dir\n")
+            s.append(dir.print(indent + 2))
+        }
+        files.forEach { file ->
+            s.append("$indentString$file\n")
         }
         return s.toString()
+    }
+
+    override fun toString(): String {
+       return "- $name (dir)"
     }
 }
