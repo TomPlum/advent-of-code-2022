@@ -51,7 +51,7 @@ tests in the `common`, `implementation` and `solutions` Gradle sub-projects as w
 | 04  | 413           | 13ms     | 806           | 12ms     | [Camp Cleanup](docs/DAY04.MD)            |
 | 05  | GRTSWNJHH     | 10ms     | QLFQDBBHM     | 5ms      | [Supply Stacks](docs/DAY05.MD)           |
 | 06  | 1238          | 7ms      | 3037          | 15ms     | [Tuning Trouble](docs/DAY06.MD)          |
-| 07  | 1477771       | -        | 3579501       | -        | [No Space Left On Device](docs/DAY07.MD) |
+| 07  | 1477771       | 7ms      | 3579501       | 3ms      | [No Space Left On Device](docs/DAY07.MD) |
 | 08  | -             | -        | -             | -        | [](docs/DAY08.MD)                        |
 | 09  | -             | -        | -             | -        | [](docs/DAY09.MD)                        |
 | 10  | -             | -        | -             | -        | [](docs/DAY10.MD)                        |

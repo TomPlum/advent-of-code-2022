@@ -1,7 +1,11 @@
 package io.github.tomplum.aoc.fs
 
-data class Directory(val name: String, val files: MutableList<File>, val parentDir: Directory?, val directories: MutableList<Directory>) {
-
+data class Directory(
+    val name: String,
+    val files: MutableList<File>,
+    val parentDir: Directory?,
+    val directories: MutableList<Directory>
+) {
     companion object {
         fun of(name: String, parentDir: Directory?): Directory {
             return Directory(name, mutableListOf(), parentDir, mutableListOf())
