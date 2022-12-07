@@ -13,4 +13,9 @@ class FileSystemTest {
     fun examplePartOne() {
         assertThat(fileSystem.getTotalFileSizeFromDirsNoGreaterThan(100000)).isEqualTo(95437)
     }
+
+    @Test
+    fun examplePartTwo() {
+        assertThat(fileSystem.getSmallestDeletableDirectoryToFreeEnoughSpace().getSize()).isEqualTo(24933642)
+    }
 }

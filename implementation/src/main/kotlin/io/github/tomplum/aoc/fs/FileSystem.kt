@@ -6,14 +6,23 @@ import java.util.Stack
 class FileSystem(private val terminalOutput: List<String>) {
     fun getTotalFileSizeFromDirsNoGreaterThan(maxDirFileSize: Long): Long {
         val root = parseTerminalOutput()
-        val children = root.findChildren()
-        val distinct = children.distinctBy { it.name }
-        val duplicates = children.groupingBy { it.name }.eachCount().filter { it.value > 1 }
         return root.findChildren()
             .sumOf { dir ->
                 val size = dir.getSize()
                 if (size <= maxDirFileSize) size else 0
             }
+    }
+
+    fun getSmallestDeletableDirectoryToFreeEnoughSpace(): Directory {
+        val root = parseTerminalOutput()
+        val diskSpaceUsed = root.getSize()
+        val totalDiskSpace = 70000000
+        val freeSpaceNeeded = 30000000
+        val availableDiskSpace = totalDiskSpace - diskSpaceUsed
+        val spaceNeededToBeFreed = freeSpaceNeeded - availableDiskSpace
+        return root.findChildren()
+            .filter { dir -> dir.getSize() >= spaceNeededToBeFreed }
+            .minByOrNull { dir -> dir.getSize() }!!
     }
 
     fun parseTerminalOutput(): Directory {
@@ -51,10 +60,6 @@ class FileSystem(private val terminalOutput: List<String>) {
             }
 
             if (isListing) {
-               /* val targetDir = breadCrumbs.peek()
-                val targetDirectory = root.findDirectory(targetDir, )
-                    ?: throw IllegalArgumentException("Cannot find directory with path [$targetDir]")*/
-
                 if (line.startsWith("dir")) {
                     val directoryName = line.removePrefix("dir ").trim()
                     if (activeDirectory.directories.find { dir -> dir.name == directoryName } == null) {
