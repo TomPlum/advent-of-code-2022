@@ -1,5 +1,6 @@
 package io.github.tomplum.aoc.map
 
+import io.github.tomplum.libs.math.Direction
 import io.github.tomplum.libs.math.map.AdventMap2D
 import io.github.tomplum.libs.math.point.Point2D
 import kotlin.properties.Delegates
@@ -95,64 +96,36 @@ class TreeMap(heightMapData: List<String>) : AdventMap2D<TreePatch>() {
     }
 
     fun getTreeScenicScores(): List<Int> {
-        return getDataMap().map { (pos, tree) ->
-            var xPositiveViewingDistance = 0
-            var xPositive = pos.x + 1
-            while (xPositive <= xMax) {
-                val candidatePos = Point2D(xPositive, pos.y)
-                val candidateTree = getTile(candidatePos)
-                if (candidateTree.height < tree.height) {
-                    xPositive += 1
-                    xPositiveViewingDistance += 1
-                } else {
-                    xPositiveViewingDistance += 1
-                    break
-                }
-            }
+        return getDataMap().map { tile ->
+            val xPositiveViewingDistance = calculateViewingDistanceFrom(tile.toPair(), Direction.RIGHT)
+            val xNegativeViewingDistance = calculateViewingDistanceFrom(tile.toPair(), Direction.LEFT)
 
-            var xNegativeViewingDistance = 0
-            var xNegative = pos.x - 1
-            while(xNegative >= xMin) {
-                val candidatePos = Point2D(xNegative, pos.y)
-                val candidateTree = getTile(candidatePos)
-                if (candidateTree.height < tree.height) {
-                    xNegative -= 1
-                    xNegativeViewingDistance += 1
-                } else {
-                    break
-                }
-            }
-
-            var yPositiveViewingDistance = 0
-            var yPositive = pos.y + 1
-            while(yPositive <= yMax) {
-                val candidatePos = Point2D(pos.x, yPositive)
-                val candidateTree = getTile(candidatePos)
-                if (candidateTree.height < tree.height) {
-                    yPositive += 1
-                    yPositiveViewingDistance += 1
-                } else {
-                    xNegativeViewingDistance += 1
-                    break
-                }
-            }
-
-            var yNegativeViewingDistance = 0
-            var yNegative = pos.y - 1
-            while(yNegative >= yMin) {
-                val candidatePos = Point2D(pos.x, yNegative)
-                val candidateTree = getTile(candidatePos)
-                if (candidateTree.height < tree.height) {
-                    yNegative -= 1
-                    yNegativeViewingDistance += 1
-                } else {
-                    yNegativeViewingDistance += 1
-                    break
-                }
-            }
+            val yPositiveViewingDistance = calculateViewingDistanceFrom(tile.toPair(), Direction.DOWN)
+            val yNegativeViewingDistance = calculateViewingDistanceFrom(tile.toPair(), Direction.UP)
 
             // Scenic score is up * left * down * right
             yNegativeViewingDistance * xNegativeViewingDistance * yPositiveViewingDistance * xPositiveViewingDistance
         }
+    }
+
+    private fun calculateViewingDistanceFrom(tile: Pair<Point2D, TreePatch>, direction: Direction): Int {
+        val (pos, tree) = tile
+
+        var viewingDistance = 0
+
+        var candidatePosition = pos.shift(direction)
+
+        while (hasRecorded(candidatePosition)) {
+            val candidateTree = getTile(candidatePosition)
+            if (candidateTree.height < tree.height) {
+                candidatePosition = candidatePosition.shift(direction)
+                viewingDistance += 1
+            } else {
+                viewingDistance += 1
+                break
+            }
+        }
+
+        return viewingDistance
     }
 }
