@@ -1,0 +1,10 @@
+package io.github.tomplum.aoc.map
+
+class TreeGridObserver(heightMapData: List<String>) {
+
+    private val treeMap = TreeMap(heightMapData)
+
+    fun countTreesVisibleFromOutside(): Int {
+        return treeMap.getTreesVisibleFromOutside().count()
+    }
+}

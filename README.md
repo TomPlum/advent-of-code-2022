@@ -71,6 +71,6 @@ tests in the `common`, `implementation` and `solutions` Gradle sub-projects as w
 | 24  | -             | -        | -             | -        | [](docs/DAY24.MD)                        |
 | 25  | -             | -        | -             | -        | [](docs/DAY25.MD)                        |
 
-Average Execution Time: 16ms \
-Total Execution Time: 99ms \
+Average Execution Time: 24ms \
+Total Execution Time: 172ms \
 i7 5820K - OpenJDK 17.0.4 - Ubuntu 22.04
