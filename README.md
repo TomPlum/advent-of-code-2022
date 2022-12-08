@@ -1,6 +1,6 @@
 # :christmas_tree: Advent of Code 2022
 
-![GitHub](https://img.shields.io/badge/stars-14%2F50-yellow)
+![GitHub](https://img.shields.io/badge/stars-16%2F50-yellow)
 
 ## What is Advent of Code?
 
@@ -52,7 +52,7 @@ tests in the `common`, `implementation` and `solutions` Gradle sub-projects as w
 | 05  | GRTSWNJHH     | 10ms     | QLFQDBBHM     | 5ms      | [Supply Stacks](docs/DAY05.MD)           |
 | 06  | 1238          | 7ms      | 3037          | 15ms     | [Tuning Trouble](docs/DAY06.MD)          |
 | 07  | 1477771       | 7ms      | 3579501       | 3ms      | [No Space Left On Device](docs/DAY07.MD) |
-| 08  | -             | -        | -             | -        | [](docs/DAY08.MD)                        |
+| 08  | 1801          | 169ms    | 209880        | 111ms    | [Treetop Tree House](docs/DAY08.MD)      |
 | 09  | -             | -        | -             | -        | [](docs/DAY09.MD)                        |
 | 10  | -             | -        | -             | -        | [](docs/DAY10.MD)                        |
 | 11  | -             | -        | -             | -        | [](docs/DAY11.MD)                        |
@@ -71,6 +71,6 @@ tests in the `common`, `implementation` and `solutions` Gradle sub-projects as w
 | 24  | -             | -        | -             | -        | [](docs/DAY24.MD)                        |
 | 25  | -             | -        | -             | -        | [](docs/DAY25.MD)                        |
 
-Average Execution Time: 24ms \
-Total Execution Time: 172ms \
+Average Execution Time: 48ms \
+Total Execution Time: 390ms \
 i7 5820K - OpenJDK 17.0.4 - Ubuntu 22.04
