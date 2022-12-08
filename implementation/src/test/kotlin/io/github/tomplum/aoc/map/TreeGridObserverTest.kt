@@ -13,4 +13,9 @@ class TreeGridObserverTest {
     fun examplePartOne() {
         assertThat(observer.countTreesVisibleFromOutside()).isEqualTo(21)
     }
+
+    @Test
+    fun examplePartTwo() {
+        assertThat(observer.findHighestPossibleScenicScore()).isEqualTo(8)
+    }
 }

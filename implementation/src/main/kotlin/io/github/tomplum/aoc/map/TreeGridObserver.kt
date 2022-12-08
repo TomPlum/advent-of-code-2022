@@ -7,4 +7,8 @@ class TreeGridObserver(heightMapData: List<String>) {
     fun countTreesVisibleFromOutside(): Int {
         return treeMap.getTreesVisibleFromOutside().count()
     }
+
+    fun findHighestPossibleScenicScore(): Int {
+        return treeMap.getTreeScenicScores().max()
+    }
 }
