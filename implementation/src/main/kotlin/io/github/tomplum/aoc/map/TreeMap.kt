@@ -2,8 +2,15 @@ package io.github.tomplum.aoc.map
 
 import io.github.tomplum.libs.math.map.AdventMap2D
 import io.github.tomplum.libs.math.point.Point2D
+import kotlin.properties.Delegates
 
 class TreeMap(heightMapData: List<String>) : AdventMap2D<TreePatch>() {
+
+    private var xMax by Delegates.notNull<Int>()
+    private var yMax by Delegates.notNull<Int>()
+    private var xMin by Delegates.notNull<Int>()
+    private var yMin by Delegates.notNull<Int>()
+
     init {
         var x = 0
         var y = 0
@@ -15,15 +22,14 @@ class TreeMap(heightMapData: List<String>) : AdventMap2D<TreePatch>() {
             x = 0
             y++
         }
+        xMax = xMax()!!
+        yMax = yMax()!!
+        xMin = xMin()!!
+        yMin = yMin()!!
     }
 
     fun getTreesVisibleFromOutside(): List<TreePatch> {
         return getDataMap().filter { (pos, tree) ->
-            val xMax = xMax()!!
-            val yMax = yMax()!!
-            val xMin = xMin()!!
-            val yMin = yMin()!!
-
             if (pos.x == xMin || pos.x == xMax || pos.y == yMin || pos.y == yMax) {
                 return@filter true
             }
@@ -90,11 +96,6 @@ class TreeMap(heightMapData: List<String>) : AdventMap2D<TreePatch>() {
 
     fun getTreeScenicScores(): List<Int> {
         return getDataMap().map { (pos, tree) ->
-            val xMax = xMax()!!
-            val yMax = yMax()!!
-            val xMin = xMin()!!
-            val yMin = yMin()!!
-
             var xPositiveViewingDistance = 0
             var xPositive = pos.x + 1
             while (xPositive <= xMax) {
@@ -103,9 +104,6 @@ class TreeMap(heightMapData: List<String>) : AdventMap2D<TreePatch>() {
                 if (candidateTree.height < tree.height) {
                     xPositive += 1
                     xPositiveViewingDistance += 1
-                } else if (candidateTree.height == tree.height) {
-                    xPositiveViewingDistance += 1
-                    break
                 } else {
                     xPositiveViewingDistance += 1
                     break
@@ -120,9 +118,6 @@ class TreeMap(heightMapData: List<String>) : AdventMap2D<TreePatch>() {
                 if (candidateTree.height < tree.height) {
                     xNegative -= 1
                     xNegativeViewingDistance += 1
-                } else if (candidateTree.height == tree.height) {
-                    xNegativeViewingDistance += 1
-                    break
                 } else {
                     break
                 }
@@ -136,9 +131,6 @@ class TreeMap(heightMapData: List<String>) : AdventMap2D<TreePatch>() {
                 if (candidateTree.height < tree.height) {
                     yPositive += 1
                     yPositiveViewingDistance += 1
-                } else if (candidateTree.height == tree.height) {
-                    yPositiveViewingDistance += 1
-                    break
                 } else {
                     xNegativeViewingDistance += 1
                     break
@@ -153,9 +145,6 @@ class TreeMap(heightMapData: List<String>) : AdventMap2D<TreePatch>() {
                 if (candidateTree.height < tree.height) {
                     yNegative -= 1
                     yNegativeViewingDistance += 1
-                } else if (candidateTree.height == tree.height) {
-                    yNegativeViewingDistance += 1
-                    break
                 } else {
                     yNegativeViewingDistance += 1
                     break
