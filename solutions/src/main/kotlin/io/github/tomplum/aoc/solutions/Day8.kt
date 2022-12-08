@@ -12,4 +12,8 @@ class Day8 : Solution<Int, Int> {
     override fun part1(): Int {
         return treeGridObserver.countTreesVisibleFromOutside()
     }
+
+    override fun part2(): Int {
+        return treeGridObserver.findHighestPossibleScenicScore()
+    }
 }
