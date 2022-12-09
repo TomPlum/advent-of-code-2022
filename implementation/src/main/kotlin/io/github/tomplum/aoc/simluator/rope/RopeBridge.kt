@@ -4,6 +4,12 @@ import io.github.tomplum.libs.math.Direction
 import io.github.tomplum.libs.math.map.AdventMap2D
 import io.github.tomplum.libs.math.point.Point2D
 
+/**
+ * Represents a rope bridge whose movement can be
+ * simulated by a [RopeBridgeSimulator].
+ *
+ * @param knotQuantity The number of knots to tie in the rope
+ */
 class RopeBridge(private val knotQuantity: Int = 1) : AdventMap2D<RopeSegment>() {
     
     init {
@@ -13,6 +19,11 @@ class RopeBridge(private val knotQuantity: Int = 1) : AdventMap2D<RopeSegment>()
 
     val visited = mutableSetOf(Point2D.origin())
 
+    /**
+     * Moves the head of the rop in the given [direction]
+     * by exactly one unit of distance.
+     * @param direction The direction in which to move the rope.
+     */
     fun move(direction: Direction) {
         // The knot leading the charge
         var leaderPos = getHeadPosition()
