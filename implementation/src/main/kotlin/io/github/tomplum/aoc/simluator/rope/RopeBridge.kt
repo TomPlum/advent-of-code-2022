@@ -49,7 +49,7 @@ class RopeBridge(private val knotQuantity: Int = 1) : AdventMap2D<RopeSegment>()
                 }
 
                 if (xRelativeDirectionCandidate == null && yRelativeDirectionCandidate == null) {
-                    throw IllegalStateException("Can't find the relative direction of the HEAD so the TAIL can catch up")
+                    throw IllegalStateException("Can't find the relative direction of the leading segment so the knot can catch up")
                 }
             }
 
