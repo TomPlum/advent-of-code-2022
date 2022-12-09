@@ -7,7 +7,6 @@ import io.github.tomplum.libs.math.point.Point2D
 class RopeBridge(private val knotQuantity: Int = 1) : AdventMap2D<RopeSegment>() {
     
     init {
-        //addTile(Point2D.origin(), Knot('B'))
         val knotMarkers = (0..knotQuantity).map { number -> number }
         addTile(Point2D.origin(), RopeSegment(knotMarkers))
     }
@@ -15,43 +14,6 @@ class RopeBridge(private val knotQuantity: Int = 1) : AdventMap2D<RopeSegment>()
     val visited = mutableSetOf(Point2D.origin())
 
     fun move(direction: Direction) {
-        var currentHeadPos = getHeadPosition()
-        var currentTailPos = getTailPosition()
-        val both = getBothPosition()
-        if (both != null) {
-            currentHeadPos = both
-            currentTailPos = both
-        }
-
-        currentHeadPos = currentHeadPos.shift(direction)
-        if (!currentTailPos.isOrthogonallyAdjacentTo(currentHeadPos) && currentHeadPos != currentTailPos) {
-            val xRelativeDirectionCandidate = currentHeadPos.xRelativeDirection(currentTailPos)
-            val yRelativeDirectionCandidate = currentHeadPos.yRelativeDirection(currentTailPos)
-
-            if (xRelativeDirectionCandidate != null) {
-                currentTailPos = currentTailPos.shift(xRelativeDirectionCandidate.first)
-            }
-
-            if (yRelativeDirectionCandidate != null) {
-                currentTailPos = currentTailPos.shift(yRelativeDirectionCandidate.first)
-            }
-
-            if (xRelativeDirectionCandidate == null && yRelativeDirectionCandidate == null) {
-                throw IllegalStateException("Can't find the relative direction of the HEAD so the TAIL can catch up")
-            }
-        }
-
-        if (currentHeadPos == currentTailPos) {
-            addTile(currentHeadPos, RopeSegment(listOf(0 ,1)))
-        } else {
-            addTile(currentHeadPos, RopeSegment(listOf(0)))
-            addTile(currentTailPos, RopeSegment(listOf(1)))
-        }
-
-        visited.add(currentTailPos)
-    }
-
-    fun moveN(direction: Direction) {
         // The knot leading the charge
         var leaderPos = getHeadPosition()
 
@@ -108,28 +70,6 @@ class RopeBridge(private val knotQuantity: Int = 1) : AdventMap2D<RopeSegment>()
             position
         } else {
             throw IllegalStateException("Cannot find HEAD position")
-        }
-    }
-
-    private fun getBothPosition(): Point2D? {
-        val bothCandidates = filterTiles { tile -> tile.isKnot(0) && tile.isKnot(1) }.entries
-        return if (bothCandidates.isNotEmpty()) {
-            val both = bothCandidates.first()
-            val position = both.key
-            removeTile(position)
-            position
-        } else null
-    }
-
-    private fun getTailPosition(): Point2D {
-        val tailCandidates = filterTiles { tile -> tile.isKnot(1) }.entries
-        return if (tailCandidates.isNotEmpty()) {
-            val tail = tailCandidates.first()
-            val position = tail.key
-            removeTile(position)
-            position
-        } else {
-            throw IllegalStateException("Cannot find TAIL position")
         }
     }
 

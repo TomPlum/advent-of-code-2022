@@ -18,6 +18,6 @@ class RopeBridgeSimulatorTest {
     fun examplePartTwo() {
         val directions = TestInputReader.read<String>("day9/example-large.txt").value
         val simulator = RopeBridgeSimulator(directions)
-        assertThat(simulator.countForNKnots(9)).isEqualTo(36)
+        assertThat(simulator.countUniquePositionsVisited(9)).isEqualTo(36)
     }
 }

@@ -15,6 +15,6 @@ class Day9 : Solution<Int, Int> {
     }
 
     override fun part2(): Int {
-        return ropeBridgeSimulator.countForNKnots(9)
+        return ropeBridgeSimulator.countUniquePositionsVisited(9)
     }
 }

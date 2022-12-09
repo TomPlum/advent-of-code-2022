@@ -5,9 +5,10 @@ import io.github.tomplum.libs.math.Direction
 
 class RopeBridgeSimulator(private val directions: List<String>) {
 
-    private val bridge = RopeBridge()
 
-    fun countUniquePositionsVisited(): Int {
+    fun countUniquePositionsVisited(knotQuantity: Int = 1): Int {
+        val bridge = RopeBridge(knotQuantity)
+
         AdventLogger.debug("== Initial State ==")
         AdventLogger.debug(bridge)
 
@@ -26,34 +27,6 @@ class RopeBridgeSimulator(private val directions: List<String>) {
             AdventLogger.debug("== ${direction.name} $units ==")
             repeat(units) {
                 bridge.move(direction)
-                AdventLogger.debug(bridge)
-            }
-        }
-
-        return bridge.visited.size
-    }
-
-    fun countForNKnots(n: Int): Int {
-        val bridge = RopeBridge(n)
-
-        AdventLogger.debug("== Initial State ==")
-        AdventLogger.debug(bridge)
-
-        directions.map { value ->
-            val parts = value.split(" ")
-            val direction = when(parts[0]) {
-                "U" -> Direction.UP
-                "R" -> Direction.RIGHT
-                "D" -> Direction.DOWN
-                "L" -> Direction.LEFT
-                else -> throw IllegalArgumentException("Unknown Direction [${parts[0]}]")
-            }
-            val units = parts[1].toInt()
-            Pair(direction, units)
-        }.forEach { (direction, units) ->
-            AdventLogger.debug("== ${direction.name} $units ==")
-            repeat(units) {
-                bridge.moveN(direction)
                 AdventLogger.debug(bridge)
             }
         }
