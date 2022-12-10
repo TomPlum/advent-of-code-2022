@@ -8,18 +8,17 @@ import org.junit.jupiter.api.Test
 class ClockCircuitTest {
 
     @Test
-    fun examplePartOneSmall() {
-        val program = TestInputReader.read<String>("/day10/example.txt").value
+    fun examplePartOneLarge() {
+        val program = TestInputReader.read<String>("/day10/example-large.txt").value
         val clockCircuit = ClockCircuit(program)
         val signalStrengthSum = clockCircuit.run().calculateSignalStrengthSum(listOf(20, 60, 100, 140, 180, 220))
         assertThat(signalStrengthSum).isEqualTo(13140)
     }
 
     @Test
-    fun examplePartOneLarge() {
+    fun examplePartTwo() {
         val program = TestInputReader.read<String>("/day10/example-large.txt").value
         val clockCircuit = ClockCircuit(program)
-        val signalStrengthSum = clockCircuit.run().calculateSignalStrengthSum(listOf(20, 60, 100, 140, 180, 220))
-        assertThat(signalStrengthSum).isEqualTo(13140)
+        clockCircuit.run().print()
     }
 }

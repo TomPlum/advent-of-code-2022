@@ -1,6 +1,6 @@
 package io.github.tomplum.aoc.communication.cpu
 
-class Add(private val value: Int) : Instruction {
+data class Add(override val value: Int) : Instruction {
 
     companion object {
         fun fromString(string: String): Add {
@@ -14,8 +14,8 @@ class Add(private val value: Int) : Instruction {
 
     override fun execute(previous: RegisterSnapshot): List<RegisterSnapshot> {
         return listOf(
-            RegisterSnapshot(previous.value, previous.cycle + 1),
-            RegisterSnapshot(previous.value + value, previous.cycle + 2)
+            RegisterSnapshot(this, previous.xRegister, previous.cycle + 1),
+            RegisterSnapshot(this, previous.xRegister + value, previous.cycle + 2)
         )
     }
 }

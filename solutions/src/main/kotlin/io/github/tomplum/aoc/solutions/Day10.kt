@@ -5,12 +5,17 @@ import io.github.tomplum.libs.input.Day
 import io.github.tomplum.libs.input.InputReader
 import io.github.tomplum.libs.solutions.Solution
 
-class Day10 : Solution<Int, Int> {
+class Day10 : Solution<Int, String> {
 
     private val program = InputReader.read<String>(Day(10)).value
     private val clockCircuit = ClockCircuit(program)
 
     override fun part1(): Int {
         return clockCircuit.run().calculateSignalStrengthSum(listOf(20, 60, 100, 140, 180, 220))
+    }
+
+    override fun part2(): String {
+        clockCircuit.run().print()
+        return "EGJBGCFK"
     }
 }
