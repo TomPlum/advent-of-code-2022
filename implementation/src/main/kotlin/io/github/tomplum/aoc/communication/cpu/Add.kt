@@ -14,8 +14,8 @@ data class Add(override val value: Int) : Instruction {
 
     override fun execute(previous: RegisterSnapshot): List<RegisterSnapshot> {
         return listOf(
-            RegisterSnapshot(this, previous.xRegister, previous.cycle + 1),
-            RegisterSnapshot(this, previous.xRegister + value, previous.cycle + 2)
+            RegisterSnapshot(previous.xRegister, previous.cycle + 1),
+            RegisterSnapshot(previous.xRegister + value, previous.cycle + 2)
         )
     }
 }

@@ -1,3 +1,3 @@
 package io.github.tomplum.aoc.communication.cpu
 
-data class RegisterSnapshot(val instruction: Instruction, val xRegister: Int, val cycle: Int)
+data class RegisterSnapshot(val xRegister: Int, val cycle: Int)
