@@ -2,8 +2,9 @@ package io.github.tomplum.aoc.communication
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import io.github.tomplum.aoc.communication.strategy.MessageStartMarkerFinder
-import io.github.tomplum.aoc.communication.strategy.PacketStartMarkerFinder
+import io.github.tomplum.aoc.communication.packet.PacketInterceptor
+import io.github.tomplum.aoc.communication.packet.strategy.MessageStartMarkerFinder
+import io.github.tomplum.aoc.communication.packet.strategy.PacketStartMarkerFinder
 import io.github.tomplum.aoc.input.TestInputReader
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test

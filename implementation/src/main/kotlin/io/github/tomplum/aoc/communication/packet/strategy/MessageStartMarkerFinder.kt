@@ -1,4 +1,4 @@
-package io.github.tomplum.aoc.communication.strategy
+package io.github.tomplum.aoc.communication.packet.strategy
 
 /**
  * A start-of-message marker is just like a start-of-packet marker,

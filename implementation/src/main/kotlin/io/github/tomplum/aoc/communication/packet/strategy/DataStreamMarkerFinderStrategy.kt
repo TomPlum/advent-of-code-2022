@@ -1,4 +1,4 @@
-package io.github.tomplum.aoc.communication.strategy
+package io.github.tomplum.aoc.communication.packet.strategy
 
 abstract class DataStreamMarkerFinderStrategy {
     /**

@@ -1,8 +1,8 @@
 package io.github.tomplum.aoc.solutions
 
-import io.github.tomplum.aoc.communication.PacketInterceptor
-import io.github.tomplum.aoc.communication.strategy.MessageStartMarkerFinder
-import io.github.tomplum.aoc.communication.strategy.PacketStartMarkerFinder
+import io.github.tomplum.aoc.communication.packet.PacketInterceptor
+import io.github.tomplum.aoc.communication.packet.strategy.MessageStartMarkerFinder
+import io.github.tomplum.aoc.communication.packet.strategy.PacketStartMarkerFinder
 import io.github.tomplum.libs.input.Day
 import io.github.tomplum.libs.input.InputReader
 import io.github.tomplum.libs.solutions.Solution

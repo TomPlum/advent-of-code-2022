@@ -1,6 +1,6 @@
-package io.github.tomplum.aoc.communication
+package io.github.tomplum.aoc.communication.packet
 
-import io.github.tomplum.aoc.communication.strategy.DataStreamMarkerFinderStrategy
+import io.github.tomplum.aoc.communication.packet.strategy.DataStreamMarkerFinderStrategy
 
 /**
  * To fix the communication system, the [PacketInterceptor] adds a subroutine to the device that detects

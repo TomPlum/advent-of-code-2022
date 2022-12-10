@@ -1,4 +1,4 @@
-package io.github.tomplum.aoc.communication.strategy
+package io.github.tomplum.aoc.communication.packet.strategy
 
 /**
  * To fix the communication system, you need to add a subroutine to the device
