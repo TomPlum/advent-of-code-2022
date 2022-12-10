@@ -1,23 +1,12 @@
 package io.github.tomplum.aoc.communication.cpu
 
-import io.github.tomplum.aoc.communication.cpu.instruction.Add
-import io.github.tomplum.aoc.communication.cpu.instruction.NoOp
+import io.github.tomplum.aoc.communication.cpu.instruction.InstructionParser
 
 class ClockCircuit(private val program: List<String>) {
-    fun run(): Buffer {
-        val instructions = program.map { line ->
-            when (line.split(" ")[0]) {
-                "noop" -> NoOp()
-                "addx" -> Add.fromString(line)
-                else -> throw IllegalArgumentException("Unknown program instruction [$line]")
-            }
-        }
 
-        val initialSnapshot = RegisterSnapshot(1, 1)
-        val bufferSnapshots = instructions.fold(listOf(initialSnapshot)) { snapshots, instruction ->
-            snapshots + instruction.execute(snapshots.last())
-        }
+    private val parser = InstructionParser()
 
-        return Buffer(bufferSnapshots)
-    }
+    fun run() = parser.parse(program).fold(listOf(RegisterSnapshot.initial())) { buffer, instruction ->
+        buffer + instruction.execute(buffer.last())
+    }.let { Buffer(it) }
 }
