@@ -1,6 +1,6 @@
 package io.github.tomplum.aoc.communication.cpu.instruction
 
-import io.github.tomplum.aoc.communication.cpu.RegisterSnapshot
+import io.github.tomplum.aoc.communication.cpu.MemorySnapshot
 import io.github.tomplum.aoc.communication.cpu.ClockCircuit
 
 /**
@@ -20,5 +20,5 @@ interface Instruction {
      * @param previous The snapshot from the previous CPU cycle
      * @return An collection of memory snapshots for the current and future cycles
      */
-    fun execute(previous: RegisterSnapshot): List<RegisterSnapshot>
+    fun execute(previous: MemorySnapshot): List<MemorySnapshot>
 }

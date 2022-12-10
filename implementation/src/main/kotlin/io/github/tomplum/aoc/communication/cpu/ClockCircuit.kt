@@ -19,7 +19,7 @@ class ClockCircuit(private val program: List<String>) {
      *
      * @return An exported collection of snapshots from the memory buffer
      */
-    fun run() = parser.parse(program).fold(listOf(RegisterSnapshot.initial())) { buffer, instruction ->
+    fun run() = parser.parse(program).fold(listOf(MemorySnapshot.initial())) { buffer, instruction ->
         buffer + instruction.execute(buffer.last())
     }.let { snapshots -> Buffer(snapshots) }
 }

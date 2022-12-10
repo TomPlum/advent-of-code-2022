@@ -1,6 +1,6 @@
 package io.github.tomplum.aoc.communication.cpu.instruction
 
-import io.github.tomplum.aoc.communication.cpu.RegisterSnapshot
+import io.github.tomplum.aoc.communication.cpu.MemorySnapshot
 
 /**
  * This instruction takes 1 CPU cycle to execute.
@@ -9,7 +9,7 @@ import io.github.tomplum.aoc.communication.cpu.RegisterSnapshot
 class NoOp : Instruction {
     override val value: Int = 0
 
-    override fun execute(previous: RegisterSnapshot): List<RegisterSnapshot> {
-        return listOf(RegisterSnapshot(previous.xRegister, previous.cycle + 1))
+    override fun execute(previous: MemorySnapshot): List<MemorySnapshot> {
+        return listOf(MemorySnapshot(previous.xRegister, previous.cycle + 1))
     }
 }

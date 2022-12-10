@@ -3,12 +3,18 @@ package io.github.tomplum.aoc.communication.cpu
 import io.github.tomplum.libs.logging.AdventLogger
 
 /**
- * An exported list of [snapshots] taken from the register
- * buffer of a [ClockCircuit].
+ * An exported list of [snapshots] taken from the memory buffer of a [ClockCircuit].
  * @param snapshots The full history of memory snapshots for every cycle.
  */
-data class Buffer(val snapshots: List<RegisterSnapshot>) {
-    fun calculateSignalStrengthSum(bufferIndexes: List<Int>) = bufferIndexes.sumOf { cycle ->
+data class Buffer(val snapshots: List<MemorySnapshot>) {
+    /**
+     * Calculates the signal strength at each of the
+     * given [cycles] and returns the total sum.
+     *
+     * @param cycles A list of target CPU cycles
+     * @return The sum of the signal strengths at the given [cycles]
+     */
+    fun calculateSignalStrengthSum(cycles: List<Int>) = cycles.sumOf { cycle ->
         snapshots[cycle - 1].xRegister * cycle
     }
 
