@@ -11,6 +11,6 @@ class Day10 : Solution<Int, Int> {
     private val clockCircuit = ClockCircuit(program)
 
     override fun part1(): Int {
-        return clockCircuit.run(listOf(20, 60, 100, 140, 180, 220))
+        return clockCircuit.run().calculateSignalStrengthSum(listOf(20, 60, 100, 140, 180, 220))
     }
 }
