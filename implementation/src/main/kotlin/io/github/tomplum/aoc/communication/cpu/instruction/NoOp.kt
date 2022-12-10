@@ -1,4 +1,6 @@
-package io.github.tomplum.aoc.communication.cpu
+package io.github.tomplum.aoc.communication.cpu.instruction
+
+import io.github.tomplum.aoc.communication.cpu.RegisterSnapshot
 
 data class NoOp(override val value: Int = 0) : Instruction {
     override fun execute(previous: RegisterSnapshot): List<RegisterSnapshot> {

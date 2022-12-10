@@ -1,4 +1,6 @@
-package io.github.tomplum.aoc.communication.cpu
+package io.github.tomplum.aoc.communication.cpu.instruction
+
+import io.github.tomplum.aoc.communication.cpu.RegisterSnapshot
 
 data class Add(override val value: Int) : Instruction {
 
