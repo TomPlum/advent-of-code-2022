@@ -2,6 +2,13 @@ package io.github.tomplum.aoc.communication.cpu.instruction
 
 import io.github.tomplum.aoc.communication.cpu.RegisterSnapshot
 
+/**
+ * This instruction takes 2 CPU cycles to complete.
+ * - On the first cycle, it does no mutation - the register value is copied.
+ * - On the second cycle, it adds the given instruction [value] from the last cycle.
+ *
+ * @param value The value in which to add at the end of the second cycle
+ */
 data class Add(override val value: Int) : Instruction {
 
     companion object {
@@ -13,6 +20,7 @@ data class Add(override val value: Int) : Instruction {
             return Add(valueString.toInt())
         }
     }
+
 
     override fun execute(previous: RegisterSnapshot): List<RegisterSnapshot> {
         return listOf(
