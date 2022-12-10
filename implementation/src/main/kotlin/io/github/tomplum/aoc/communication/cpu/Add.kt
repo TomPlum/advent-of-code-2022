@@ -12,7 +12,10 @@ class Add(private val value: Int) : Instruction {
         }
     }
 
-    override fun execute(currentRegisterValue: Int): Int {
-        return currentRegisterValue + value
+    override fun execute(previous: RegisterSnapshot): List<RegisterSnapshot> {
+        return listOf(
+            RegisterSnapshot(previous.value, previous.cycle + 1),
+            RegisterSnapshot(previous.value + value, previous.cycle + 2)
+        )
     }
 }
