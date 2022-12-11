@@ -1,8 +1,17 @@
 package io.github.tomplum.aoc.simluator.monkey.parser
 
 import java.util.*
+import io.github.tomplum.aoc.simluator.monkey.KeepAway
 
 class MonkeyNoteParser {
+    /**
+     * Parses a list of notes about the [KeepAway] game
+     * and produce a list of [Monkey]s that are playing
+     * the game.
+     *
+     * @param notes A list of notes that describe the state of the monkeys
+     * @return A list of monkey participants that form a [MonkeyTroop]
+     */
     fun parse(notes: List<String>) = notes.fold(mutableListOf<MutableList<String>>(mutableListOf())) { monkeys, line ->
         if (line.isNotBlank()) monkeys.last().add(line) else monkeys.add(mutableListOf())
         monkeys

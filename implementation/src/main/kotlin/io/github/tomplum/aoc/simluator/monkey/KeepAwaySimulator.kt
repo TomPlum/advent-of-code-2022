@@ -1,20 +1,29 @@
 package io.github.tomplum.aoc.simluator.monkey
 
 import io.github.tomplum.aoc.simluator.monkey.parser.MonkeyTroop
-import io.github.tomplum.aoc.simluator.monkey.strategy.WorryLevelStrategy
+import io.github.tomplum.aoc.simluator.monkey.strategy.WorryReliefStrategy
 
+/**
+ * Simulates a game of Keep Away played by a [troop]
+ * of Monkeys.
+ *
+ * @param troop The troop of monkeys playing the game
+ */
 class KeepAwaySimulator(private val troop: MonkeyTroop) {
+
+    private val game = KeepAway()
     private val monkeys = troop.monkeys
 
-    fun simulate(rounds: Int, strategy: WorryLevelStrategy) = repeat(rounds) {
-        monkeys.forEach { monkey ->
-            val items = monkey.items
-            while(items.isNotEmpty()) {
-                val worryLevel = strategy.calculate(monkey.operation.execute(items.pop()))
-                monkey.inspections++
-                val targetMonkey = monkey.test.execute(worryLevel)
-                monkeys[targetMonkey].items.add(worryLevel)
-            }
-        }
+    /**
+     * Simulates the game of [KeepAway] for the given number of [rounds].
+     * Uses the given [strategy] to calculate the worry level
+     * when a monkey inspects an item.
+     *
+     * @param rounds The number of rounds to play
+     * @param strategy The strategy for calculating worry relief
+     * @return The level of monkey business after all the rounds
+     */
+    fun simulate(rounds: Int, strategy: WorryReliefStrategy): Long = repeat(rounds) {
+        game.play(monkeys, strategy)
     }.let { troop.calculateMonkeyBusiness() }
 }
