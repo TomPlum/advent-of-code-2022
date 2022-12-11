@@ -18,4 +18,15 @@ class MonkeyTroop(val monkeys: List<Monkey>) {
         .sortedDescending()
         .take(2)
         .product()
+
+    /**
+     * Throws an item with a given worry level
+     * at another [Monkey] in the troop.
+     *
+     * @param target The ID of the target monkey
+     * @param item The worry level of the item
+     */
+    fun throwItem(target: Int, item: Long) {
+        monkeys[target].items.push(item)
+    }
 }

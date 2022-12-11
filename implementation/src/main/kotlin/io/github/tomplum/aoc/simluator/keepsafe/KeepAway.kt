@@ -1,6 +1,6 @@
 package io.github.tomplum.aoc.simluator.keepsafe
 
-import io.github.tomplum.aoc.simluator.keepsafe.monkey.Monkey
+import io.github.tomplum.aoc.simluator.keepsafe.monkey.MonkeyTroop
 import io.github.tomplum.aoc.simluator.keepsafe.strategy.WorryReliefStrategy
 
 /**
@@ -16,20 +16,20 @@ import io.github.tomplum.aoc.simluator.keepsafe.strategy.WorryReliefStrategy
 class KeepAway {
     /**
      * Plays a single round of the game with the given
-     * [monkeys] and calculates the worry level using the
+     * [troop] and calculates the worry level using the
      * given [strategy].
      *
-     * @param monkeys The monkeys participating in the game
+     * @param troop The monkeys participating in the game
      * @param strategy The strategy for worry relief
      * @return The state of the monkey players at the end of the round
      */
-    fun play(monkeys: List<Monkey>, strategy: WorryReliefStrategy) = monkeys.forEach { monkey ->
+    fun play(troop: MonkeyTroop, strategy: WorryReliefStrategy) = troop.monkeys.forEach { monkey ->
         val items = monkey.items
         while(items.isNotEmpty()) {
             val worryLevel = strategy.reduce(monkey.operation.execute(items.pop()))
             monkey.inspections++
             val targetMonkey = monkey.test.execute(worryLevel)
-            monkeys[targetMonkey].items.add(worryLevel)
+            troop.throwItem(targetMonkey, worryLevel)
         }
-    }.let { monkeys }
+    }
 }

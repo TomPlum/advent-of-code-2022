@@ -12,7 +12,6 @@ import io.github.tomplum.aoc.simluator.keepsafe.strategy.WorryReliefStrategy
 class KeepAwaySimulator(private val troop: MonkeyTroop) {
 
     private val game = KeepAway()
-    private val monkeys = troop.monkeys
 
     /**
      * Simulates the game of [KeepAway] for the given number of [rounds].
@@ -24,6 +23,6 @@ class KeepAwaySimulator(private val troop: MonkeyTroop) {
      * @return The level of monkey business after all the rounds
      */
     fun simulate(rounds: Int, strategy: WorryReliefStrategy): Long = repeat(rounds) {
-        game.play(monkeys, strategy)
+        game.play(troop, strategy)
     }.let { troop.calculateMonkeyBusiness() }
 }
