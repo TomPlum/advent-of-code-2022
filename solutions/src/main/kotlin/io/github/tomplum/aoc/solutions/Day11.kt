@@ -13,4 +13,8 @@ class Day11 : Solution<Long, Long> {
     override fun part1(): Long {
         return simulator.simulate(20)
     }
+
+    override fun part2(): Long {
+        return simulator.simulate(10_000)
+    }
 }
