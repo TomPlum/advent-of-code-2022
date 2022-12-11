@@ -1,18 +1,17 @@
 package io.github.tomplum.aoc.simluator.monkey
 
+import io.github.tomplum.aoc.simluator.monkey.strategy.WorryLevelStrategy
 import io.github.tomplum.libs.extensions.product
 
-class KeepAwaySimulator(notes: List<String>) {
+class KeepAwaySimulator(private val monkeys: List<Monkey>) {
 
-    private val monkeys = MonkeyNoteParser().parse(notes)
-    private val mod = monkeys.map { monkey -> monkey.test.divisor }.reduce { a, b -> a * b }
     private val inspections = mutableMapOf(*monkeys.map { Pair(it.id, 0L) }.toTypedArray())
 
-    fun simulate(rounds: Int): Long {
+    fun simulate(rounds: Int, strategy: WorryLevelStrategy): Long {
         repeat(rounds) {
             monkeys.forEach { monkey ->
                 monkey.items.forEach { item ->
-                    val worryLevel = monkey.operation.execute(item) % mod
+                    val worryLevel = strategy.calculate(monkey.operation.execute(item))
                     inspections.computeIfPresent(monkey.id) { _, count  -> count +  1 }
                     val targetMonkey = monkey.test.execute(worryLevel)
                     monkeys[targetMonkey].items.add(worryLevel)
