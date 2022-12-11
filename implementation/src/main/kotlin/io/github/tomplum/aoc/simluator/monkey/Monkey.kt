@@ -5,4 +5,6 @@ data class Monkey(
     val items: MutableList<Long>,
     val operation: MonkeyOperation,
     val test: MonkeyTest
-)
+) {
+    var inspections = 0L
+}
