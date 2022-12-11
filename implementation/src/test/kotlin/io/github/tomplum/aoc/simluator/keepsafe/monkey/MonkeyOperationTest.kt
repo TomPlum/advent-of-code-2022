@@ -1,8 +1,7 @@
-package io.github.tomplum.aoc.simluator.monkey.parser
+package io.github.tomplum.aoc.simluator.keepsafe.monkey
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import io.github.tomplum.aoc.simluator.monkey.parser.MonkeyOperation
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 

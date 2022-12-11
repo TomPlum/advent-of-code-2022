@@ -1,4 +1,4 @@
-package io.github.tomplum.aoc.simluator.monkey.parser
+package io.github.tomplum.aoc.simluator.keepsafe.monkey
 
 import io.github.tomplum.libs.extensions.product
 

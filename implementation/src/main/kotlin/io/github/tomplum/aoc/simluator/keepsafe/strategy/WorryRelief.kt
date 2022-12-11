@@ -1,4 +1,4 @@
-package io.github.tomplum.aoc.simluator.monkey.strategy
+package io.github.tomplum.aoc.simluator.keepsafe.strategy
 
 /**
  * After each monkey inspects an item but before it tests

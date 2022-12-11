@@ -1,9 +1,9 @@
-package io.github.tomplum.aoc.simluator.monkey.strategy
+package io.github.tomplum.aoc.simluator.keepsafe.strategy
 
-import io.github.tomplum.aoc.simluator.monkey.parser.Monkey
-import io.github.tomplum.aoc.simluator.monkey.parser.MonkeyTroop
-import io.github.tomplum.aoc.simluator.monkey.parser.MonkeyTest
-import io.github.tomplum.aoc.simluator.monkey.KeepAway
+import io.github.tomplum.aoc.simluator.keepsafe.monkey.Monkey
+import io.github.tomplum.aoc.simluator.keepsafe.monkey.MonkeyTroop
+import io.github.tomplum.aoc.simluator.keepsafe.monkey.MonkeyTest
+import io.github.tomplum.aoc.simluator.keepsafe.KeepAway
 
 /**
  * You're worried you might not ever get your items back.

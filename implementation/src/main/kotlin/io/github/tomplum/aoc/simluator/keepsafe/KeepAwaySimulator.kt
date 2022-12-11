@@ -1,7 +1,7 @@
-package io.github.tomplum.aoc.simluator.monkey
+package io.github.tomplum.aoc.simluator.keepsafe
 
-import io.github.tomplum.aoc.simluator.monkey.parser.MonkeyTroop
-import io.github.tomplum.aoc.simluator.monkey.strategy.WorryReliefStrategy
+import io.github.tomplum.aoc.simluator.keepsafe.monkey.MonkeyTroop
+import io.github.tomplum.aoc.simluator.keepsafe.strategy.WorryReliefStrategy
 
 /**
  * Simulates a game of Keep Away played by a [troop]

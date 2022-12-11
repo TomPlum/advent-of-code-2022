@@ -1,4 +1,4 @@
-package io.github.tomplum.aoc.simluator.monkey.parser
+package io.github.tomplum.aoc.simluator.keepsafe.monkey
 
 /**
  * An operation that determines how the worry level

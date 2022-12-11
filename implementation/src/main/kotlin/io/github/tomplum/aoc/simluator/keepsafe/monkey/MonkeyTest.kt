@@ -1,4 +1,4 @@
-package io.github.tomplum.aoc.simluator.monkey.parser
+package io.github.tomplum.aoc.simluator.keepsafe.monkey
 
 /**
  * A test used by a [Monkey] to determine which other

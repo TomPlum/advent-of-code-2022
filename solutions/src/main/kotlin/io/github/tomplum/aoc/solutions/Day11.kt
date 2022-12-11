@@ -1,10 +1,10 @@
 package io.github.tomplum.aoc.solutions
 
-import io.github.tomplum.aoc.simluator.monkey.KeepAwaySimulator
-import io.github.tomplum.aoc.simluator.monkey.parser.MonkeyNoteParser
-import io.github.tomplum.aoc.simluator.monkey.parser.MonkeyTroop
-import io.github.tomplum.aoc.simluator.monkey.strategy.RidiculousWorryRelief
-import io.github.tomplum.aoc.simluator.monkey.strategy.WorryRelief
+import io.github.tomplum.aoc.simluator.keepsafe.KeepAwaySimulator
+import io.github.tomplum.aoc.simluator.keepsafe.monkey.MonkeyNoteParser
+import io.github.tomplum.aoc.simluator.keepsafe.monkey.MonkeyTroop
+import io.github.tomplum.aoc.simluator.keepsafe.strategy.RidiculousWorryRelief
+import io.github.tomplum.aoc.simluator.keepsafe.strategy.WorryRelief
 import io.github.tomplum.libs.input.Day
 import io.github.tomplum.libs.input.InputReader
 import io.github.tomplum.libs.solutions.Solution

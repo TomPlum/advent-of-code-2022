@@ -1,6 +1,6 @@
-package io.github.tomplum.aoc.simluator.monkey.strategy
+package io.github.tomplum.aoc.simluator.keepsafe.strategy
 
-import io.github.tomplum.aoc.simluator.monkey.parser.Monkey
+import io.github.tomplum.aoc.simluator.keepsafe.monkey.Monkey
 
 /**
  * A strategy for reducing the level

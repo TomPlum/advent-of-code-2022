@@ -1,7 +1,7 @@
-package io.github.tomplum.aoc.simluator.monkey.parser
+package io.github.tomplum.aoc.simluator.keepsafe.monkey
 
 import java.util.Stack
-import io.github.tomplum.aoc.simluator.monkey.KeepAway
+import io.github.tomplum.aoc.simluator.keepsafe.KeepAway
 
 /**
  * A singular monkey playing a game of [KeepAway]

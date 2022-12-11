@@ -1,7 +1,7 @@
-package io.github.tomplum.aoc.simluator.monkey.parser
+package io.github.tomplum.aoc.simluator.keepsafe.monkey
 
 import java.util.*
-import io.github.tomplum.aoc.simluator.monkey.KeepAway
+import io.github.tomplum.aoc.simluator.keepsafe.KeepAway
 
 class MonkeyNoteParser {
     /**

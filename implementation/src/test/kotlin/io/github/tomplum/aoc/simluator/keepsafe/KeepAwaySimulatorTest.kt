@@ -1,12 +1,12 @@
-package io.github.tomplum.aoc.simluator.monkey
+package io.github.tomplum.aoc.simluator.keepsafe
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import io.github.tomplum.aoc.input.TestInputReader
-import io.github.tomplum.aoc.simluator.monkey.parser.MonkeyNoteParser
-import io.github.tomplum.aoc.simluator.monkey.parser.MonkeyTroop
-import io.github.tomplum.aoc.simluator.monkey.strategy.RidiculousWorryRelief
-import io.github.tomplum.aoc.simluator.monkey.strategy.WorryRelief
+import io.github.tomplum.aoc.simluator.keepsafe.monkey.MonkeyNoteParser
+import io.github.tomplum.aoc.simluator.keepsafe.monkey.MonkeyTroop
+import io.github.tomplum.aoc.simluator.keepsafe.strategy.RidiculousWorryRelief
+import io.github.tomplum.aoc.simluator.keepsafe.strategy.WorryRelief
 import org.junit.jupiter.api.Test
 
 class KeepAwaySimulatorTest {

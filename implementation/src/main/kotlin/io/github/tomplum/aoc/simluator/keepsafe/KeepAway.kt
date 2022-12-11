@@ -1,7 +1,7 @@
-package io.github.tomplum.aoc.simluator.monkey
+package io.github.tomplum.aoc.simluator.keepsafe
 
-import io.github.tomplum.aoc.simluator.monkey.parser.Monkey
-import io.github.tomplum.aoc.simluator.monkey.strategy.WorryReliefStrategy
+import io.github.tomplum.aoc.simluator.keepsafe.monkey.Monkey
+import io.github.tomplum.aoc.simluator.keepsafe.strategy.WorryReliefStrategy
 
 /**
  * As you finally start making your way upriver, you realize your pack is
