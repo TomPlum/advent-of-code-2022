@@ -7,13 +7,13 @@ class KeepAwaySimulator(private val troop: MonkeyTroop) {
 
     fun simulate(rounds: Int, strategy: WorryLevelStrategy) = repeat(rounds) {
         monkeys.forEach { monkey ->
-            monkey.items.forEach { item ->
-                val worryLevel = strategy.calculate(monkey.operation.execute(item))
+            val items = monkey.items
+            while(items.isNotEmpty()) {
+                val worryLevel = strategy.calculate(monkey.operation.execute(items.pop()))
                 monkey.inspections++
                 val targetMonkey = monkey.test.execute(worryLevel)
                 monkeys[targetMonkey].items.add(worryLevel)
             }
-            monkey.items.clear()
         }
     }.let { troop.calculateMonkeyBusiness() }
 }
