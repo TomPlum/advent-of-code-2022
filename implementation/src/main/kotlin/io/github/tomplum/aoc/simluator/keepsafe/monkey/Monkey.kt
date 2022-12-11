@@ -2,6 +2,7 @@ package io.github.tomplum.aoc.simluator.keepsafe.monkey
 
 import java.util.Stack
 import io.github.tomplum.aoc.simluator.keepsafe.KeepAway
+import io.github.tomplum.aoc.simluator.keepsafe.strategy.WorryReliefStrategy
 
 /**
  * A singular monkey playing a game of [KeepAway]
@@ -21,4 +22,9 @@ data class Monkey(
      * has inspected an item.
      */
     var inspections = 0L
+
+    fun inspect(strategy: WorryReliefStrategy): Long {
+        inspections++
+        return strategy.reduce(operation.execute(items.pop()))
+    }
 }

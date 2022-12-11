@@ -26,10 +26,9 @@ class KeepAway {
     fun play(troop: MonkeyTroop, strategy: WorryReliefStrategy) = troop.monkeys.forEach { monkey ->
         val items = monkey.items
         while(items.isNotEmpty()) {
-            val worryLevel = strategy.reduce(monkey.operation.execute(items.pop()))
-            monkey.inspections++
-            val targetMonkey = monkey.test.execute(worryLevel)
-            troop.throwItem(targetMonkey, worryLevel)
+            val worry = monkey.inspect(strategy)
+            val targetMonkey = monkey.test.execute(worry)
+            troop.throwItem(targetMonkey, worry)
         }
     }
 }
