@@ -20,20 +20,6 @@ data class Directory(
         directories.add(directory)
     }
 
-    fun findDirectory(path: String, dir: Directory = this): Directory? {
-        if (path == dir.name) {
-            return dir
-        } else {
-            dir.directories.forEach { subDir ->
-                val found = findDirectory(path, subDir)
-                if (found != null) {
-                    return found
-                }
-            }
-        }
-        return null
-    }
-
     fun findChildren(): List<Directory> {
         return directories + directories.flatMap { dir -> dir.findChildren() }
     }
