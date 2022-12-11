@@ -35,4 +35,15 @@ data class Monkey(
         val worry = operation.execute(items.pop())
         return strategy.reduce(worry)
     }
+
+    /**
+     * Determines which monkey the inspected item
+     * should be thrown at using its [test].
+     *
+     * @param worry The worry level after inspection
+     * @return The ID of the monkey to target the throw
+     */
+    fun determineTargetMonkey(worry: Long): Int {
+        return test.execute(worry)
+    }
 }
