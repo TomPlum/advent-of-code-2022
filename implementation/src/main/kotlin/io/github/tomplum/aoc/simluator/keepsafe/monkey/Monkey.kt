@@ -23,8 +23,16 @@ data class Monkey(
      */
     var inspections = 0L
 
+    /**
+     * Inspects the next of the [items] using
+     * the monkey's [operation].
+     *
+     * @param strategy The strategy for worry relief
+     * @return The relieved worry value
+     */
     fun inspect(strategy: WorryReliefStrategy): Long {
         inspections++
-        return strategy.reduce(operation.execute(items.pop()))
+        val worry = operation.execute(items.pop())
+        return strategy.reduce(worry)
     }
 }
