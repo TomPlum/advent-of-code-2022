@@ -12,10 +12,10 @@ import io.github.tomplum.aoc.simluator.keepsafe.strategy.WorryReliefStrategy
  * @param test Used by the monkey to test the worry level and determine its next target monkey
  */
 data class Monkey(
-    val id: Int,
-    val items: Stack<Long>,
-    val operation: MonkeyOperation,
-    val test: MonkeyTest
+    private val id: Int,
+    private val items: Stack<Long>,
+    private val operation: MonkeyOperation,
+    private val test: MonkeyTest
 ) {
     /**
      * The total number of times the monkey
@@ -45,5 +45,31 @@ data class Monkey(
      */
     fun determineTargetMonkey(worry: Long): Int {
         return test.execute(worry)
+    }
+
+    /**
+     * Checks whether the monkey has
+     * items left to throw or not.
+     * @return true if has items left, else false
+     */
+    fun hasItemsLeft(): Boolean {
+        return items.isNotEmpty()
+    }
+
+    /**
+     * Receives an item.
+     * @param item The worry level of the item
+     */
+    fun catchItem(item: Long) {
+        items.push(item)
+    }
+
+    /**
+     * Retrieves the divisor for the equation
+     * of the monkey's test.
+     * @return The divisor value
+     */
+    fun getTestDivisor(): Long {
+        return test.divisor
     }
 }

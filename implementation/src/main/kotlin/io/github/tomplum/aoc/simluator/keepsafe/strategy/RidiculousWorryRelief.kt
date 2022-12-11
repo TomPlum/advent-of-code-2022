@@ -1,9 +1,7 @@
 package io.github.tomplum.aoc.simluator.keepsafe.strategy
 
-import io.github.tomplum.aoc.simluator.keepsafe.monkey.Monkey
-import io.github.tomplum.aoc.simluator.keepsafe.monkey.MonkeyTroop
-import io.github.tomplum.aoc.simluator.keepsafe.monkey.MonkeyTest
 import io.github.tomplum.aoc.simluator.keepsafe.KeepAway
+import io.github.tomplum.aoc.simluator.keepsafe.monkey.MonkeyTroop
 
 /**
  * You're worried you might not ever get your items back.
@@ -13,16 +11,16 @@ import io.github.tomplum.aoc.simluator.keepsafe.KeepAway
  *
  * @param monkeys The members of the [MonkeyTroop] participating in [KeepAway]
  */
-class RidiculousWorryRelief(monkeys: List<Monkey>) : WorryReliefStrategy {
+class RidiculousWorryRelief(private val monkeys: MonkeyTroop) : WorryReliefStrategy {
 
     /**
-     * The lowest common multiple of all the [MonkeyTest] divisors.
+     * The divisor of the [reduce] modulus function used to relieve worry.
      */
-    private val divisorLcm = monkeys.map { monkey -> monkey.test.divisor }.reduce { a, b -> a * b }.toLong()
+    private val divisorLcm = monkeys.findTestDivisorLowestCommonMultiple()
 
     /**
      * Heavily relieves the worry value by using
-     * some modular arithmetic. Uses the [divisorLcm]
+     * some modular arithmetic. Uses the divisor LCM
      * to reduce the [previous] value by returning the
      * remainder after apply the modulus function.
      *

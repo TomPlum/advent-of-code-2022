@@ -24,7 +24,7 @@ class KeepAway {
      * @return The state of the monkey players at the end of the round
      */
     fun play(troop: MonkeyTroop, strategy: WorryReliefStrategy) = troop.monkeys.forEach { monkey ->
-        while (monkey.items.isNotEmpty()) {
+        while (monkey.hasItemsLeft()) {
             val worry = monkey.inspect(strategy)
             val targetMonkey = monkey.determineTargetMonkey(worry)
             troop.throwItem(targetMonkey, worry)

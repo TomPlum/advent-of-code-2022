@@ -13,7 +13,7 @@ class Day11 : Solution<Long, Long> {
 
     private val notes = InputReader.read<String>(Day(11)).value
     private val monkeys = MonkeyNoteParser().parse(notes)
-    private val simulator = KeepAwaySimulator(MonkeyTroop(monkeys))
+    private val simulator = KeepAwaySimulator(monkeys)
 
     override fun part1(): Long {
         val strategy = WorryRelief()

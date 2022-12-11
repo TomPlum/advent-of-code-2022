@@ -33,5 +33,5 @@ class MonkeyNoteParser {
         val operation = MonkeyOperation(lines[2])
         val test = MonkeyTest(lines.subList(3, 6))
         Monkey(id, startingItems, operation, test)
-    }
+    }.let { monkeys -> MonkeyTroop(monkeys) }
 }

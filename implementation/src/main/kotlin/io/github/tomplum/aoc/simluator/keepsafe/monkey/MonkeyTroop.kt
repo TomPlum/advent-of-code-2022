@@ -1,6 +1,7 @@
 package io.github.tomplum.aoc.simluator.keepsafe.monkey
 
 import io.github.tomplum.libs.extensions.product
+import io.github.tomplum.aoc.simluator.keepsafe.strategy.RidiculousWorryRelief
 
 /**
  * A collection of [Monkey]s.
@@ -27,6 +28,17 @@ class MonkeyTroop(val monkeys: List<Monkey>) {
      * @param item The worry level of the item
      */
     fun throwItem(target: Int, item: Long) {
-        monkeys[target].items.push(item)
+        monkeys[target].catchItem(item)
+    }
+
+    /**
+     * Finds the lowest common multiple of the divisors
+     * from the troops [MonkeyTest]s. This is used by the
+     * [RidiculousWorryRelief] strategy.
+     *
+     * @return The LCM of the troops test divisors
+     */
+    fun findTestDivisorLowestCommonMultiple(): Long {
+        return monkeys.map { monkey -> monkey.getTestDivisor() }.reduce { a, b -> a * b }.toLong()
     }
 }
