@@ -2,6 +2,7 @@ package io.github.tomplum.aoc.solutions
 
 import io.github.tomplum.aoc.simluator.monkey.KeepAwaySimulator
 import io.github.tomplum.aoc.simluator.monkey.MonkeyNoteParser
+import io.github.tomplum.aoc.simluator.monkey.MonkeyTroop
 import io.github.tomplum.aoc.simluator.monkey.strategy.RidiculousWorryRelief
 import io.github.tomplum.aoc.simluator.monkey.strategy.WorryRelief
 import io.github.tomplum.libs.input.Day
@@ -12,7 +13,7 @@ class Day11 : Solution<Long, Long> {
 
     private val notes = InputReader.read<String>(Day(11)).value
     private val monkeys = MonkeyNoteParser().parse(notes)
-    private val simulator = KeepAwaySimulator(monkeys)
+    private val simulator = KeepAwaySimulator(MonkeyTroop(monkeys))
 
     override fun part1(): Long {
         val strategy = WorryRelief()
