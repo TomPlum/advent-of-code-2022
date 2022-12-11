@@ -1,4 +1,4 @@
-package io.github.tomplum.aoc.simluator.monkey
+package io.github.tomplum.aoc.simluator.monkey.parser
 
 class MonkeyOperation(instruction: String) {
     private val contents = instruction.trim().removePrefix("Operation: ").trim()

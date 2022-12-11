@@ -1,7 +1,8 @@
-package io.github.tomplum.aoc.simluator.monkey
+package io.github.tomplum.aoc.simluator.monkey.parser
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import io.github.tomplum.aoc.simluator.monkey.parser.MonkeyTest
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
@@ -14,7 +15,7 @@ class MonkeyTestTest {
             "    If true: throw to monkey 2",
             "    If false: throw to monkey 3"
         ))
-        val targetMonkey = test.execute(worryLevel.toBigInteger())
+        val targetMonkey = test.execute(worryLevel)
         assertThat(targetMonkey).isEqualTo(2)
     }
 
@@ -26,7 +27,7 @@ class MonkeyTestTest {
             "    If true: throw to monkey 2",
             "    If false: throw to monkey 3"
         ))
-        val targetMonkey = test.execute(worryLevel.toBigInteger())
+        val targetMonkey = test.execute(worryLevel)
         assertThat(targetMonkey).isEqualTo(3)
     }
 }

@@ -1,4 +1,4 @@
-package io.github.tomplum.aoc.simluator.monkey
+package io.github.tomplum.aoc.simluator.monkey.parser
 
 import java.util.*
 

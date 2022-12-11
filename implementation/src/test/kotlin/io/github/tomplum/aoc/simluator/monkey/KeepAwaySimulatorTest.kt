@@ -3,6 +3,8 @@ package io.github.tomplum.aoc.simluator.monkey
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import io.github.tomplum.aoc.input.TestInputReader
+import io.github.tomplum.aoc.simluator.monkey.parser.MonkeyNoteParser
+import io.github.tomplum.aoc.simluator.monkey.parser.MonkeyTroop
 import io.github.tomplum.aoc.simluator.monkey.strategy.RidiculousWorryRelief
 import io.github.tomplum.aoc.simluator.monkey.strategy.WorryRelief
 import org.junit.jupiter.api.Test
@@ -10,7 +12,7 @@ import org.junit.jupiter.api.Test
 class KeepAwaySimulatorTest {
     private val notes = TestInputReader.read<String>("day11/example.txt").value
     private val monkeys = MonkeyNoteParser().parse(notes)
-    private val simulator = KeepAwaySimulator(monkeys)
+    private val simulator = KeepAwaySimulator(MonkeyTroop(monkeys))
 
     @Test
     fun examplePartOne() {

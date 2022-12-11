@@ -1,5 +1,6 @@
 package io.github.tomplum.aoc.simluator.monkey
 
+import io.github.tomplum.aoc.simluator.monkey.parser.MonkeyTroop
 import io.github.tomplum.aoc.simluator.monkey.strategy.WorryLevelStrategy
 
 class KeepAwaySimulator(private val troop: MonkeyTroop) {

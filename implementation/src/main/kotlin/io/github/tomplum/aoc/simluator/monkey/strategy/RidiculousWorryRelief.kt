@@ -1,6 +1,6 @@
 package io.github.tomplum.aoc.simluator.monkey.strategy
 
-import io.github.tomplum.aoc.simluator.monkey.Monkey
+import io.github.tomplum.aoc.simluator.monkey.parser.Monkey
 
 class RidiculousWorryRelief(monkeys: List<Monkey>) : WorryLevelStrategy {
 

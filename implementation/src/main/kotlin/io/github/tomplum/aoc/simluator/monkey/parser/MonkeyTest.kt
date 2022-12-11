@@ -1,4 +1,4 @@
-package io.github.tomplum.aoc.simluator.monkey
+package io.github.tomplum.aoc.simluator.monkey.parser
 
 class MonkeyTest(instructions: List<String>) {
     private val trueTarget = instructions[1].trim().removePrefix("If true: throw to monkey ").trim().toInt()
