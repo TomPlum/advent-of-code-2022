@@ -5,12 +5,12 @@ import io.github.tomplum.libs.input.Day
 import io.github.tomplum.libs.input.InputReader
 import io.github.tomplum.libs.solutions.Solution
 
-class Day11 : Solution<Int, Int> {
+class Day11 : Solution<Long, Long> {
 
     private val notes = InputReader.read<String>(Day(11)).value
     private val simulator = KeepAwaySimulator(notes)
 
-    override fun part1(): Int {
+    override fun part1(): Long {
         return simulator.simulate(20)
     }
 }

@@ -13,4 +13,9 @@ class KeepAwaySimulatorTest {
     fun examplePartOne() {
         assertThat(simulator.simulate(20)).isEqualTo(10605)
     }
+
+    @Test
+    fun examplePartTwo() {
+        assertThat(simulator.simulate(10000)).isEqualTo(2713310158)
+    }
 }

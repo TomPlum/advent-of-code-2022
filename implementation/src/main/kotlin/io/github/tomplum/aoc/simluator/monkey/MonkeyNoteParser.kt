@@ -6,7 +6,7 @@ class MonkeyNoteParser {
         monkeys
     }.map { lines ->
         val id = lines[0].removePrefix("Monkey ").first().toString().toInt()
-        val startingItems = lines[1].trim().removePrefix("Starting items: ").split(", ").map { it.toInt() }.toMutableList()
+        val startingItems = lines[1].trim().removePrefix("Starting items: ").split(", ").map { it.toBigInteger() }.toMutableList()
         val operation = MonkeyOperation(lines[2])
         val test = MonkeyTest(lines.subList(3, 6))
         Monkey(id, startingItems, operation, test)
