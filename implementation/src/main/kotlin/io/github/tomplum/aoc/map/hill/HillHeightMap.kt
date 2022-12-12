@@ -26,7 +26,8 @@ class HillHeightMap(data: List<String>) : AdventMap2D<HillTile>() {
     fun findShortestRouteFromLowestElevationToBestSignal(): Int =
         filterTiles { tile -> tile.isLowestPossibleElevation() }
             .map { tile -> tile.key }
-            .map { startingPosition -> search(startingPosition) }
+            .map { startingPosition -> search2(startingPosition) }
+            .filterNot { distance -> distance == 0 }
             .minOf { distance -> distance }
 
     private fun search(start: Point2D): Int {
@@ -35,7 +36,7 @@ class HillHeightMap(data: List<String>) : AdventMap2D<HillTile>() {
         val next = mutableSetOf(start)
 
         while(next.isNotEmpty()) {
-            val adjacent = next.map { pos -> pos.traversableAdjacent() }.reduce { a, b -> a + b }
+            val adjacent = next.map { pos -> pos.traversableAdjacent(start) }.reduce { a, b -> a + b }
             visited.addAll(next)
             next.clear()
 
@@ -52,10 +53,33 @@ class HillHeightMap(data: List<String>) : AdventMap2D<HillTile>() {
         return steps
     }
 
-    private fun Point2D.traversableAdjacent(): Map<Point2D, HillTile> {
+    private fun search2(start: Point2D): Int {
+        var steps = 0
+        val visited = mutableSetOf<Point2D>()
+        val next = mutableSetOf(start)
+
+        while(next.isNotEmpty()) {
+            val adjacent = next.map { pos -> pos.traversableAdjacent(start) }.reduce { a, b -> a + b }
+            visited.addAll(next)
+            next.clear()
+
+            val traversable = adjacent.filterKeys { dest -> dest !in visited }
+            next.addAll(traversable.keys)
+
+            steps++
+
+            if (adjacent.count { tile -> tile.value.isBestSignal() } == 1) {
+                return steps
+            }
+        }
+
+        return 0
+    }
+
+    private fun Point2D.traversableAdjacent(start: Point2D): Map<Point2D, HillTile> {
         return this.orthogonallyAdjacent()
             .filter { pos -> hasRecorded(pos) }
-            .filter { dest -> getTile(this).canClimbTo(getTile(dest)) }
+            .filter { dest -> dest != start && getTile(dest).height() - getTile(this).height() <= 1 }
             .associateWith { adj -> getTile(adj) }
     }
 }

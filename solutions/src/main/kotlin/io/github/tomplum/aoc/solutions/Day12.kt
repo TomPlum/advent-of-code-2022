@@ -13,4 +13,8 @@ class Day12 : Solution<Int, Int> {
     override fun part1(): Int {
         return hillHeightMap.findShortestRouteToBestSignal()
     }
+
+    override fun part2(): Int {
+        return hillHeightMap.findShortestRouteFromLowestElevationToBestSignal()
+    }
 }
