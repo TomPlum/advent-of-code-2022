@@ -13,11 +13,7 @@ class HillTile(private val marker: Char) : MapTile<Char>(marker) {
 
     fun isLowestPossibleElevation() = marker == 'a' || isCurrentPosition()
 
-    fun heightDifference(dest: HillTile): Int {
-        return dest.height() - this.height()
-    }
-
-    fun height() = when {
+    private fun height() = when {
         isCurrentPosition() -> 'a'.code
         isBestSignal() -> 'z'.code
         else -> marker.code
