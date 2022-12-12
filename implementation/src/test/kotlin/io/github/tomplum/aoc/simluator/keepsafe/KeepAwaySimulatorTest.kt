@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test
 class KeepAwaySimulatorTest {
     private val notes = TestInputReader.read<String>("day11/example.txt").value
     private val monkeys = MonkeyNoteParser().parse(notes)
-    private val simulator = KeepAwaySimulator(MonkeyTroop(monkeys))
+    private val simulator = KeepAwaySimulator(monkeys)
 
     @Test
     fun examplePartOne() {
