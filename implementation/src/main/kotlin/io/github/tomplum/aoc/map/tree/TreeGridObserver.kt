@@ -1,4 +1,4 @@
-package io.github.tomplum.aoc.map
+package io.github.tomplum.aoc.map.tree
 
 class TreeGridObserver(heightMapData: List<String>) {
 

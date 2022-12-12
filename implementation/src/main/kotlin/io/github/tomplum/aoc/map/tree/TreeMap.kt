@@ -1,4 +1,4 @@
-package io.github.tomplum.aoc.map
+package io.github.tomplum.aoc.map.tree
 
 import io.github.tomplum.libs.extensions.product
 import io.github.tomplum.libs.math.Direction
