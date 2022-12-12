@@ -23,6 +23,12 @@ class HillHeightMap(data: List<String>) : AdventMap2D<HillTile>() {
         return search(startingPosition)
     }
 
+    fun findShortestRouteFromLowestElevationToBestSignal(): Int =
+        filterTiles { tile -> tile.isLowestPossibleElevation() }
+            .map { tile -> tile.key }
+            .map { startingPosition -> search(startingPosition) }
+            .minOf { distance -> distance }
+
     private fun search(start: Point2D): Int {
         var steps = 0
         val visited = mutableSetOf<Point2D>()

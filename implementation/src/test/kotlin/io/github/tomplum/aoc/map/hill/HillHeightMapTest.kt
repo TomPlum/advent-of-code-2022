@@ -13,4 +13,9 @@ class HillHeightMapTest {
     fun examplePartOne() {
         assertThat(heightMap.findShortestRouteToBestSignal()).isEqualTo(31)
     }
+
+    @Test
+    fun examplePartTwo() {
+        assertThat(heightMap.findShortestRouteFromLowestElevationToBestSignal()).isEqualTo(29)
+    }
 }
