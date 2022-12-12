@@ -14,7 +14,7 @@ class HillTile(marker: Char) : MapTile<Char>(marker) {
         else -> marker.code
     }
 
-    fun canClimbTo(dest: HillTile): Boolean {
+    fun canTraverseTo(dest: HillTile): Boolean {
         return dest.height - this.height <= 1
     }
 }

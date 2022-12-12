@@ -7,13 +7,21 @@ import java.util.PriorityQueue
 class HillHeightMap(data: List<String>) : AdventMap2D<HillTile>() {
 
     private val adjacencyMatrix = mutableMapOf<Point2D, Set<Point2D>>()
+    private lateinit var bestSignalPosition: Point2D
 
     init {
         var x = 0
         var y = 0
         data.forEach { row ->
             row.forEach { column ->
-                addTile(Point2D(x, y), HillTile(column))
+                val tile = HillTile(column)
+                val position = Point2D(x, y)
+
+                if (tile.isBestSignal) {
+                    bestSignalPosition = position
+                }
+
+                addTile(position, tile)
                 x++
             }
             x = 0
@@ -50,8 +58,7 @@ class HillHeightMap(data: List<String>) : AdventMap2D<HillTile>() {
             }
         }
 
-        val end = filterTiles { tile -> tile.isBestSignal }.keys.first()
-        return distances.filterKeys { pos -> pos == end }.values.min()
+        return distances.filterKeys { pos -> pos == bestSignalPosition }.values.min()
     }
 
     private fun Point2D.traversableAdjacent(): Set<Point2D> {
@@ -60,7 +67,7 @@ class HillHeightMap(data: List<String>) : AdventMap2D<HillTile>() {
         if (cached == null) {
             val adjacent = this.orthogonallyAdjacent()
                 .filter { pos -> hasRecorded(pos) }
-                .filter { dest -> getTile(this).canClimbTo(getTile(dest)) }
+                .filter { dest -> getTile(this).canTraverseTo(getTile(dest)) }
                 .toSet()
             adjacencyMatrix[this] = adjacent
             return adjacent
