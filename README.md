@@ -56,7 +56,7 @@ tests in the `common`, `implementation` and `solutions` Gradle sub-projects as w
 | 09  | 6081          | 100ms    | 2487          | 125ms    | [Rope Bridge](docs/DAY09.MD)             |
 | 10  | 13480         | 6ms      | EGJBGCFK      | 549ms    | [Cathode-Ray Tube](docs/DAY10.MD)        |
 | 11  | 111210        | 3ms      | 15447387620   | 110ms    | [Monkey in the Middle](docs/DAY11.MD)    |
-| 12  | 484           | 169ms    | 478           | 83ms     | [Hill Climbing Algorithm](docs/DAY12.MD) |
+| 12  | 484           | 169ms    | 478           | 37ms     | [Hill Climbing Algorithm](docs/DAY12.MD) |
 | 13  | -             | -        | -             | -        | [](docs/DAY13.MD)                        |
 | 14  | -             | -        | -             | -        | [](docs/DAY14.MD)                        |
 | 15  | -             | -        | -             | -        | [](docs/DAY15.MD)                        |
