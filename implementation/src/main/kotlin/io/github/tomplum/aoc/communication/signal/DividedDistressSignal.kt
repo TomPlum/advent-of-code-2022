@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode
 import com.fasterxml.jackson.databind.node.IntNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.github.tomplum.extension.splitNewLine
-import io.github.tomplum.libs.logging.AdventLogger
 
 class DividedDistressSignal(data: List<String>) {
 
@@ -37,16 +36,13 @@ class DividedDistressSignal(data: List<String>) {
     }
 
     private fun compare(first: JsonNode, second: JsonNode): Int {
-        AdventLogger.debug("- Compare $first vs $second")
         if (first is IntNode && second is IntNode) {
             val leftInt = first.numberValue().toInt()
             val rightInt = second.numberValue().toInt()
 
             return if (leftInt < rightInt) {
-                AdventLogger.debug("- Left side is smaller, so inputs are in the right order")
                 1
             } else if (leftInt > rightInt) {
-                AdventLogger.debug("- Right side is smaller, so inputs are in the wrong order")
                 -1
             } else {
                 0
@@ -59,10 +55,8 @@ class DividedDistressSignal(data: List<String>) {
             }
 
             return if (first.size() < second.size()) {
-                AdventLogger.debug("- Left side ran out of items, so inputs are in the right order")
                 1
             } else if (first.size() > second.size()) {
-                AdventLogger.debug("- Right side ran out of items, so inputs are in the wrong order")
                 -1
             } else {
                 0
@@ -70,12 +64,10 @@ class DividedDistressSignal(data: List<String>) {
         } else if (first is IntNode && second is ArrayNode) {
             val arrayNode = objectMapper.createArrayNode()
             arrayNode.add(first)
-            AdventLogger.debug("- Mixed types; convert left to $arrayNode and retry comparison")
             return compare(arrayNode, second)
         } else if (first is ArrayNode && second is IntNode) {
             val arrayNode = objectMapper.createArrayNode()
             arrayNode.add(second)
-            AdventLogger.debug("- Mixed types; convert right to $arrayNode and retry comparison")
             return compare(first, arrayNode)
         }
 

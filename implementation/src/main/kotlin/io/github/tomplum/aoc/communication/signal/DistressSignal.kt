@@ -24,16 +24,7 @@ class DistressSignal(data: List<String>) {
 
     inner class PacketPair(val index: Int, private val first: ArrayNode, private val second: ArrayNode) {
         fun inCorrectOrder(): Boolean {
-            AdventLogger.debug("== Pair $index ===")
-            AdventLogger.debug("- Compare $first vs $second")
-            val result = compare(first, second)
-            if (result == 1) {
-                AdventLogger.debug("Right order confirmed\n")
-                return true
-            }
-
-            AdventLogger.debug("Wrong order confirmed\n")
-            return false
+            return compare(first, second) == -1
         }
 
         private fun compare(first: JsonNode, second: JsonNode): Int {
@@ -43,10 +34,8 @@ class DistressSignal(data: List<String>) {
                 val rightInt = second.numberValue().toInt()
 
                 return if (leftInt < rightInt) {
-                    AdventLogger.debug("- Left side is smaller, so inputs are in the right order")
                     1
                 } else if (leftInt > rightInt) {
-                    AdventLogger.debug("- Right side is smaller, so inputs are in the wrong order")
                     -1
                 } else {
                     0
@@ -59,30 +48,15 @@ class DistressSignal(data: List<String>) {
                 }
 
                 return if (first.size() < second.size()) {
-                    AdventLogger.debug("- Left side ran out of items, so inputs are in the right order")
                     1
                 } else if (first.size() > second.size()) {
-                    AdventLogger.debug("- Right side ran out of items, so inputs are in the wrong order")
                     -1
                 } else {
                     0
                 }
-
-               /* first.forEachIndexed { i, firstValue ->
-                    if (!second.has(i)) {
-                        return 1
-                    }
-                    val result = compare(firstValue, second[i])
-                    if (result != 0) {
-                        return result
-                    }
-                }
-
-                return if (first.size() == second.size()) 0 else -1*/
             } else if (first is IntNode && second is ArrayNode) {
                 val arrayNode = objectMapper.createArrayNode()
                 arrayNode.add(first)
-                AdventLogger.debug("- Mixed types; convert left to $arrayNode and retry comparison")
                 return compare(arrayNode, second)
             } else if (first is ArrayNode && second is IntNode) {
                 val arrayNode = objectMapper.createArrayNode()
