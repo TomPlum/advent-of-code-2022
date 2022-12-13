@@ -25,36 +25,51 @@ class DistressSignal(data: List<String>) {
 
     fun findDecoderKey(): Int {
         val packets = (this.packets + listOf(firstDividerPacket, secondDividerPacket)).toMutableList()
-        packets.sortWith { a, b -> compare(b.value, a.value) }
+        packets.sortWith { a, b -> Pair(b.value, a.value).compare() }
         return (packets.indexOf(firstDividerPacket) + 1) * (packets.indexOf(secondDividerPacket) + 1)
     }
 
-    inner class PacketPair(val index: Int, private val first: Packet, private val second: Packet) {
-        fun isCorrectlyOrdered(): Boolean {
-            return compare(first.value, second.value) >= 1
+    inner class Pair(private val left: JsonNode, private val right: JsonNode) {
+        val areBothIntegers get() = left is IntNode && right is IntNode
+        val areBothLists get() = left is ArrayNode && right is ArrayNode
+
+        val leftIsList get() = left is ArrayNode && right is IntNode
+        val rightIsList get() = left is IntNode && right is ArrayNode
+
+        val valueDifference get() = right.intValue() - left.intValue()
+        val sizeDifference get() = right.size() - left.size()
+
+        val range get() = (0 until listOf(left, right).minOf { list -> list.size() })
+
+        fun childAt(index: Int) = Pair(left[index], right[index])
+
+        fun toLists() = when {
+            leftIsList -> Pair(left, right.toArray())
+            rightIsList -> Pair(left.toArray(), right)
+            else -> this
         }
+
+        operator fun component1() = left
+        operator fun component2() = right
     }
 
-    private fun compare(left: JsonNode, right: JsonNode): Int {
-        if (left is IntNode && right is IntNode) {
-            return right.intValue() - left.intValue()
-        } else if (left is ArrayNode && right is ArrayNode) {
-            val smallestListSize = listOf(left, right).minOf { it.size() } - 1
-            (0..smallestListSize).forEach { i ->
-                val result = compare(left[i], right[i])
-                if (result != 0) {
-                    return compare(left[i], right[i])
+    private fun Pair.compare(): Int {
+        when {
+            areBothIntegers -> return valueDifference
+            areBothLists -> {
+                range.forEach { i ->
+                    val childPair = childAt(i)
+                    val result = childPair.compare()
+                    if (result != 0) {
+                        return childPair.compare()
+                    }
                 }
+
+                return sizeDifference
             }
-
-            return right.size() - left.size()
-        } else if (left is IntNode && right is ArrayNode) {
-            return compare(left.toArray(), right)
-        } else if (left is ArrayNode && right is IntNode) {
-            return compare(left, right.toArray())
+            rightIsList || leftIsList -> return toLists().compare()
+            else -> throw IllegalArgumentException("Cannot compare $this")
         }
-
-        throw IllegalArgumentException("Cannot compare $left and $right")
     }
 
     private fun getDividerPacketWithValue(value: Int): Packet {
@@ -65,9 +80,13 @@ class DistressSignal(data: List<String>) {
         return Packet.fromDataStream(0, data)
     }
 
-    private fun IntNode.toArray(): ArrayNode {
+    private fun JsonNode.toArray(): ArrayNode {
         val arrayNode = objectMapper.createArrayNode()
         arrayNode.add(this)
         return arrayNode
+    }
+
+    private fun PacketPair.isCorrectlyOrdered(): Boolean {
+        return Pair(first.value, second.value).compare() >= 1
     }
 }
