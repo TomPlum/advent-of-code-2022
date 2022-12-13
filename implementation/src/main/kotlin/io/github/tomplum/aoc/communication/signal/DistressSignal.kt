@@ -4,8 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.ArrayNode
 import com.fasterxml.jackson.databind.node.IntNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import io.github.tomplum.extension.splitNewLine
-import io.github.tomplum.libs.logging.AdventLogger
 
 class DistressSignal(data: List<String>) {
 
@@ -13,8 +11,8 @@ class DistressSignal(data: List<String>) {
     private val firstDividerPacket = getDividerPacketWithValue(2)
     private val secondDividerPacket = getDividerPacketWithValue(6)
 
-    private val packets = data.splitNewLine().flatMap { pair ->
-        pair.map { list -> objectMapper.readTree(list) } as List<ArrayNode>
+    private val packets = data.filter { line -> line.isNotBlank() }.mapIndexed { index, data ->
+        Packet.fromDataStream(index + 1, objectMapper.readTree(data))
     }
 
     private val pairs = packets.chunked(2).mapIndexed { i, packets ->
@@ -26,19 +24,18 @@ class DistressSignal(data: List<String>) {
     }
 
     fun findDecoderKey(): Int {
-        val packets: MutableList<ArrayNode> = (this.packets + listOf(firstDividerPacket, secondDividerPacket)).toMutableList()
-        packets.sortWith { a, b -> compare(b, a) }
+        val packets = (this.packets + listOf(firstDividerPacket, secondDividerPacket)).toMutableList()
+        packets.sortWith { a, b -> compare(b.value, a.value) }
         return (packets.indexOf(firstDividerPacket) + 1) * (packets.indexOf(secondDividerPacket) + 1)
     }
 
-    inner class PacketPair(val index: Int, private val first: ArrayNode, private val second: ArrayNode) {
+    inner class PacketPair(val index: Int, private val first: Packet, private val second: Packet) {
         fun inCorrectOrder(): Boolean {
-            return compare(first, second) == 1
+            return compare(first.value, second.value) == 1
         }
     }
 
     private fun compare(first: JsonNode, second: JsonNode): Int {
-        AdventLogger.debug("- Compare $first vs $second")
         if (first is IntNode && second is IntNode) {
             val leftInt = first.numberValue().toInt()
             val rightInt = second.numberValue().toInt()
@@ -71,18 +68,17 @@ class DistressSignal(data: List<String>) {
         } else if (first is ArrayNode && second is IntNode) {
             val arrayNode = objectMapper.createArrayNode()
             arrayNode.add(second)
-            AdventLogger.debug("- Mixed types; convert right to $arrayNode and retry comparison")
             return compare(first, arrayNode)
         }
 
         throw IllegalArgumentException("Cannot compare $first and $second")
     }
 
-    private fun getDividerPacketWithValue(value: Int): ArrayNode {
-        val packet = objectMapper.createArrayNode()
+    private fun getDividerPacketWithValue(value: Int): Packet {
+        val data = objectMapper.createArrayNode()
         val leftInner = objectMapper.createArrayNode()
         leftInner.add(IntNode(value))
-        packet.add(leftInner)
-        return packet
+        data.add(leftInner)
+        return Packet.fromDataStream(0, data)
     }
 }
