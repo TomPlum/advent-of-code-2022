@@ -11,6 +11,12 @@ class PacketComparison(private val left: JsonNode, private val right: JsonNode) 
     operator fun component1() = left
     operator fun component2() = right
 
+    companion object {
+        fun fromPacketPair(pair: PacketPair): PacketComparison {
+            return PacketComparison(pair.first.value, pair.second.value)
+        }
+    }
+
     val areBothIntegers get() = left is IntNode && right is IntNode
     val areBothLists get() = left is ArrayNode && right is ArrayNode
 

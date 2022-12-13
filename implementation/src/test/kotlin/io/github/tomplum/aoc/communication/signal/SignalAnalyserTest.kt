@@ -5,17 +5,18 @@ import assertk.assertions.isEqualTo
 import io.github.tomplum.aoc.input.TestInputReader
 import org.junit.jupiter.api.Test
 
-class DistressSignalTest {
+class SignalAnalyserTest {
     private val data = TestInputReader.read<String>("day13/example.txt").value
     private val distressSignal = DistressSignal(data)
+    private val signalAnalyser = SignalAnalyser(distressSignal)
 
     @Test
     fun examplePartOne() {
-        assertThat(distressSignal.findCorrectlyOrderedPacketPairs()).isEqualTo(13)
+        assertThat(signalAnalyser.findCorrectlyOrderedPacketPairs()).isEqualTo(13)
     }
 
     @Test
     fun examplePartTwo() {
-        assertThat(distressSignal.findDecoderKey()).isEqualTo(140)
+        assertThat(signalAnalyser.findDecoderKey()).isEqualTo(140)
     }
 }
