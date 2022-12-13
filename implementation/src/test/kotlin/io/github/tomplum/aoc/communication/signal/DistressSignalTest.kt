@@ -11,7 +11,7 @@ class DistressSignalTest {
 
     @Test
     fun examplePartOne() {
-        assertThat(distressSignal.determinePacketPairOrdering()).isEqualTo(13)
+        assertThat(distressSignal.findCorrectlyOrderedPacketPairs()).isEqualTo(13)
     }
 
     @Test

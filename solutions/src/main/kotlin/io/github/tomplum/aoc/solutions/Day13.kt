@@ -10,7 +10,7 @@ class Day13 : Solution<Int, Int> {
     private val distressSignal = DistressSignal(data)
 
     override fun part1(): Int {
-        return distressSignal.determinePacketPairOrdering()
+        return distressSignal.findCorrectlyOrderedPacketPairs()
     }
 
     override fun part2(): Int {
