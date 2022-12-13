@@ -16,6 +16,6 @@ class DistressSignalTest {
 
     @Test
     fun examplePartTwo() {
-        assertThat(DividedDistressSignal(data).findDecoderKey()).isEqualTo(140)
+        assertThat(distressSignal.findDecoderKey()).isEqualTo(140)
     }
 }
