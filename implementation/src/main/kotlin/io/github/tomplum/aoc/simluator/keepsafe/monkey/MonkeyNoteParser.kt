@@ -2,6 +2,7 @@ package io.github.tomplum.aoc.simluator.keepsafe.monkey
 
 import java.util.*
 import io.github.tomplum.aoc.simluator.keepsafe.KeepAway
+import io.github.tomplum.extension.splitNewLine
 
 class MonkeyNoteParser {
     /**
@@ -12,14 +13,7 @@ class MonkeyNoteParser {
      * @param notes A list of notes that describe the state of the monkeys
      * @return A list of monkey participants that form a [MonkeyTroop]
      */
-    fun parse(notes: List<String>) = notes.fold(mutableListOf<MutableList<String>>(mutableListOf())) { monkeys, line ->
-        if (line.isNotBlank()) {
-            monkeys.last().add(line)
-        } else {
-            monkeys.add(mutableListOf())
-        }
-        monkeys
-    }.map { lines ->
+    fun parse(notes: List<String>) = notes.splitNewLine().map { lines ->
         val id = lines[0].removePrefix("Monkey ").first().toString().toInt()
         val startingItems = lines[1].trim()
             .removePrefix("Starting items: ").split(", ")

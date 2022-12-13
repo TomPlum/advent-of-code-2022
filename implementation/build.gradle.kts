@@ -12,7 +12,11 @@ dependencies {
     implementation(project(":implementation:common"))
     testImplementation(project(":implementation:test-support"))
 
+    //implementation("com.fasterxml.jackson.core:jackson-core:2.14.1")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.1")
+
     testImplementation("io.mockk:mockk:1.13.2")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
 }
 
 subprojects {
