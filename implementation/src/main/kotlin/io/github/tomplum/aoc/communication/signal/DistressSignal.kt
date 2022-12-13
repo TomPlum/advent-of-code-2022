@@ -51,7 +51,9 @@ class DistressSignal(data: List<String>) {
             val smallestListSize = listOf(first, second).minOf { it.size() } - 1
             IntRange(0, smallestListSize).forEach { i ->
                 val result = compare(first[i], second[i])
-                if (result != 0) return compare(first[i], second[i])
+                if (result != 0) {
+                    return compare(first[i], second[i])
+                }
             }
 
             return if (first.size() < second.size()) {
@@ -62,13 +64,9 @@ class DistressSignal(data: List<String>) {
                 0
             }
         } else if (first is IntNode && second is ArrayNode) {
-            val arrayNode = objectMapper.createArrayNode()
-            arrayNode.add(first)
-            return compare(arrayNode, second)
+            return compare(first.toArray(), second)
         } else if (first is ArrayNode && second is IntNode) {
-            val arrayNode = objectMapper.createArrayNode()
-            arrayNode.add(second)
-            return compare(first, arrayNode)
+            return compare(first, second.toArray())
         }
 
         throw IllegalArgumentException("Cannot compare $first and $second")
@@ -80,5 +78,11 @@ class DistressSignal(data: List<String>) {
         leftInner.add(IntNode(value))
         data.add(leftInner)
         return Packet.fromDataStream(0, data)
+    }
+
+    private fun IntNode.toArray(): ArrayNode {
+        val arrayNode = objectMapper.createArrayNode()
+        arrayNode.add(this)
+        return arrayNode
     }
 }
