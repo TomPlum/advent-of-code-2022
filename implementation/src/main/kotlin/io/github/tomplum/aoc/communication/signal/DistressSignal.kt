@@ -1,7 +1,5 @@
 package io.github.tomplum.aoc.communication.signal
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ArrayNode
 import com.fasterxml.jackson.databind.node.IntNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 
@@ -25,35 +23,11 @@ class DistressSignal(data: List<String>) {
 
     fun findDecoderKey(): Int {
         val packets = (this.packets + listOf(firstDividerPacket, secondDividerPacket)).toMutableList()
-        packets.sortWith { a, b -> Pair(b.value, a.value).compare() }
+        packets.sortWith { a, b -> PacketComparison(b.value, a.value).compare() }
         return (packets.indexOf(firstDividerPacket) + 1) * (packets.indexOf(secondDividerPacket) + 1)
     }
 
-    inner class Pair(private val left: JsonNode, private val right: JsonNode) {
-        val areBothIntegers get() = left is IntNode && right is IntNode
-        val areBothLists get() = left is ArrayNode && right is ArrayNode
-
-        val leftIsList get() = left is ArrayNode && right is IntNode
-        val rightIsList get() = left is IntNode && right is ArrayNode
-
-        val valueDifference get() = right.intValue() - left.intValue()
-        val sizeDifference get() = right.size() - left.size()
-
-        val range get() = (0 until listOf(left, right).minOf { list -> list.size() })
-
-        fun childAt(index: Int) = Pair(left[index], right[index])
-
-        fun toLists() = when {
-            leftIsList -> Pair(left, right.toArray())
-            rightIsList -> Pair(left.toArray(), right)
-            else -> this
-        }
-
-        operator fun component1() = left
-        operator fun component2() = right
-    }
-
-    private fun Pair.compare(): Int {
+    private fun PacketComparison.compare(): Int {
         when {
             areBothIntegers -> return valueDifference
             areBothLists -> {
@@ -80,13 +54,7 @@ class DistressSignal(data: List<String>) {
         return Packet.fromDataStream(0, data)
     }
 
-    private fun JsonNode.toArray(): ArrayNode {
-        val arrayNode = objectMapper.createArrayNode()
-        arrayNode.add(this)
-        return arrayNode
-    }
-
     private fun PacketPair.isCorrectlyOrdered(): Boolean {
-        return Pair(first.value, second.value).compare() >= 1
+        return PacketComparison(first.value, second.value).compare() >= 1
     }
 }
