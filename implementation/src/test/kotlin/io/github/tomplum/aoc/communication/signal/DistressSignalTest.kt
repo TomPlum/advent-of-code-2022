@@ -13,4 +13,9 @@ class DistressSignalTest {
     fun examplePartOne() {
         assertThat(distressSignal.determinePacketPairOrdering()).isEqualTo(13)
     }
+
+    @Test
+    fun examplePartTwo() {
+        assertThat(DividedDistressSignal(data).findDecoderKey()).isEqualTo(140)
+    }
 }
