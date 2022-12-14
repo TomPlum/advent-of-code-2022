@@ -14,4 +14,8 @@ class Day14 : Solution<Int, Int> {
     override fun part1(): Int {
         return simulator.simulate()
     }
+
+    override fun part2(): Int {
+        return simulator.findSafeFloorSpace()
+    }
 }
