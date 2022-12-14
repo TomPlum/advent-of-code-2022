@@ -1,13 +1,12 @@
 package io.github.tomplum.aoc.map.sand
 
-import io.github.tomplum.libs.math.Direction
 import io.github.tomplum.libs.math.Direction.*
 import io.github.tomplum.libs.math.map.AdventMap2D
 import io.github.tomplum.libs.math.point.Point2D
 
 class RegolithReservoir(scan: List<String>) : AdventMap2D<ReservoirTile>() {
 
-    private val entryPoint = Point2D(500, 0)
+    val entryPoint = Point2D(500, 0)
     private val emptySpace = ReservoirTile('.')
     private val sand = ReservoirTile('o')
 
@@ -37,88 +36,23 @@ class RegolithReservoir(scan: List<String>) : AdventMap2D<ReservoirTile>() {
         addTile(entryPoint, ReservoirTile('+'))
     }
 
-    fun produceSand(): Int {
-        var sandPosition = entryPoint
-
-        var units = 0
-
-        var sandFlowingIntoAbyss = false
-
-        while(!sandFlowingIntoAbyss) {
-            var atRest = false
-            var tilesTraversed = 0
-            while(!atRest && !sandFlowingIntoAbyss) {
-                if (tilesTraversed > 180) {
-                    sandFlowingIntoAbyss = true
-                }
-
-                val positionBelow = sandPosition.shift(UP)
-                val tileBelow = getTile(positionBelow, emptySpace)
-                val (isNowResting, newSandPosition, newTilesTraversed) = checkForBlockingTiles(
-                    tileBelow,
-                    sandPosition,
-                    tilesTraversed,
-                    positionBelow
-                )
-                atRest = isNowResting
-                sandPosition = newSandPosition
-                tilesTraversed = newTilesTraversed
-            }
-
-            if (!sandFlowingIntoAbyss) {
-                addTile(sandPosition, ReservoirTile('o'))
-                sandPosition = entryPoint
-                units += 1
-            }
-        }
-
-        return units
+    fun getTile(position: Point2D): ReservoirTile {
+        return getTile(position, emptySpace)
     }
 
-    fun produceSandWithFloor(): Int {
-        var sandPosition = entryPoint
-        val yFloor = yMax()!! + 2
-
-        var units = 0
-
-        var sandBlockingSource = false
-
-        while(!sandBlockingSource) {
-            var atRest = false
-
-            while(!atRest && !sandBlockingSource) {
-                val positionBelow = sandPosition.shift(UP)
-                val tileBelow = getTile(positionBelow, emptySpace)
-
-                if (getTile(entryPoint, emptySpace).isSand()) {
-                    sandBlockingSource = true
-                }
-
-                if (positionBelow.y == yFloor) {
-                    atRest = true
-                } else {
-                    val (isNowResting, newSandPosition) = checkForBlockingTiles(
-                        tileBelow,
-                        sandPosition,
-                        0,
-                        positionBelow
-                    )
-                    atRest = isNowResting
-                    sandPosition = newSandPosition
-                }
-            }
-
-            if (!sandBlockingSource) {
-                addTile(sandPosition, sand)
-                sandPosition = entryPoint
-                units += 1
-            }
-        }
-
-        return units
+    fun addSand(position: Point2D) {
+        addTile(position, sand)
     }
 
-    private fun checkForBlockingTiles(
+    fun getFloorOrdinateY(): Int {
+        return yMax()!! + 2
+    }
+
+    fun isEntryPointBlocked(): Boolean {
+        return getTile(entryPoint, emptySpace).isSand()
+    }
+
+    fun checkForBlockingTiles(
         tileBelow: ReservoirTile,
         sandPosition: Point2D,
         tilesTraversed: Int,
