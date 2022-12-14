@@ -14,6 +14,7 @@ class ReservoirSimulator(private val reservoir: RegolithReservoir) {
         while(!sandFlowingIntoAbyss) {
             var atRest = false
             var tilesTraversed = 0
+
             while(!atRest && !sandFlowingIntoAbyss) {
                 if (tilesTraversed > 180) {
                     sandFlowingIntoAbyss = true
