@@ -45,7 +45,7 @@ class RegolithReservoir(scan: List<String>) : AdventMap2D<ReservoirTile>() {
             var atRest = false
             var tilesTraversed = 0
             while(!atRest && !sandFlowingIntoAbyss) {
-                if (tilesTraversed > 50) {
+                if (tilesTraversed > 1000) {
                     sandFlowingIntoAbyss = true
                 }
 
