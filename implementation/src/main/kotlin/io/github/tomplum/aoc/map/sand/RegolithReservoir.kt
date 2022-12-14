@@ -35,7 +35,7 @@ class RegolithReservoir(scan: List<String>) : AdventMap2D<ReservoirTile>() {
     }
 
     fun produceSand(): Int {
-        var sandPosition = entryPoint.shift(Direction.UP)
+        var sandPosition = entryPoint
 
         var units = 0
 
@@ -49,30 +49,22 @@ class RegolithReservoir(scan: List<String>) : AdventMap2D<ReservoirTile>() {
                     sandFlowingIntoAbyss = true
                 }
 
-                val tileBelow = getTile(sandPosition.shift(Direction.UP), ReservoirTile('.'))
-                if (tileBelow.isSand() || tileBelow.isRock()) {
-                    val tileDiagonallyLeft = getTile(sandPosition.shift(Direction.TOP_LEFT), ReservoirTile('.'))
-                    if (tileDiagonallyLeft.isSand() || tileDiagonallyLeft.isRock()) {
-                        val tileDiagonallyRight = getTile(sandPosition.shift(Direction.TOP_RIGHT), ReservoirTile('.'))
-                        if (tileDiagonallyRight.isSand() || tileDiagonallyRight.isRock()) {
-                            atRest = true
-                        } else {
-                            sandPosition = sandPosition.shift(Direction.TOP_RIGHT)
-                            tilesTraversed += 1
-                        }
-                    } else {
-                        sandPosition = sandPosition.shift(Direction.TOP_LEFT)
-                        tilesTraversed += 1
-                    }
-                } else {
-                    sandPosition = sandPosition.shift(Direction.UP)
-                    tilesTraversed += 1
-                }
+                val positionBelow = sandPosition.shift(Direction.UP)
+                val tileBelow = getTile(positionBelow, ReservoirTile('.'))
+                val (isNowResting, newSandPosition, newTilesTraversed) = checkForBlockingTiles(
+                    tileBelow,
+                    sandPosition,
+                    tilesTraversed,
+                    positionBelow
+                )
+                atRest = isNowResting
+                sandPosition = newSandPosition
+                tilesTraversed = newTilesTraversed
             }
 
             if (!sandFlowingIntoAbyss) {
                 addTile(sandPosition, ReservoirTile('o'))
-                sandPosition = entryPoint.shift(Direction.UP)
+                sandPosition = entryPoint
                 units += 1
             }
         }
@@ -103,24 +95,15 @@ class RegolithReservoir(scan: List<String>) : AdventMap2D<ReservoirTile>() {
                 if (positionBelow.y == yFloor) {
                     atRest = true
                 } else {
-                    if (tileBelow.isSand() || tileBelow.isRock()) {
-                        val tileDiagonallyLeft = getTile(sandPosition.shift(Direction.TOP_LEFT), ReservoirTile('.'))
-                        if (tileDiagonallyLeft.isSand() || tileDiagonallyLeft.isRock()) {
-                            val tileDiagonallyRight = getTile(sandPosition.shift(Direction.TOP_RIGHT), ReservoirTile('.'))
-                            if (tileDiagonallyRight.isSand() || tileDiagonallyRight.isRock()) {
-                                atRest = true
-                            } else {
-                                sandPosition = sandPosition.shift(Direction.TOP_RIGHT)
-                                tilesTraversed += 1
-                            }
-                        } else {
-                            sandPosition = sandPosition.shift(Direction.TOP_LEFT)
-                            tilesTraversed += 1
-                        }
-                    } else {
-                        sandPosition = positionBelow
-                        tilesTraversed += 1
-                    }
+                    val (isNowResting, newSandPosition, newTilesTraversed) = checkForBlockingTiles(
+                        tileBelow,
+                        sandPosition,
+                        tilesTraversed,
+                        positionBelow
+                    )
+                    atRest = isNowResting
+                    sandPosition = newSandPosition
+                    tilesTraversed = newTilesTraversed
                 }
             }
 
@@ -132,6 +115,38 @@ class RegolithReservoir(scan: List<String>) : AdventMap2D<ReservoirTile>() {
         }
 
         return units
+    }
+
+    private fun checkForBlockingTiles(
+        tileBelow: ReservoirTile,
+        sandPosition: Point2D,
+        tilesTraversed: Int,
+        positionBelow: Point2D
+    ): Triple<Boolean, Point2D, Int> {
+        var newSandPosition = sandPosition
+        var atRest = false
+        var newTilesTraversed = tilesTraversed
+
+        if (tileBelow.isSand() || tileBelow.isRock()) {
+            val tileDiagonallyLeft = getTile(newSandPosition.shift(Direction.TOP_LEFT), ReservoirTile('.'))
+            if (tileDiagonallyLeft.isSand() || tileDiagonallyLeft.isRock()) {
+                val tileDiagonallyRight = getTile(newSandPosition.shift(Direction.TOP_RIGHT), ReservoirTile('.'))
+                if (tileDiagonallyRight.isSand() || tileDiagonallyRight.isRock()) {
+                    atRest = true
+                } else {
+                    newSandPosition = newSandPosition.shift(Direction.TOP_RIGHT)
+                    newTilesTraversed += 1
+                }
+            } else {
+                newSandPosition = newSandPosition.shift(Direction.TOP_LEFT)
+                newTilesTraversed += 1
+            }
+        } else {
+            newSandPosition = positionBelow
+            newTilesTraversed += 1
+        }
+
+        return Triple(atRest, newSandPosition, newTilesTraversed)
     }
 
 }
