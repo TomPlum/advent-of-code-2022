@@ -1,12 +1,15 @@
 package io.github.tomplum.aoc.map.sand
 
 import io.github.tomplum.libs.math.Direction
+import io.github.tomplum.libs.math.Direction.*
 import io.github.tomplum.libs.math.map.AdventMap2D
 import io.github.tomplum.libs.math.point.Point2D
 
 class RegolithReservoir(scan: List<String>) : AdventMap2D<ReservoirTile>() {
 
     private val entryPoint = Point2D(500, 0)
+    private val emptySpace = ReservoirTile('.')
+    private val sand = ReservoirTile('o')
 
     init {
         scan.forEach { path ->
@@ -45,12 +48,12 @@ class RegolithReservoir(scan: List<String>) : AdventMap2D<ReservoirTile>() {
             var atRest = false
             var tilesTraversed = 0
             while(!atRest && !sandFlowingIntoAbyss) {
-                if (tilesTraversed > 1000) {
+                if (tilesTraversed > 180) {
                     sandFlowingIntoAbyss = true
                 }
 
-                val positionBelow = sandPosition.shift(Direction.UP)
-                val tileBelow = getTile(positionBelow, ReservoirTile('.'))
+                val positionBelow = sandPosition.shift(UP)
+                val tileBelow = getTile(positionBelow, emptySpace)
                 val (isNowResting, newSandPosition, newTilesTraversed) = checkForBlockingTiles(
                     tileBelow,
                     sandPosition,
@@ -82,33 +85,31 @@ class RegolithReservoir(scan: List<String>) : AdventMap2D<ReservoirTile>() {
 
         while(!sandBlockingSource) {
             var atRest = false
-            var tilesTraversed = 0
 
             while(!atRest && !sandBlockingSource) {
-                val positionBelow = sandPosition.shift(Direction.UP)
-                val tileBelow = getTile(positionBelow, ReservoirTile('.'))
+                val positionBelow = sandPosition.shift(UP)
+                val tileBelow = getTile(positionBelow, emptySpace)
 
-                if (getTile(entryPoint, ReservoirTile('.')).isSand()) {
+                if (getTile(entryPoint, emptySpace).isSand()) {
                     sandBlockingSource = true
                 }
 
                 if (positionBelow.y == yFloor) {
                     atRest = true
                 } else {
-                    val (isNowResting, newSandPosition, newTilesTraversed) = checkForBlockingTiles(
+                    val (isNowResting, newSandPosition) = checkForBlockingTiles(
                         tileBelow,
                         sandPosition,
-                        tilesTraversed,
+                        0,
                         positionBelow
                     )
                     atRest = isNowResting
                     sandPosition = newSandPosition
-                    tilesTraversed = newTilesTraversed
                 }
             }
 
             if (!sandBlockingSource) {
-                addTile(sandPosition, ReservoirTile('o'))
+                addTile(sandPosition, sand)
                 sandPosition = entryPoint
                 units += 1
             }
@@ -127,18 +128,18 @@ class RegolithReservoir(scan: List<String>) : AdventMap2D<ReservoirTile>() {
         var atRest = false
         var newTilesTraversed = tilesTraversed
 
-        if (tileBelow.isSand() || tileBelow.isRock()) {
-            val tileDiagonallyLeft = getTile(newSandPosition.shift(Direction.TOP_LEFT), ReservoirTile('.'))
-            if (tileDiagonallyLeft.isSand() || tileDiagonallyLeft.isRock()) {
-                val tileDiagonallyRight = getTile(newSandPosition.shift(Direction.TOP_RIGHT), ReservoirTile('.'))
-                if (tileDiagonallyRight.isSand() || tileDiagonallyRight.isRock()) {
+        if (tileBelow.isOccupied()) {
+            val tileDiagonallyLeft = getTile(newSandPosition.shift(TOP_LEFT), emptySpace)
+            if (tileDiagonallyLeft.isOccupied()) {
+                val tileDiagonallyRight = getTile(newSandPosition.shift(TOP_RIGHT), emptySpace)
+                if (tileDiagonallyRight.isOccupied()) {
                     atRest = true
                 } else {
-                    newSandPosition = newSandPosition.shift(Direction.TOP_RIGHT)
+                    newSandPosition = newSandPosition.shift(TOP_RIGHT)
                     newTilesTraversed += 1
                 }
             } else {
-                newSandPosition = newSandPosition.shift(Direction.TOP_LEFT)
+                newSandPosition = newSandPosition.shift(TOP_LEFT)
                 newTilesTraversed += 1
             }
         } else {
