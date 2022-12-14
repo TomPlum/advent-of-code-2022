@@ -15,4 +15,9 @@ class ReservoirSimulatorTest {
     fun examplePartOne() {
         assertThat(simulator.simulate()).isEqualTo(24)
     }
+
+    @Test
+    fun examplePartTwo() {
+        assertThat(simulator.findSafeFloorSpace()).isEqualTo(93)
+    }
 }

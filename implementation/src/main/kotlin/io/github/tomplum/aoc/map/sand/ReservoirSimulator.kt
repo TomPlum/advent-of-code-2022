@@ -4,4 +4,8 @@ class ReservoirSimulator(private val reservoir: RegolithReservoir) {
     fun simulate(): Int {
         return reservoir.produceSand()
     }
+
+    fun findSafeFloorSpace(): Int {
+        return reservoir.produceSandWithFloor()
+    }
 }

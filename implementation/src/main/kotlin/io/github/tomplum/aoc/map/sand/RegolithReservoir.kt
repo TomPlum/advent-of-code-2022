@@ -80,5 +80,58 @@ class RegolithReservoir(scan: List<String>) : AdventMap2D<ReservoirTile>() {
         return units
     }
 
-    inner class SandFlowingIntoAbyssException : Exception()
+    fun produceSandWithFloor(): Int {
+        var sandPosition = entryPoint
+        val yFloor = yMax()!! + 2
+
+        var units = 0
+
+        var sandBlockingSource = false
+
+        while(!sandBlockingSource) {
+            var atRest = false
+            var tilesTraversed = 0
+
+            while(!atRest && !sandBlockingSource) {
+                val positionBelow = sandPosition.shift(Direction.UP)
+                val tileBelow = getTile(positionBelow, ReservoirTile('.'))
+
+                if (getTile(entryPoint, ReservoirTile('.')).isSand()) {
+                    sandBlockingSource = true
+                }
+
+                if (positionBelow.y == yFloor) {
+                    atRest = true
+                } else {
+                    if (tileBelow.isSand() || tileBelow.isRock()) {
+                        val tileDiagonallyLeft = getTile(sandPosition.shift(Direction.TOP_LEFT), ReservoirTile('.'))
+                        if (tileDiagonallyLeft.isSand() || tileDiagonallyLeft.isRock()) {
+                            val tileDiagonallyRight = getTile(sandPosition.shift(Direction.TOP_RIGHT), ReservoirTile('.'))
+                            if (tileDiagonallyRight.isSand() || tileDiagonallyRight.isRock()) {
+                                atRest = true
+                            } else {
+                                sandPosition = sandPosition.shift(Direction.TOP_RIGHT)
+                                tilesTraversed += 1
+                            }
+                        } else {
+                            sandPosition = sandPosition.shift(Direction.TOP_LEFT)
+                            tilesTraversed += 1
+                        }
+                    } else {
+                        sandPosition = positionBelow
+                        tilesTraversed += 1
+                    }
+                }
+            }
+
+            if (!sandBlockingSource) {
+                addTile(sandPosition, ReservoirTile('o'))
+                sandPosition = entryPoint
+                units += 1
+            }
+        }
+
+        return units
+    }
+
 }
