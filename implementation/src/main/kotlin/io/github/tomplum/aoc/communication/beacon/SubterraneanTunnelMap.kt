@@ -1,14 +1,22 @@
 package io.github.tomplum.aoc.communication.beacon
 
-import io.github.tomplum.libs.math.map.AdventMap2D
 import io.github.tomplum.libs.math.point.Point2D
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
-class SubterraneanTunnelMap(data: List<String>) : AdventMap2D<TunnelTile>() {
+class SubterraneanTunnelMap(data: List<String>) {
 
-    val sensors = mutableMapOf<Point2D, TunnelTile>()
+    /**
+     * A map of sensor locations -> their closest beacon location.
+     */
+    val sensors = mutableMapOf<Point2D, Point2D>()
+
+    /**
+     * A map of sensor locations -> the distance to their closest beacon
+     */
+    val distances = mutableMapOf<Point2D, Int>()
+
     private val excludedZones = mutableSetOf<Point2D>()
 
     init {
@@ -19,44 +27,42 @@ class SubterraneanTunnelMap(data: List<String>) : AdventMap2D<TunnelTile>() {
             val beaconData = input.split(" closest beacon is at ")[1].trim().split(", ")
             val beaconPos = Point2D(beaconData[0].removePrefix("x=").toInt(), beaconData[1].removePrefix("y=").toInt())
 
-            val sensor = TunnelTile('S')
-            sensor.closestBeaconPosition = beaconPos
-            addTile(sensorPos, sensor)
-            sensors[sensorPos] = sensor
+            sensors[sensorPos] = beaconPos
+            distances[sensorPos] = sensorPos.distanceBetween(beaconPos)
             excludedZones.add(sensorPos)
-
-            addTile(beaconPos, TunnelTile('B'))
         }
     }
 
-    fun locatePositionsWhereNoBeaconsCanBePresent(y: Int): MutableSet<IntRange> {
+    fun locateExcludedPositions(y: Int): MutableSet<IntRange> {
         val xExclusionZoneRange = mutableSetOf<IntRange>()
-        sensors.forEach { ( position, sensor ) ->
-            val distance = position.distanceBetween(sensor.closestBeaconPosition!!)
-            val dy = y - position.y
+        sensors.keys.forEach { sensor ->
+            val distance = distances[sensor]!!
+            val dy = y - sensor.y
+
             if (abs(dy) > distance) {
                 return@forEach
             }
 
             val dx = distance - abs(dy)
-            xExclusionZoneRange.add(-dx + position.x..dx + position.x)
+            val xRangeWhereNoBeacons = (-dx + sensor.x)..(dx + sensor.x)
+            xExclusionZoneRange.add(xRangeWhereNoBeacons)
         }
 
         return xExclusionZoneRange
     }
 
     fun locateDistressBeacon(yOrdinateMaximum: Int): LongPoint2D {
-        (0..yOrdinateMaximum).forEach { y->
-            val noBeacons = locatePositionsWhereNoBeaconsCanBePresent(y)
+        (0..yOrdinateMaximum).forEach ordinates@{ y ->
+            val noBeacons = locateExcludedPositions(y)
             val ranges = noBeacons.sortedBy { range -> range.first }
             var biggestRange = ranges.first()
             if (biggestRange.first > 0) {
-                return@forEach
+                return@ordinates
             }
 
-            ranges.forEach { range ->
+            ranges.forEach ranges@{ range ->
                 if (biggestRange.contains(range)) {
-                    return@forEach
+                    return@ranges
                 }
 
                 if (biggestRange.overlaps(range) || biggestRange.last + 1 == range.first) {
@@ -76,7 +82,7 @@ class SubterraneanTunnelMap(data: List<String>) : AdventMap2D<TunnelTile>() {
         return this.contains(other.first) || this.contains(other.last) || other.contains(this.first)
     }
 
-    private  fun IntRange.contains(other: IntRange): Boolean {
+    private fun IntRange.contains(other: IntRange): Boolean {
         return this.first <= other.first && other.last <= this.last
     }
 }

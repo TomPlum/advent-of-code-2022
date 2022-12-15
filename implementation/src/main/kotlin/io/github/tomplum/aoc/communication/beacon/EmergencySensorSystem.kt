@@ -5,19 +5,21 @@ class EmergencySensorSystem(data: List<String>) {
     private val subterraneanTunnelMap = SubterraneanTunnelMap(data)
 
     fun calculateBeaconExclusionZoneCount(yAxisOrdinate: Int): Int {
-        val xOrdinates = subterraneanTunnelMap.locatePositionsWhereNoBeaconsCanBePresent(yAxisOrdinate)
-            .flatten().distinct()
+        val exclusions = subterraneanTunnelMap.locateExcludedPositions(yAxisOrdinate)
+            .flatten()
+            .distinct()
 
         val beacons = subterraneanTunnelMap.sensors
-            .map { sensor -> sensor.value.closestBeaconPosition!! }
+            .values
             .filter { point -> point.y == yAxisOrdinate }
             .distinct()
-        return xOrdinates.size - beacons.size
+        
+        return exclusions.size - beacons.size
     }
 
     fun locateDistressBeacon(): Long {
-        val yOrdinateMaximum = 4_000_000
-        val position = subterraneanTunnelMap.locateDistressBeacon(yOrdinateMaximum)
-        return (yOrdinateMaximum * position.x) + position.y // Return tuning frequency
+        val yOrdinateMax = 4_000_000
+        val position = subterraneanTunnelMap.locateDistressBeacon(yOrdinateMax)
+        return (yOrdinateMax * position.x) + position.y // Return tuning frequency
     }
 }
