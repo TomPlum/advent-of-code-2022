@@ -13,4 +13,9 @@ class EmergencySensorSystemTest {
     fun examplePartOne() {
         assertThat(emergencySensorSystem.calculateBeaconExclusionZoneCount(10)).isEqualTo(26)
     }
+
+    @Test
+    fun examplePartTwo() {
+        assertThat(emergencySensorSystem.locateDistressBeacon()).isEqualTo(56000011)
+    }
 }

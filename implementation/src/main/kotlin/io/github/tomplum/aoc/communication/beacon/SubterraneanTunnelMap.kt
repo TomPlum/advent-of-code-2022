@@ -1,14 +1,14 @@
 package io.github.tomplum.aoc.communication.beacon
 
-import io.github.tomplum.libs.math.Direction
-import io.github.tomplum.libs.math.Direction.*
 import io.github.tomplum.libs.math.map.AdventMap2D
 import io.github.tomplum.libs.math.point.Point2D
 import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 
 class SubterraneanTunnelMap(data: List<String>) : AdventMap2D<TunnelTile>() {
 
-    private val sensors = mutableMapOf<Point2D, TunnelTile>()
+    val sensors = mutableMapOf<Point2D, TunnelTile>()
     private val excludedZones = mutableSetOf<Point2D>()
 
     init {
@@ -29,7 +29,7 @@ class SubterraneanTunnelMap(data: List<String>) : AdventMap2D<TunnelTile>() {
         }
     }
 
-    fun doThing(y: Int): Int {
+    fun locatePositionsWhereNoBeaconsCanBePresent(y: Int): MutableSet<IntRange> {
         val xExclusionZoneRange = mutableSetOf<IntRange>()
         sensors.forEach { ( position, sensor ) ->
             val distance = position.distanceBetween(sensor.closestBeaconPosition!!)
@@ -42,19 +42,41 @@ class SubterraneanTunnelMap(data: List<String>) : AdventMap2D<TunnelTile>() {
             xExclusionZoneRange.add(-dx + position.x..dx + position.x)
         }
 
-        val xOrdinatesExcluded = xExclusionZoneRange.flatten().distinct()
-        val beacons = sensors.map { sensor -> sensor.value.closestBeaconPosition!! }.filter { point -> point.y == y }.distinct()
-        return xOrdinatesExcluded.size - beacons.size
+        return xExclusionZoneRange
     }
 
-    private fun Point2D.getSensorRangeQuadrant(distance: Int, horizontal: Direction, vertical: Direction): List<Point2D> {
-        return (0..distance).flatMapIndexed { i, x ->
-            val start = this.shift(horizontal, i)
-            val column = (1..(distance - i)).map { upOffset ->
-                start.shift(vertical, upOffset)
+    fun locateDistressBeacon(yOrdinateMaximum: Int): LongPoint2D {
+        (0..yOrdinateMaximum).forEach { y->
+            val noBeacons = locatePositionsWhereNoBeaconsCanBePresent(y)
+            val ranges = noBeacons.sortedBy { range -> range.first }
+            var biggestRange = ranges.first()
+            if (biggestRange.first > 0) {
+                return@forEach
             }
 
-            column + start
+            ranges.forEach { range ->
+                if (biggestRange.contains(range)) {
+                    return@forEach
+                }
+
+                if (biggestRange.overlaps(range) || biggestRange.last + 1 == range.first) {
+                    biggestRange = min(biggestRange.first, range.first)..max(biggestRange.last, range.last)
+                } else {
+                    return LongPoint2D(biggestRange.last + 1L, y.toLong())
+                }
+            }
         }
+
+        throw IllegalArgumentException("Failed to locate distress beacon in range 0 >= loc <= $yOrdinateMaximum")
+    }
+
+    inner class LongPoint2D(val x: Long, val y: Long)
+
+    private fun IntRange.overlaps(other: IntRange): Boolean {
+        return this.contains(other.first) || this.contains(other.last) || other.contains(this.first)
+    }
+
+    private  fun IntRange.contains(other: IntRange): Boolean {
+        return this.first <= other.first && other.last <= this.last
     }
 }
