@@ -4,6 +4,7 @@ import io.github.tomplum.libs.math.Direction
 import io.github.tomplum.libs.math.Direction.*
 import io.github.tomplum.libs.math.map.AdventMap2D
 import io.github.tomplum.libs.math.point.Point2D
+import kotlin.math.abs
 
 class SubterraneanTunnelMap(data: List<String>) : AdventMap2D<TunnelTile>() {
 
@@ -29,32 +30,21 @@ class SubterraneanTunnelMap(data: List<String>) : AdventMap2D<TunnelTile>() {
     }
 
     fun doThing(y: Int): Int {
-        val exclusionZones = sensors.flatMap { ( position, sensor ) ->
+        val xExclusionZoneRange = mutableSetOf<IntRange>()
+        sensors.forEach { ( position, sensor ) ->
             val distance = position.distanceBetween(sensor.closestBeaconPosition!!)
-            val topLeftQuadrant = position.getSensorRangeQuadrant(distance, LEFT, DOWN)
-            val topRightQuadrant = position.getSensorRangeQuadrant(distance, RIGHT, DOWN)
-            val bottomLeftQuadrant = position.getSensorRangeQuadrant(distance, LEFT, UP)
-            val bottomRightQuadrant = position.getSensorRangeQuadrant(distance, RIGHT, UP)
-
-            /*if (position == Point2D(8, 7)) {
-                (topLeftQuadrant + topRightQuadrant + bottomLeftQuadrant + bottomRightQuadrant).forEach { pos ->
-                    addTile(pos, TunnelTile('O'))
-                }
-                addTile(position, TunnelTile('S'))
-            }*/
-            topLeftQuadrant + topRightQuadrant + bottomLeftQuadrant + bottomRightQuadrant
-        }.distinct()
-
-        exclusionZones.forEach { pos ->
-            val existing = getTile(pos, TunnelTile('.'))
-            if (!existing.hasBeacon() && !existing.hasSensor()) {
-                addTile(pos, TunnelTile('#'))
+            val dy = y - position.y
+            if (abs(dy) > distance) {
+                return@forEach
             }
+
+            val dx = distance - abs(dy)
+            xExclusionZoneRange.add(-dx + position.x..dx + position.x)
         }
 
-        excludedZones.addAll(exclusionZones)
-
-        return exclusionZones.filter { it.y == y }.sortedBy { it.x }.count { getTile(it).isExclusionZone() }
+        val xOrdinatesExcluded = xExclusionZoneRange.flatten().distinct()
+        val beacons = sensors.map { sensor -> sensor.value.closestBeaconPosition!! }.filter { point -> point.y == y }.distinct()
+        return xOrdinatesExcluded.size - beacons.size
     }
 
     private fun Point2D.getSensorRangeQuadrant(distance: Int, horizontal: Direction, vertical: Direction): List<Point2D> {
