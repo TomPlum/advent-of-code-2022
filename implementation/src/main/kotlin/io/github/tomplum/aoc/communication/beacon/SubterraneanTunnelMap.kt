@@ -15,7 +15,7 @@ class SubterraneanTunnelMap(data: List<String>) {
     /**
      * A map of sensor locations -> the distance to their closest beacon
      */
-    val distances = mutableMapOf<Point2D, Int>()
+    private val distances = mutableMapOf<Point2D, Int>()
 
     private val excludedZones = mutableSetOf<Point2D>()
 
