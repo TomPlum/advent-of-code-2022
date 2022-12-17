@@ -12,28 +12,29 @@ class PyroclasticFlow(data: String): AdventMap2D<FlowTile>() {
     private var rockTypeIndex = 0
 
     fun getNextJetPatternDirection(): Direction {
-        if (jetIndex == jetPattern.lastIndex) {
-            jetIndex = 0
-        }
-
         val direction = when(jetPattern[jetIndex]) {
             '>' -> Direction.RIGHT
             '<' -> Direction.LEFT
             else -> throw IllegalArgumentException("Unknown Jet Pattern Direction")
         }
 
-        jetIndex += 1
+        if (jetIndex == jetPattern.lastIndex) {
+            jetIndex = 0
+        } else {
+            jetIndex += 1
+        }
 
         return direction
     }
 
     fun getNextRock(): RockType {
+        val rockType = RockType.values()[rockTypeIndex]
+
         if (rockTypeIndex == 4) {
             rockTypeIndex = 0
+        } else {
+            rockTypeIndex += 1
         }
-
-        val rockType = RockType.values()[rockTypeIndex]
-        rockTypeIndex += 1
 
         return rockType
     }
