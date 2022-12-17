@@ -1,5 +1,6 @@
 package io.github.tomplum.aoc.simluator.tower
 
+import io.github.tomplum.aoc.simluator.tower.rocks.*
 import io.github.tomplum.libs.math.Direction
 import io.github.tomplum.libs.math.map.AdventMap2D
 import io.github.tomplum.libs.math.point.Point2D
@@ -9,7 +10,14 @@ class PyroclasticFlow(data: String): AdventMap2D<FlowTile>() {
     private val jetPattern = data
     private var jetIndex = 0
 
-    private var rockTypeIndex = 0
+    private var rockIndex = 0
+    private val rocks = listOf(
+        HorizontalRock(),
+        PlusRock(),
+        AngleRock(),
+        VerticalRock(),
+        SquareRock()
+    )
 
     fun getNextJetPatternDirection(): Direction {
         val direction = when(jetPattern[jetIndex]) {
@@ -27,16 +35,16 @@ class PyroclasticFlow(data: String): AdventMap2D<FlowTile>() {
         return direction
     }
 
-    fun getNextRock(): RockType {
-        val rockType = RockType.values()[rockTypeIndex]
+    fun getNextRock(): Rock {
+        val rock = rocks[rockIndex]
 
-        if (rockTypeIndex == 4) {
-            rockTypeIndex = 0
+        if (rockIndex == 4) {
+            rockIndex = 0
         } else {
-            rockTypeIndex += 1
+            rockIndex += 1
         }
 
-        return rockType
+        return rock
     }
 
     fun hasAnyRocksResting(positions: List<Point2D>) = positions.any { pos -> hasRecorded(pos) }
