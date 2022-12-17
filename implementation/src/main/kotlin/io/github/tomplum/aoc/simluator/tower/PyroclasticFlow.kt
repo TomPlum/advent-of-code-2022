@@ -9,8 +9,10 @@ class PyroclasticFlow(data: String): AdventMap2D<FlowTile>() {
 
     private val jetPattern = data
     private var jetIndex = 0
+    var jetIsCycling = false
 
     private var rockIndex = 0
+    var rockAreCycling = false
     private val rocks = listOf(
         HorizontalRock(),
         PlusRock(),
@@ -28,8 +30,10 @@ class PyroclasticFlow(data: String): AdventMap2D<FlowTile>() {
 
         if (jetIndex == jetPattern.lastIndex) {
             jetIndex = 0
+            jetIsCycling = true
         } else {
             jetIndex += 1
+            jetIsCycling = false
         }
 
         return direction
@@ -40,8 +44,10 @@ class PyroclasticFlow(data: String): AdventMap2D<FlowTile>() {
 
         if (rockIndex == 4) {
             rockIndex = 0
+            rockAreCycling = true
         } else {
             rockIndex += 1
+            rockAreCycling = false
         }
 
         return rock
@@ -56,5 +62,31 @@ class PyroclasticFlow(data: String): AdventMap2D<FlowTile>() {
         positions.forEach { pos -> addTile(pos, FlowTile('#')) }
     }
 
+    fun getCycleMarkers(y: Int): List<Point2D> {
+        return (1..7).map { x -> Point2D(x, y) }
+    }
+
+    fun addCycleMarker(pos: Point2D) {
+        if (!hasRecorded(pos)) {
+            addTile(pos, FlowTile('-'))
+        }
+    }
+
     fun getHighestRockPosition() = yMax()!!
+
+    fun bump(height: Int) = getDataMap().keys.forEach { pos ->
+        removeTile(pos)
+        addTile(pos.shift(Direction.UP, height), FlowTile('#'))
+    }
+
+    fun getSnapshot() = getDataMap().keys
+
+    fun getTopTwentyRows(): Int {
+        val yMax = yMax()!!
+        return (yMax downTo yMax - 20).flatMap {
+            (1..7).map { x -> getTile(Point2D(x, yMax), FlowTile('.')) }
+        }.joinToString("") {
+            if (it.isRock()) "1" else "0"
+        }.let { binary -> Integer.parseInt(binary, 2) }
+    }
 }

@@ -11,6 +11,11 @@ class PyroclasticFlowSimulatorTest {
 
     @Test
     fun examplePartOne() {
-        assertThat(simulator.simulate()).isEqualTo(3068)
+        assertThat(simulator.simulate(2022)).isEqualTo(3068)
+    }
+
+    @Test
+    fun examplePartTwo() {
+        assertThat(simulator.simulate(1_000_000_000_000)).isEqualTo(1_514_285_714_288)
     }
 }

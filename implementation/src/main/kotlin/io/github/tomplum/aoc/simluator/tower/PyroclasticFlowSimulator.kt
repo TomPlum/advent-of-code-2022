@@ -2,20 +2,44 @@ package io.github.tomplum.aoc.simluator.tower
 
 import io.github.tomplum.libs.logging.AdventLogger
 import io.github.tomplum.libs.math.point.Point2D
+import kotlin.math.floor
 
 class PyroclasticFlowSimulator(data: String) {
 
     private val flow = PyroclasticFlow(data)
 
-    fun simulate(): Int {
+    fun simulate(quantity: Long): Long {
         var currentRock = flow.getNextRock()
         var count = 0
-        var rocks = 0
+        var rocks = 0L
         var x = 3 // Starts 2 units in (left wall == x=1)
         var y = 4 // Starts 3 units above the floor (floor == y=0)
+        val snapshots = mutableListOf<Int>()
 
-        while(rocks < 2022) {
-            //AdventLogger.debug("($x, $y)")
+        var hasJustCycled = false
+        var lastCycleHeight = 0
+        var rocksAtLastCycle = 0L
+        val cycleMarkers = mutableListOf<Point2D>()
+        val cycleHeightDeltas = mutableListOf<Int>()
+        val rockDeltas = mutableListOf<Long>()
+        var cycleFound = false
+        var heightBeforeExtrapolation = 0
+        var extrapolatedHeight = 0L
+
+        while(rocks < quantity) {
+
+            val lastTwoCycles = cycleHeightDeltas.takeLast(4)
+            if (!cycleFound && lastTwoCycles.size == 4 && lastTwoCycles[0] == lastTwoCycles[2] && lastTwoCycles[1] == lastTwoCycles[3]) {
+                heightBeforeExtrapolation = flow.getHighestRockPosition()
+                cycleFound = true
+                val cycleHeight = cycleHeightDeltas.takeLast(2).sum()
+                val rocksInCycle = rockDeltas.takeLast(2).sum()
+                val remainingFullCycles = (quantity - rocks) / rocksInCycle
+                val extrapolatedRocks = remainingFullCycles * rocksInCycle
+                extrapolatedHeight = cycleHeight * remainingFullCycles
+                rocks += extrapolatedRocks
+            }
+
             val isInfluencedByJetStream = count % 2 == 0
             if (isInfluencedByJetStream) {
                 val direction = flow.getNextJetPatternDirection()
@@ -30,9 +54,6 @@ class PyroclasticFlowSimulator(data: String) {
 
                 if (isWithinBounds && !isShiftingIntoRock) {
                     x = xLeftNew
-                    //AdventLogger.debug("Shifting rock $direction")
-                } else {
-                    //AdventLogger.debug("Can't shift $direction, nothing happens")
                 }
             } else {
                 val yNew = y - 1
@@ -44,16 +65,41 @@ class PyroclasticFlowSimulator(data: String) {
                     x = 3
                     y = flow.getHighestRockPosition() + currentRock.height() + 3
                     rocks += 1
+
+                    if (hasJustCycled) {
+                        //snapshots.add(flow.getTopTwentyRows())
+                        rockDeltas.add(rocks - rocksAtLastCycle)
+                        rocksAtLastCycle = rocks
+
+                        val cycleHeight = flow.getHighestRockPosition()
+                        val cycleHeightDelta = cycleHeight - lastCycleHeight
+                        cycleHeightDeltas.add(cycleHeightDelta)
+
+                        if (cycleHeightDelta == 26) {
+                            cycleMarkers.addAll(flow.getCycleMarkers(y))
+                            AdventLogger.debug("Height before first cycle = ${flow.getHighestRockPosition()}")
+                        }
+                        AdventLogger.debug("Cycled at $rocks rocks with height delta $cycleHeightDelta")
+                        lastCycleHeight = cycleHeight
+                        hasJustCycled = false
+                        //return (quantity / rocks) * cycleHeight
+                    }
                     //AdventLogger.debug(flow)
                 } else {
                     y = yNew
-                    //AdventLogger.debug("Rock falls down")
                 }
+            }
+
+
+            if (flow.jetIsCycling && flow.rockAreCycling) {
+                hasJustCycled = true
             }
 
             count++
         }
 
-        return flow.getHighestRockPosition()
+        cycleMarkers.forEach { pos -> flow.addCycleMarker(pos) }
+
+        return (flow.getHighestRockPosition().toLong() - heightBeforeExtrapolation) + extrapolatedHeight + heightBeforeExtrapolation
     }
 }
