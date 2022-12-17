@@ -11,7 +11,7 @@ class PyroclasticFlowSimulator(data: String) {
     fun simulate(): Int {
         var currentRock = flow.getNextRock()
         var count = 0
-        var rocks = 1
+        var rocks = 0
         var x = 3 // Starts 2 units in (left wall == x=1)
         var y = 4 // Starts 3 units above the floor (floor == y=0)
 
@@ -49,7 +49,7 @@ class PyroclasticFlowSimulator(data: String) {
                     x = 3
                     y = flow.getHighestRockPosition() + getRockHeight(currentRock) + 3
                     rocks += 1
-                    AdventLogger.debug(flow)
+                    //AdventLogger.debug(flow)
                 } else {
                     y = yNew
                     //AdventLogger.debug("Rock falls down")
