@@ -42,6 +42,8 @@ class VolcanoCaveMap(scan: List<String>) {
         val s = ""
     }
 
-    private fun find
+    private fun find() {
+
+    }
 
 }
