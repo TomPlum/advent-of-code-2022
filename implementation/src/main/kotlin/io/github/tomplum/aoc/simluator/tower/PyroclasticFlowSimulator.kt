@@ -1,5 +1,6 @@
 package io.github.tomplum.aoc.simluator.tower
 
+import io.github.tomplum.libs.logging.AdventLogger
 import io.github.tomplum.libs.math.point.Point2D
 
 class PyroclasticFlowSimulator(data: String) {
@@ -36,7 +37,7 @@ class PyroclasticFlowSimulator(data: String) {
             } else {
                 val yNew = y - 1
                 val newRockPositions = currentRock.positions(Point2D(x, yNew))
-                val rockWillHitRestingPoint = yNew == 0 || flow.hasAnyRocksResting(newRockPositions)
+                val rockWillHitRestingPoint = flow.hasAnyRocksResting(newRockPositions) || newRockPositions.any { pos -> pos.y == 0 }
                 if (rockWillHitRestingPoint) {
                     flow.addRestingRock(currentRock.positions(Point2D(x, y)))
                     currentRock = flow.getNextRock()
