@@ -16,7 +16,7 @@ class PyroclasticFlowSimulator(data: String) {
         var y = 4 // Starts 3 units above the floor (floor == y=0)
 
         while(rocks < 2022) {
-            AdventLogger.debug("($x, $y)")
+            //AdventLogger.debug("($x, $y)")
             val isInfluencedByJetStream = count % 2 == 0
             if (isInfluencedByJetStream) {
                 val direction = flow.getNextJetPatternDirection()
@@ -30,23 +30,14 @@ class PyroclasticFlowSimulator(data: String) {
                     else -> throw IllegalArgumentException("Rocks should not be shifting $direction...")
                 }
 
-                if (isShiftingIntoRock) {
-                    flow.addRestingRock(getRockPositions(currentRock, start = Point2D(x, y)))
-                    currentRock = flow.getNextRock()
-                    x = 3
-                    y = flow.getHighestRockPosition() + getRockHeight(currentRock) + 3
-                    rocks += 1
-                    //AdventLogger.debug(flow)
-                } else {
-                    val xBoundary = (1..7)
-                    val isWithinBounds = xLeftNew in xBoundary && xRightNew in xBoundary
+                val xBoundary = (1..7)
+                val isWithinBounds = xLeftNew in xBoundary && xRightNew in xBoundary
 
-                    if (isWithinBounds) {
-                        x = xLeftNew
-                        //AdventLogger.debug("Shifting rock $direction")
-                    } else {
-                        //AdventLogger.debug("Can't shift $direction, nothing happens")
-                    }
+                if (isWithinBounds && !isShiftingIntoRock) {
+                    x = xLeftNew
+                    //AdventLogger.debug("Shifting rock $direction")
+                } else {
+                    //AdventLogger.debug("Can't shift $direction, nothing happens")
                 }
             } else {
                 val yNew = y - 1
@@ -58,7 +49,7 @@ class PyroclasticFlowSimulator(data: String) {
                     x = 3
                     y = flow.getHighestRockPosition() + getRockHeight(currentRock) + 3
                     rocks += 1
-                    //AdventLogger.debug(flow)
+                    AdventLogger.debug(flow)
                 } else {
                     y = yNew
                     //AdventLogger.debug("Rock falls down")
@@ -72,7 +63,7 @@ class PyroclasticFlowSimulator(data: String) {
     }
 
     private fun getRockPositions(type: RockType, start: Point2D) = when(type) {
-        RockType.STRAIGHT_H -> (start.x..start.x + 3).map { x -> Point2D(x, start.y) }
+        RockType.HORIZONTAL -> (start.x..start.x + 3).map { x -> Point2D(x, start.y) }
         RockType.PLUS -> {
             val top = start.shift(Direction.RIGHT)
             val left = start.shift(Direction.DOWN)
@@ -88,7 +79,7 @@ class PyroclasticFlowSimulator(data: String) {
             val bottomLeft = bottomMiddle.shift(Direction.LEFT)
             listOf(bottomLeft, bottomMiddle) + rightSide
         }
-        RockType.STRAIGHT_V -> (start.y..start.y - 3).map { y -> Point2D(start.x, y) }
+        RockType.VERTICAL -> (start.y downTo start.y - 3).map { y -> Point2D(start.x, y) }
         RockType.SQUARE -> {
             val topRight = start.shift(Direction.RIGHT)
             val bottomLeft = start.shift(Direction.DOWN)
@@ -98,18 +89,18 @@ class PyroclasticFlowSimulator(data: String) {
     }
 
     private fun getRightMostX(xLeft: Int, type: RockType) = when(type) {
-        RockType.STRAIGHT_H -> xLeft + 3
+        RockType.HORIZONTAL -> xLeft + 3
         RockType.PLUS -> xLeft + 2
         RockType.L -> xLeft + 2
-        RockType.STRAIGHT_V -> xLeft
+        RockType.VERTICAL -> xLeft
         RockType.SQUARE -> xLeft + 1
     }
 
     private fun getRockHeight(type: RockType) = when(type) {
-        RockType.STRAIGHT_H -> 1
+        RockType.HORIZONTAL -> 1
         RockType.PLUS -> 3
         RockType.L -> 3
-        RockType.STRAIGHT_V -> 4
+        RockType.VERTICAL -> 4
         RockType.SQUARE -> 2
     }
 }

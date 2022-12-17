@@ -40,7 +40,12 @@ class PyroclasticFlow(data: String): AdventMap2D<FlowTile>() {
 
     fun hasAnyRocksResting(positions: List<Point2D>) = positions.any { pos -> hasRecorded(pos) }
 
-    fun addRestingRock(positions: List<Point2D>) = positions.forEach { pos -> addTile(pos, FlowTile('#')) }
+    fun addRestingRock(positions: List<Point2D>) {
+        if (hasAnyRocksResting(positions)) {
+            throw IllegalArgumentException("Trying to add rocks to existing rock positions")
+        }
+        positions.forEach { pos -> addTile(pos, FlowTile('#')) }
+    }
 
     fun getHighestRockPosition() = yMax()!!
 }
