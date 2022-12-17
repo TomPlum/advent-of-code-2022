@@ -22,26 +22,46 @@ class PyroclasticFlowSimulator(data: String) {
                 val direction = flow.getNextJetPatternDirection()
                 val xLeftNew = Point2D(x, y).shift(direction).x
                 val xRightNew = getRightMostX(xLeftNew, currentRock)
-                val towerRange = (1..7)
-                if (xLeftNew in towerRange && xRightNew in towerRange) {
-                    x = xLeftNew
-                    AdventLogger.debug("Shifting rock $direction")
+                val newRockPositions = getRockPositions(currentRock, Point2D(xLeftNew, y))
+
+                val isShiftingIntoRock = when(direction) {
+                    Direction.RIGHT -> flow.hasAnyRocksResting(newRockPositions)
+                    Direction.LEFT -> flow.hasAnyRocksResting(newRockPositions)
+                    else -> throw IllegalArgumentException("Rocks should not be shifting $direction...")
+                }
+
+                if (isShiftingIntoRock) {
+                    flow.addRestingRock(getRockPositions(currentRock, start = Point2D(x, y)))
+                    currentRock = flow.getNextRock()
+                    x = 3
+                    y = flow.getHighestRockPosition() + getRockHeight(currentRock) + 3
+                    rocks += 1
+                    //AdventLogger.debug(flow)
                 } else {
-                    AdventLogger.debug("Can't shift $direction, nothing happens")
+                    val xBoundary = (1..7)
+                    val isWithinBounds = xLeftNew in xBoundary && xRightNew in xBoundary
+
+                    if (isWithinBounds) {
+                        x = xLeftNew
+                        //AdventLogger.debug("Shifting rock $direction")
+                    } else {
+                        //AdventLogger.debug("Can't shift $direction, nothing happens")
+                    }
                 }
             } else {
                 val yNew = y - 1
-                val rockWillHitRestingPoint = yNew == 0 || flow.hasRockRestingAt(Point2D(x, yNew))
+                val newRockPositions = getRockPositions(currentRock, Point2D(x, yNew))
+                val rockWillHitRestingPoint = yNew == 0 || flow.hasAnyRocksResting(newRockPositions)
                 if (rockWillHitRestingPoint) {
-                    flow.addRestingRock(getRockPositions(currentRock, Point2D(x, y)))
+                    flow.addRestingRock(getRockPositions(currentRock, start = Point2D(x, y)))
                     currentRock = flow.getNextRock()
-                    x = 2
-                    y = flow.getHighestRockPosition() + 3
+                    x = 3
+                    y = flow.getHighestRockPosition() + getRockHeight(currentRock) + 3
                     rocks += 1
-                    AdventLogger.debug(flow)
+                    //AdventLogger.debug(flow)
                 } else {
                     y = yNew
-                    AdventLogger.debug("Rock falls down")
+                    //AdventLogger.debug("Rock falls down")
                 }
             }
 
@@ -63,12 +83,12 @@ class PyroclasticFlowSimulator(data: String) {
         }
         RockType.L -> {
             val topRight = start.shift(Direction.RIGHT, 2)
-            val rightSide = (topRight.y..topRight.y - 3).map { y -> Point2D(topRight.x , y) }
+            val rightSide = (topRight.y downTo topRight.y - 2).map { y -> Point2D(topRight.x , y) }
             val bottomMiddle = rightSide.last().shift(Direction.LEFT)
             val bottomLeft = bottomMiddle.shift(Direction.LEFT)
             listOf(bottomLeft, bottomMiddle) + rightSide
         }
-        RockType.STRAIGHT_V -> (start.y..start.y + 3).map { y -> Point2D(start.x, y) }
+        RockType.STRAIGHT_V -> (start.y..start.y - 3).map { y -> Point2D(start.x, y) }
         RockType.SQUARE -> {
             val topRight = start.shift(Direction.RIGHT)
             val bottomLeft = start.shift(Direction.DOWN)
@@ -83,5 +103,13 @@ class PyroclasticFlowSimulator(data: String) {
         RockType.L -> xLeft + 2
         RockType.STRAIGHT_V -> xLeft
         RockType.SQUARE -> xLeft + 1
+    }
+
+    private fun getRockHeight(type: RockType) = when(type) {
+        RockType.STRAIGHT_H -> 1
+        RockType.PLUS -> 3
+        RockType.L -> 3
+        RockType.STRAIGHT_V -> 4
+        RockType.SQUARE -> 2
     }
 }

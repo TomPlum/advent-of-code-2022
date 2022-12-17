@@ -38,7 +38,7 @@ class PyroclasticFlow(data: String): AdventMap2D<FlowTile>() {
         return rockType
     }
 
-    fun hasRockRestingAt(pos: Point2D) = hasRecorded(pos)
+    fun hasAnyRocksResting(positions: List<Point2D>) = positions.any { pos -> hasRecorded(pos) }
 
     fun addRestingRock(positions: List<Point2D>) = positions.forEach { pos -> addTile(pos, FlowTile('#')) }
 
