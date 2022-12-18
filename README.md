@@ -1,6 +1,6 @@
 # :christmas_tree: Advent of Code 2022
 
-![GitHub](https://img.shields.io/badge/stars-28%2F50-yellow)
+![GitHub](https://img.shields.io/badge/stars-30%2F50-yellow)
 
 ## What is Advent of Code?
 
@@ -62,7 +62,7 @@ tests in the `common`, `implementation` and `solutions` Gradle sub-projects as w
 | 15  | -             | -        | -             | -        | [](docs/DAY15.MD)                        |
 | 16  | -             | -        | -             | -        | [](docs/DAY16.MD)                        |
 | 17  | -             | -        | -             | -        | [](docs/DAY17.MD)                        |
-| 18  | -             | -        | -             | -        | [](docs/DAY18.MD)                        |
+| 18  | 3576          | 5ms      | 2066          | 37ms     | [Boiling Boulders](docs/DAY18.MD)        |
 | 19  | -             | -        | -             | -        | [](docs/DAY19.MD)                        |
 | 20  | -             | -        | -             | -        | [](docs/DAY20.MD)                        |
 | 21  | -             | -        | -             | -        | [](docs/DAY21.MD)                        |
