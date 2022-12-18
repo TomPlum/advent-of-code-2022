@@ -1,57 +1,49 @@
 package io.github.tomplum.aoc.map.volcano
 
 class VolcanoCaveMap(scan: List<String>) {
-    private val flowRates = mutableMapOf<Valve, Int>()
 
     private val valveRelationships: Map<Valve, List<Valve>> = scan.associate { line ->
         val label = line.removePrefix("Valve ").split(" ")[0].trim()
         val flowRate = line.split(" has flow rate=")[1].split(";")[0].toInt()
         val tunnels = if (line.contains("tunnels")) {
-            line.split("tunnels lead to valves ")[1].trim().split(", ").map { Valve(it) }
+            line.split("tunnels lead to valves ")[1].trim().split(", ").map { label -> Valve(label) }
         } else {
-            listOf(line.split("tunnel leads to valve ")[1].trim()).map { Valve(it) }
+            listOf(line.split("tunnel leads to valve ")[1].trim()).map { label -> Valve(label) }
         }
-        flowRates[Valve(label)] = flowRate
-        Valve(label) to tunnels
+        val valve = Valve(label)
+        valve.flowRate = flowRate
+        valve to tunnels
     }
 
-    var times = listOf<Map<Valve, Int>>()
-    val distances: Array<Array<Int>> = Array(52) { Array(52) { -1 } }
-
-    fun findMaximumFlowRate(): Int {
+    fun findMaximumReleasablePressure(): Int {
         val valves = valveRelationships.keys.toList()
-        val newDistances = mutableMapOf<Valve, MutableMap<Valve, Int>>()
-        valves.forEach { start ->
+
+        val distances = valves.fold(mutableMapOf<Valve, MutableMap<Valve, Int>>()) { sources, start ->
             valves.forEach { end ->
-                val innerMap = newDistances.getOrPut(start) { mutableMapOf() }
-                innerMap[end] = findShortestPath(start, end).size - 1
+                val targets = sources.getOrPut(start) { mutableMapOf() }
+                targets[end] = findShortestPath(start, end).size - 1
+                sources[start] = targets
             }
+            sources
         }
 
-        val valveCandidates = valves.filter { label -> flowRates[label]!! > 0 }
-
-        val times = calculateFlowRates(newDistances, Valve("AA"), 30, valveCandidates)
-        this.times = times
-        val flowRates = times.map { rates ->
-            rates.entries.fold(0) { rate, (valve, time) -> rate + flowRates[valve]!! * time }
+        val flowingValves = valves.filter { valve -> valve.flowRate > 0 }
+        val times = calculateValveOpenTime(distances, Valve("AA"), 30, flowingValves)
+        val pressuresReleased = times.map { rates ->
+            rates.entries.fold(0) { pressure, (valve, time) -> pressure + valve.flowRate * time }
         }
 
-        return flowRates.max()
-
-        /*rates.map { rates ->
-            rates.entries.sumOf { (valve, time) -> flowRates[valve]!! * time }
-        }.maxOf { pressure -> pressure }*/
+        return pressuresReleased.max()
     }
 
-    private fun calculateFlowRates(
+    private fun calculateValveOpenTime(
         distances: Map<Valve, Map<Valve, Int>>,
         source: Valve,
         time: Int,
         remaining: List<Valve>,
         opened: Map<Valve, Int> = mutableMapOf()
     ): List<Map<Valve, Int>> {
-        // A list of valve label -> time that valve spends open
-        val flowRates = mutableListOf(opened)
+        val cumulativeTime = mutableListOf(opened)
 
         remaining.forEachIndexed { i, target ->
             val distance = distances[source]?.get(target)!!
@@ -66,21 +58,21 @@ class VolcanoCaveMap(scan: List<String>) {
             val newRemaining = remaining.toMutableList()
             newRemaining.removeAt(i)
 
-            flowRates.addAll(calculateFlowRates(distances, target, newTime, newRemaining, newlyOpened))
+            cumulativeTime.addAll(calculateValveOpenTime(distances, target, newTime, newRemaining, newlyOpened))
         }
 
-        return flowRates
+        return cumulativeTime
     }
 
-    private fun findShortestPath(startingValve: Valve, finishingValve: Valve): List<Valve> {
-        if (startingValve == finishingValve) {
-            return listOf(startingValve)
+    private fun findShortestPath(start: Valve, end: Valve): List<Valve> {
+        if (start == end) {
+            return listOf(start)
         }
 
-        val visited = mutableSetOf(startingValve)
+        val visited = mutableSetOf(start)
 
         val next = mutableListOf<List<Valve>>()
-        next.add(listOf(startingValve))
+        next.add(listOf(start))
 
         while(next.isNotEmpty()) {
             val path = next.removeFirst()
@@ -92,7 +84,7 @@ class VolcanoCaveMap(scan: List<String>) {
                 }
 
                 val updatedPath = path + adjacent
-                if (adjacent == finishingValve) {
+                if (adjacent == end) {
                     return updatedPath
                 }
 
@@ -101,6 +93,6 @@ class VolcanoCaveMap(scan: List<String>) {
             }
         }
 
-        throw IllegalArgumentException("Could not find path from $startingValve -> $finishingValve")
+        throw IllegalArgumentException("Could not find path from $start -> $end")
     }
 }

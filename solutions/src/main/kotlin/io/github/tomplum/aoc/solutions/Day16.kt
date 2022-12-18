@@ -12,6 +12,6 @@ class Day16 : Solution<Int, Int> {
 
     override fun part1(): Int {
         val oldMap = OldVolcanoMap(scan)
-        return volcanoCaveMap.findMaximumFlowRate()
+        return volcanoCaveMap.findMaximumReleasablePressure()
     }
 }
