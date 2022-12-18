@@ -4,21 +4,22 @@ import io.github.tomplum.libs.extensions.cartesianProduct
 import java.util.*
 
 class OldVolcanoMap(scan: List<String>) {
-    private val flowRates = mutableMapOf<Char, Int>()
+    private val flowRates = mutableMapOf<String, Int>()
 
-    private val valves: Map<Char, List<Char>> = scan.associate { line ->
-        val label = line.removePrefix("Valve ").split(" ")[0].trim().first()
+    private val valves: Map<String, List<String>> = scan.associate { line ->
+        val label = line.removePrefix("Valve ").split(" ")[0].trim()
         val flowRate = line.split(" has flow rate=")[1].split(";")[0].toInt()
         val tunnels = if (line.contains("tunnels")) {
-            line.split("tunnels lead to valves ")[1].trim().split(", ").map { it.first() }
+            line.split("tunnels lead to valves ")[1].trim().split(", ")
         } else {
-            listOf(line.split("tunnel leads to valve ")[1].trim()).map { it.first() }
+            listOf(line.split("tunnel leads to valve ")[1].trim())
         }
         flowRates[label] = flowRate
         label to tunnels
     }
 
-    var valveTimes = listOf<Map<Char, Int>>()
+    var valveTimes = listOf<Map<String, Int>>()
+    val distances = Array(52) { Array(52) { -1 } }
 
     fun findMaximumFlowRate(): Int {
         /*val distances = mutableMapOf<Char, Int>()
@@ -42,18 +43,15 @@ class OldVolcanoMap(scan: List<String>) {
 
         val valveLabels = valves.keys.toList()
         val distinctCombinations = valveLabels.cartesianProduct(valveLabels).filter { (a, b) -> a != b }
-        val distances = Array(26) { Array(26) { -1 } }
         valveLabels.forEach { start ->
             valveLabels.forEach { end ->
-                if (start != end) {
-                    distances[start.getAlphabetIndex()][end.getAlphabetIndex()] = findShortestPath(start, end).length - 1
-                }
+                distances[start.getAlphabetIndex()][end.getAlphabetIndex()] = findShortestPath(start, end).size - 1
             }
         }
 
         val valveCandidates = valveLabels.filter { label -> flowRates[label]!! > 0 }
 
-        val times = calculateFlowRates(distances, 'A', 30, valveCandidates)
+        val times = calculateFlowRates(distances, "AA", 30, valveCandidates)
         this.valveTimes = times
         val rates = times.map { rates ->
             rates.entries.fold(0) { pressure, (valve, time) -> pressure + flowRates[valve]!! * time }
@@ -67,11 +65,11 @@ class OldVolcanoMap(scan: List<String>) {
 
     private fun calculateFlowRates(
         paths: Array<Array<Int>>,
-        source: Char,
+        source: String,
         time: Int,
-        remaining: List<Char>,
-        opened: Map<Char, Int> = mutableMapOf()
-    ): List<Map<Char, Int>> {
+        remaining: List<String>,
+        opened: Map<String, Int> = mutableMapOf()
+    ): List<Map<String, Int>> {
         // A list of valve label -> time that valve spends open
         val flowRates = mutableListOf(opened)
 
@@ -94,14 +92,18 @@ class OldVolcanoMap(scan: List<String>) {
         return flowRates
     }
 
-    private fun findShortestPath(startingValve: Char, finishingValve: Char): String {
+    private fun findShortestPath(startingValve: String, finishingValve: String): List<String> {
+        if (startingValve == finishingValve) {
+            return listOf(startingValve)
+        }
+
         val visited = mutableSetOf(startingValve)
 
-        val next = PriorityQueue<String>()
-        next.offer(startingValve.toString())
+        val next = mutableListOf<List<String>>()
+        next.add(listOf(startingValve))
 
         while(next.isNotEmpty()) {
-            val path = next.poll()
+            val path = next.removeFirst()
             val valve = path.last()
 
             valves[valve]?.forEach { adjacent ->
@@ -109,7 +111,7 @@ class OldVolcanoMap(scan: List<String>) {
                     return@forEach
                 }
 
-                val updatedPath = "$path$adjacent"
+                val updatedPath = path + adjacent
                 if (adjacent == finishingValve) {
                     return updatedPath
                 }
@@ -122,8 +124,8 @@ class OldVolcanoMap(scan: List<String>) {
         throw IllegalArgumentException("Could not find path from $startingValve -> $finishingValve")
     }
 
-    private fun Char.getAlphabetIndex(): Int {
-        return this.lowercase().first().code - 'a'.code
+    private fun String.getAlphabetIndex(): Int {
+        return this.sumOf { it.lowercase().first().code - 'a'.code }
     }
 
 }

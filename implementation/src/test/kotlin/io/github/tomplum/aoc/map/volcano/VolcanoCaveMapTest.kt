@@ -24,15 +24,30 @@ class VolcanoCaveMapTest {
     fun comparison() {
         val old = OldVolcanoMap(scan)
         old.findMaximumFlowRate()
+
         val new = VolcanoCaveMap(scan)
         new.findMaximumFlowRate()
+
+        val oldDistances = old.distances
+        val newDistances = new.distances
+
+        oldDistances.forEachIndexed { index, values ->
+            values.forEachIndexed { id, oldDistance ->
+                val newDistance = newDistances[index][id]
+                if (newDistance != oldDistance) {
+                    val oops = ""
+                }
+            }
+        }
+
+
         val oldTimes = old.valveTimes
         val newTimes = new.times
 
         oldTimes.forEachIndexed { index, old ->
             old.entries.forEachIndexed { i, (oldLabel, oldTime) ->
                 val newMappings = newTimes[index]
-                val newTime = newMappings[Valve("$oldLabel$oldLabel")]
+                val newTime = newMappings[Valve(oldLabel)]
                 if (oldTime != newTime) {
                     throw IllegalArgumentException("Time disparity!")
                 }
