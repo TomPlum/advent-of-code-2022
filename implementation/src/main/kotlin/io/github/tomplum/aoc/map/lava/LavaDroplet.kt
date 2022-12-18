@@ -1,9 +1,9 @@
-package io.github.tomplum.aoc.map.pond
+package io.github.tomplum.aoc.map.lava
 
 import io.github.tomplum.libs.math.map.AdventMap3D
 import io.github.tomplum.libs.math.point.Point3D
 
-class PondMap(scan: List<String>) : AdventMap3D<PondTile>() {
+class LavaDroplet(scan: List<String>) : AdventMap3D<PondTile>() {
     init {
         scan.forEach { data ->
             val (x, y, z) = data.split(",").map { value -> value.toInt() }
@@ -11,11 +11,11 @@ class PondMap(scan: List<String>) : AdventMap3D<PondTile>() {
         }
     }
 
-    fun getLavaDropletSurfaceArea(): Int = getDataMap().keys.sumOf { pos ->
+    fun getSurfaceArea(): Int = getDataMap().keys.sumOf { pos ->
         6 - pos.neighbouring().count { adj -> hasRecorded(adj) }
     }
 
-    fun getLavaDropletExteriorSurfaceArea(): Int {
+    fun getExteriorSurfaceArea(): Int {
         val surface = locateSurfaceCubes()
         return getDataMap().keys.sumOf { pos -> pos.neighbouring().filter { adj -> adj in surface }.size }
     }
