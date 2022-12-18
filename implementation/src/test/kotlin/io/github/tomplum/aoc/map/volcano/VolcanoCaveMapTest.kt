@@ -13,4 +13,32 @@ class VolcanoCaveMapTest {
     fun exampleOne() {
         assertThat(map.findMaximumFlowRate()).isEqualTo(1651)
     }
+
+    @Test
+    fun exampleOneOld() {
+        val map = OldVolcanoMap(scan)
+        assertThat(map.findMaximumFlowRate()).isEqualTo(1651)
+    }
+
+    @Test
+    fun comparison() {
+        val old = OldVolcanoMap(scan)
+        old.findMaximumFlowRate()
+        val new = VolcanoCaveMap(scan)
+        new.findMaximumFlowRate()
+        val oldTimes = old.valveTimes
+        val newTimes = new.times
+
+        oldTimes.forEachIndexed { index, old ->
+            old.entries.forEachIndexed { i, (oldLabel, oldTime) ->
+                val newMappings = newTimes[index]
+                val newTime = newMappings[Valve("$oldLabel$oldLabel")]
+                if (oldTime != newTime) {
+                    throw IllegalArgumentException("Time disparity!")
+                }
+            }
+        }
+
+        assertThat(map.findMaximumFlowRate()).isEqualTo(1651)
+    }
 }
