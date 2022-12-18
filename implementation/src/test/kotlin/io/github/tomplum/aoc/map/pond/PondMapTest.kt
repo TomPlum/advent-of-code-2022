@@ -19,4 +19,11 @@ class PondMapTest {
         val pondMap = PondMap(scan)
         assertThat(pondMap.getLavaDropletSurfaceArea()).isEqualTo(64)
     }
+
+    @Test
+    fun examplePartTwoLarger() {
+        val scan = TestInputReader.read<String>("day18/example-large.txt").value
+        val pondMap = PondMap(scan)
+        assertThat(pondMap.getLavaDropletExteriorSurfaceArea()).isEqualTo(58)
+    }
 }
