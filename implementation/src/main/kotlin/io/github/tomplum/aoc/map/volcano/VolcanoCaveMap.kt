@@ -51,10 +51,12 @@ class VolcanoCaveMap(scan: List<String>) {
 
         val valveCandidates = valveLabels.filter { label -> flowRates[label]!! > 0 }
 
-        val rates = calculateFlowRates(distances, Valve("AA"), 30, valveCandidates)
-        return rates.map { rates ->
+        val times = calculateFlowRates(distances, Valve("AA"), 30, valveCandidates)
+        val flowRates = times.map { rates ->
             rates.entries.fold(0) { pressure, (valve, time) -> pressure + flowRates[valve]!! * time }
-        }.max()
+        }
+
+        return flowRates.max()
 
         /*rates.map { rates ->
             rates.entries.sumOf { (valve, time) -> flowRates[valve]!! * time }
