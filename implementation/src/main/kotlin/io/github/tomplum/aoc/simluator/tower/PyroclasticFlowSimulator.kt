@@ -30,7 +30,7 @@ class PyroclasticFlowSimulator(data: String) {
 
             val lastTwoCycles = cycleHeightDeltas.takeLast(4)
             if (!cycleFound && lastTwoCycles.size == 4 && lastTwoCycles[0] == lastTwoCycles[2] && lastTwoCycles[1] == lastTwoCycles[3]) {
-                heightBeforeExtrapolation = flow.getHighestRockPosition()
+                heightBeforeExtrapolation = flow.highestRockPosition
                 cycleFound = true
                 val cycleHeight = cycleHeightDeltas.takeLast(2).sum()
                 val rocksInCycle = rockDeltas.takeLast(2).sum()
@@ -57,13 +57,13 @@ class PyroclasticFlowSimulator(data: String) {
                 }
             } else {
                 val yNew = y - 1
-                val newRockPositions = currentRock.positions(Point2D(x, yNew))
+                val newRockPositions = currentRock.positions(Point2D(x, yNew)).reversed()
                 val rockWillHitRestingPoint = flow.hasAnyRocksResting(newRockPositions) || newRockPositions.any { pos -> pos.y == 0 }
                 if (rockWillHitRestingPoint) {
                     flow.addRestingRock(currentRock.positions(Point2D(x, y)))
                     currentRock = flow.getNextRock()
                     x = 3
-                    y = flow.getHighestRockPosition() + currentRock.height() + 3
+                    y = flow.highestRockPosition + currentRock.height() + 3
                     rocks += 1
 
                     if (hasJustCycled) {
@@ -71,14 +71,14 @@ class PyroclasticFlowSimulator(data: String) {
                         rockDeltas.add(rocks - rocksAtLastCycle)
                         rocksAtLastCycle = rocks
 
-                        val cycleHeight = flow.getHighestRockPosition()
+                        val cycleHeight = flow.highestRockPosition
                         val cycleHeightDelta = cycleHeight - lastCycleHeight
                         cycleHeightDeltas.add(cycleHeightDelta)
 
-                        if (cycleHeightDelta == 26) {
+                        /*if (cycleHeightDelta == 26) {
                             cycleMarkers.addAll(flow.getCycleMarkers(y))
                             AdventLogger.debug("Height before first cycle = ${flow.getHighestRockPosition()}")
-                        }
+                        }*/
                         AdventLogger.debug("Cycled at $rocks rocks with height delta $cycleHeightDelta")
                         lastCycleHeight = cycleHeight
                         hasJustCycled = false
@@ -98,8 +98,8 @@ class PyroclasticFlowSimulator(data: String) {
             count++
         }
 
-        cycleMarkers.forEach { pos -> flow.addCycleMarker(pos) }
+        //cycleMarkers.forEach { pos -> flow.addCycleMarker(pos) }
 
-        return (flow.getHighestRockPosition().toLong() - heightBeforeExtrapolation) + extrapolatedHeight + heightBeforeExtrapolation
+        return (flow.highestRockPosition.toLong() - heightBeforeExtrapolation) + extrapolatedHeight + heightBeforeExtrapolation
     }
 }
