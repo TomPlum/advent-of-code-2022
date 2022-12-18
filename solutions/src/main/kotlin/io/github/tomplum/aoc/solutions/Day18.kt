@@ -12,4 +12,8 @@ class Day18 : Solution<Int, Int> {
     override fun part1(): Int {
         return pondMap.getLavaDropletSurfaceArea()
     }
+
+    override fun part2(): Int {
+        return pondMap.getLavaDropletExteriorSurfaceArea()
+    }
 }
