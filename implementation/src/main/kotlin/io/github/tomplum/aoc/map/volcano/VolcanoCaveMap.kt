@@ -40,18 +40,18 @@ class VolcanoCaveMap(scan: List<String>) {
 
         val valveLabels = valves.keys.toList()
         val distinctCombinations = valveLabels.cartesianProduct(valveLabels).filter { (a, b) -> a != b }
-        val paths = Array(26) { Array(26) { "" } }
+        val distances = Array(26) { Array(26) { -1 } }
         valveLabels.forEach { start ->
             valveLabels.forEach { end ->
                 if (start != end) {
-                    paths[start.getAlphabetIndex()][end.getAlphabetIndex()] = findShortestPath(start, end)
+                    distances[start.getAlphabetIndex()][end.getAlphabetIndex()] = findShortestPath(start, end).length - 1
                 }
             }
         }
 
         val valveCandidates = valveLabels.filter { label -> flowRates[label]!! > 0 }
 
-        val rates = calculateFlowRates(paths, 'A', 30, valveCandidates)
+        val rates = calculateFlowRates(distances, 'A', 30, valveCandidates)
         return rates.map { rates ->
             rates.entries.fold(0) { pressure, (valve, time) -> pressure + flowRates[valve]!! * time }
         }.max()
@@ -62,7 +62,7 @@ class VolcanoCaveMap(scan: List<String>) {
     }
 
     private fun calculateFlowRates(
-        paths: Array<Array<String>>,
+        paths: Array<Array<Int>>,
         source: Char,
         time: Int,
         remaining: List<Char>,
@@ -72,8 +72,8 @@ class VolcanoCaveMap(scan: List<String>) {
         val flowRates = mutableListOf(opened)
 
         remaining.forEachIndexed { i, target ->
-            val path = paths[source.getAlphabetIndex()][target.getAlphabetIndex()]
-            val newTime = time - (path.length - 1)
+            val distance = paths[source.getAlphabetIndex()][target.getAlphabetIndex()]
+            val newTime = time - distance - 1
             if (newTime < 1) {
                 return@forEachIndexed
             }
