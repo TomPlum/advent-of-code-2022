@@ -6,23 +6,26 @@ import io.github.tomplum.libs.math.point.Point3D
 class PondMap(scan: List<String>) : AdventMap3D<PondTile>() {
     init {
         scan.forEach { data ->
-        val ( x, y, z ) = data.split(",").map { value -> value.toInt() }
+            val (x, y, z) = data.split(",").map { value -> value.toInt() }
             addTile(Point3D(x, y, z), PondTile())
         }
     }
 
-    fun getLavaDropletSurfaceArea(): Int {
-        return getDataMap().keys.sumOf { pos ->
-            6 - pos.neighbouring().count { adj -> hasRecorded(adj) }
-        }
+    fun getLavaDropletSurfaceArea(): Int = getDataMap().keys.sumOf { pos ->
+        6 - pos.neighbouring().count { adj -> hasRecorded(adj) }
     }
 
     fun getLavaDropletExteriorSurfaceArea(): Int {
-        val xMin = getDataMap().keys.minBy { pos -> pos.x }.x - 1
+        val surface = locateSurfaceCubes()
+        return getDataMap().keys.sumOf { pos -> pos.neighbouring().filter { adj -> adj in surface }.size }
+    }
+
+    private fun locateSurfaceCubes(): MutableSet<Point3D> {
+        val xMin = xMin() - 1
         val yMin = yMin()!! - 1
         val zMin = zMin()!! - 1
 
-        val xInside = xMin..getDataMap().keys.maxBy { pos -> pos.x }.x + 1
+        val xInside = xMin..xMax() + 1
         val yInside = yMin..yMax()!! + 1
         val zInside = zMin..zMax()!! + 1
 
@@ -30,7 +33,7 @@ class PondMap(scan: List<String>) : AdventMap3D<PondTile>() {
         val queue = mutableListOf<Point3D>()
         queue.add(Point3D(xMin, yMin, zMin))
 
-        while(queue.isNotEmpty()) {
+        while (queue.isNotEmpty()) {
             val position = queue.removeLast()
 
             if (hasRecorded(position)) {
@@ -46,7 +49,15 @@ class PondMap(scan: List<String>) : AdventMap3D<PondTile>() {
             }
         }
 
-        return getDataMap().keys.sumOf { pos -> pos.neighbouring().filter { adj -> adj in surface }.size }
+        return surface
+    }
+
+    override fun xMin(): Int {
+        return getDataMap().keys.minBy { pos -> pos.x }.x
+    }
+
+    override fun xMax(): Int {
+        return getDataMap().keys.maxBy { pos -> pos.x }.x
     }
 
     private fun Point3D.neighbouring() = listOf(
