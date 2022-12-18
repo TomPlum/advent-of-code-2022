@@ -11,10 +11,21 @@ class LavaDroplet(scan: List<String>) : AdventMap3D<PondTile>() {
         }
     }
 
+    /**
+     * Calculates the surface area of the lava droplet,
+     * including air pockets on the inside.
+     * @return The total surface area.
+     */
     fun getSurfaceArea(): Int = getDataMap().keys.sumOf { pos ->
         6 - pos.neighbouring().count { adj -> hasRecorded(adj) }
     }
 
+    /**
+     * Calculates the external surface area of the lava droplet.
+     * Only considers faces on the outside that
+     * can be touched by pond water.
+     * @return The total exterior surface area
+     */
     fun getExteriorSurfaceArea(): Int {
         val surface = locateSurfaceCubes()
         return getDataMap().keys.sumOf { pos -> pos.neighbouring().filter { adj -> adj in surface }.size }
@@ -60,6 +71,10 @@ class LavaDroplet(scan: List<String>) : AdventMap3D<PondTile>() {
         return getDataMap().keys.maxBy { pos -> pos.x }.x
     }
 
+    /**
+     * Finds the six neighbouring points.
+     * @return The 6 neighbouring co-ordinates.
+     */
     private fun Point3D.neighbouring() = listOf(
         Point3D(this.x, this.y, this.z + 1), Point3D(this.x, this.y, this.z - 1)
     ) + this.planarAdjacentPoints()
