@@ -15,7 +15,9 @@ class OreCollectingRobotSimulator(data: List<String>) {
     fun simulate(): Int {
         val start = InventoryState(0, 1, 0, 0, 0, 0, 0, 0)
         val geodes = blueprints.map { blueprint ->
-            blueprint.id to calculateGeodesSmashed(blueprint, 24, start)
+            val maxGeodes = calculateGeodesSmashed(blueprint, 24, start)
+            maxGeodesFound = 0
+            blueprint.id to maxGeodes
         }
         return geodes.sumOf { (id, geodes) -> id * geodes }
     }
@@ -26,9 +28,8 @@ class OreCollectingRobotSimulator(data: List<String>) {
             return inventory.openGeodes
         }
 
-        val optimisticGeodePrediction = inventory.optimisticGeodePrediction(minute)
-        if (optimisticGeodePrediction <= maxGeodesFound) {
-            return inventory.openGeodes
+        if (inventory.optimisticGeodePrediction(minute) < maxGeodesFound) {
+            return 0
         }
 
         if (inventory.canAffordGeodeCrackingRobot(blueprint)) {
@@ -36,43 +37,45 @@ class OreCollectingRobotSimulator(data: List<String>) {
                 blueprint.geodeRobotCost.first,
                 blueprint.geodeRobotCost.second
             )
-            return searchDeeper(blueprint, minute, updatedInventory)
-        } else {
-            val hasEnoughObsidian = inventory.producesEnoughObsidianToMakeGeodeRobots(blueprint)
-            if (!hasEnoughObsidian && inventory.canAffordObsidianRobot(blueprint)) {
-                val updatedInventory = inventory.createObsidianCollectingRobot(
-                    blueprint.obsidianRobotCost.first,
-                    blueprint.obsidianRobotCost.second
-                )
-                maxGeodesFound = searchDeeper(blueprint, minute, updatedInventory)
-            }
-
-            val hasEnoughClay = inventory.producesEnoughClayToMakeObsidianRobots(blueprint)
-            if (!hasEnoughClay && inventory.canAffordClayRobot(blueprint)) {
-                val updatedInventory = inventory.createClayCollectionRobot(blueprint.clayRobotCost)
-                maxGeodesFound = searchDeeper(blueprint, minute, updatedInventory)
-            }
-
-            val hasEnoughOre = inventory.producesEnoughOreToMakingEverything(blueprint)
-            if (!hasEnoughOre && inventory.canAffordOreRobot(blueprint)) {
-                val updatedInventory = inventory.createOreCollectionRobot(blueprint.oreRobotCost)
-                maxGeodesFound = searchDeeper(blueprint, minute, updatedInventory)
-            }
-
-            if (!hasEnoughOre || !hasEnoughClay || !hasEnoughObsidian) {
-                val updatedInventory = inventory.createNothing()
-                maxGeodesFound = searchDeeper(blueprint, minute, updatedInventory)
-            }
+            return  searchDeeper(blueprint, minute, updatedInventory)
         }
 
-        return maxGeodesFound
+        var highest = 0
+
+        val hasEnoughObsidian = inventory.producesEnoughObsidianToMakeGeodeRobots(blueprint)
+        if (!hasEnoughObsidian && inventory.canAffordObsidianRobot(blueprint)) {
+            val updatedInventory = inventory.createObsidianCollectingRobot(
+                blueprint.obsidianRobotCost.first,
+                blueprint.obsidianRobotCost.second
+            )
+            highest = searchDeeper(blueprint, minute, updatedInventory, highest)
+        }
+
+        val hasEnoughClay = inventory.producesEnoughClayToMakeObsidianRobots(blueprint)
+        if (!hasEnoughClay && inventory.canAffordClayRobot(blueprint)) {
+            val updatedInventory = inventory.createClayCollectionRobot(blueprint.clayRobotCost)
+            highest = searchDeeper(blueprint, minute, updatedInventory, highest)
+        }
+
+        val hasEnoughOre = inventory.producesEnoughOreToMakingEverything(blueprint)
+        if (!hasEnoughOre && inventory.canAffordOreRobot(blueprint)) {
+            val updatedInventory = inventory.createOreCollectionRobot(blueprint.oreRobotCost)
+            highest = searchDeeper(blueprint, minute, updatedInventory, highest)
+        }
+
+        if (!hasEnoughOre || !hasEnoughClay || !hasEnoughObsidian) {
+            val updatedInventory = inventory.createNothing()
+            highest = searchDeeper(blueprint, minute, updatedInventory, highest)
+        }
+
+        return highest
     }
 
-    private fun searchDeeper(blueprint: Blueprint, minute: Int, inventory: InventoryState): Int {
+    private fun searchDeeper(blueprint: Blueprint, minute: Int, inventory: InventoryState, compare: Int = maxGeodesFound): Int {
         val geodes = cache.getOrPut("${blueprint.id}${inventory.key()}") {
             calculateGeodesSmashed(blueprint, minute - 1, inventory)
         }
-        return maxOf(maxGeodesFound, geodes)
+        return maxOf(compare, geodes)
     }
 
     data class InventoryState(
