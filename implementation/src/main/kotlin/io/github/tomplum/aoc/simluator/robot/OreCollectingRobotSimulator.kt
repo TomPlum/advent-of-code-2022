@@ -12,8 +12,9 @@ class OreCollectingRobotSimulator(data: List<String>) {
 
     fun simulate(): Int {
         val start = InventoryState(0, 1, 0, 0, 0, 0, 0, 0)
-        val geodes = blueprints.map { blueprint ->
+        val geodes = blueprints.asSequence().map { blueprint ->
             maxGeodesFound = 0
+            cache.clear()
             blueprint.id to calculateGeodesSmashed(blueprint, 24, start)
         }
         return geodes.sumOf { (id, geodes) -> id * geodes }
@@ -23,6 +24,7 @@ class OreCollectingRobotSimulator(data: List<String>) {
         val start = InventoryState(0, 1, 0, 0, 0, 0, 0, 0)
         val geodes = blueprints.take(3).map { blueprint ->
             maxGeodesFound = 0
+            cache.clear()
             calculateGeodesSmashed(blueprint, 32, start)
         }
         return geodes.product()
@@ -86,9 +88,9 @@ class OreCollectingRobotSimulator(data: List<String>) {
     }
 
     private fun searchDeeper(blueprint: Blueprint, minute: Int, inventory: InventoryState, compare: Int = maxGeodesFound): Int {
-        val geodes = //cache.getOrPut("${blueprint.id}${inventory.key()}") {
+        val geodes = cache.getOrPut(inventory.key()) {
             calculateGeodesSmashed(blueprint, minute - 1, inventory)
-        //}
+        }
         return maxOf(compare, geodes)
     }
 
