@@ -24,11 +24,11 @@ class OreCollectingRobotSimulator(data: List<String>) {
         if (minute <= 24) {
             val states = mutableListOf<InventoryState>()
 
-            val timeRemaining = 24 - minute
+        /*    val timeRemaining = 24 - minute
             val optimisticGeodePrediction = (timeRemaining - 1).nthBinomialCoefficient()
             if (optimisticGeodePrediction <= maxGeodesFound) {
                 return listOf(inventory.openGeodes)
-            }
+            }*/
 
             if (inventory.canAffordGeodeCrackingRobot(blueprint)) {
                 states += inventory.createGeodeCrackingRobot(
@@ -54,10 +54,8 @@ class OreCollectingRobotSimulator(data: List<String>) {
                     states += inventory.createOreCollectionRobot(blueprint.oreRobotCost)
                 }
 
-                if (!hasEnoughOre || !hasEnoughClay || !hasEnoughObsidian) {
+                if ((!hasEnoughOre || !hasEnoughClay || !hasEnoughObsidian) && states.isEmpty()) {
                     states += inventory.createNothing()
-                } else {
-                    states += inventory
                 }
             }
 
