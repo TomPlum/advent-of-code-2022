@@ -1,5 +1,7 @@
 package io.github.tomplum.aoc.simluator.robot
 
+import io.github.tomplum.libs.extensions.nthBinomialCoefficient
+
 class OreCollectingRobotSimulator(data: List<String>) {
 
     private val blueprints = data.map { info -> Blueprint.fromString(info) }
@@ -21,6 +23,11 @@ class OreCollectingRobotSimulator(data: List<String>) {
     private fun calculateGeodesSmashed(blueprint: Blueprint, minute: Int, inventory: InventoryState): Int {
         if (minute == 0) {
             maxGeodesFound = maxOf(maxGeodesFound, inventory.openGeodes)
+            return inventory.openGeodes
+        }
+
+        val optimisticGeodePrediction = inventory.optimisticGeodePrediction(minute)
+        if (optimisticGeodePrediction <= maxGeodesFound) {
             return inventory.openGeodes
         }
 
@@ -163,6 +170,10 @@ class OreCollectingRobotSimulator(data: List<String>) {
 
         fun canAffordOreRobot(blueprint: Blueprint): Boolean {
             return blueprint.canAffordOreRobot(ore)
+        }
+
+        fun optimisticGeodePrediction(timeRemaining: Int): Int {
+            return (timeRemaining - 1).nthBinomialCoefficient() + openGeodes + geodeCrackingRobots + 1
         }
 
         fun key(): String {
