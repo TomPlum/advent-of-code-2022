@@ -12,4 +12,8 @@ class Day19 : Solution<Int, Int> {
     override fun part1(): Int {
         return robotSimulator.simulate()
     }
+
+    override fun part2(): Int {
+        return robotSimulator.simulate2()
+    }
 }

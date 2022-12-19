@@ -1,6 +1,7 @@
 package io.github.tomplum.aoc.simluator.robot
 
 import io.github.tomplum.libs.extensions.nthBinomialCoefficient
+import io.github.tomplum.libs.extensions.product
 
 class OreCollectingRobotSimulator(data: List<String>) {
 
@@ -16,6 +17,15 @@ class OreCollectingRobotSimulator(data: List<String>) {
             blueprint.id to calculateGeodesSmashed(blueprint, 24, start)
         }
         return geodes.sumOf { (id, geodes) -> id * geodes }
+    }
+
+    fun simulate2(): Int {
+        val start = InventoryState(0, 1, 0, 0, 0, 0, 0, 0)
+        val geodes = blueprints.take(3).map { blueprint ->
+            maxGeodesFound = 0
+            calculateGeodesSmashed(blueprint, 32, start)
+        }
+        return geodes.product()
     }
 
     private fun calculateGeodesSmashed(blueprint: Blueprint, minute: Int, inventory: InventoryState): Int {

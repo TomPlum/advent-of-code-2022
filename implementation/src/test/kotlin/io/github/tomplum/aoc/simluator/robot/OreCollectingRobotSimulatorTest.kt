@@ -13,4 +13,9 @@ class OreCollectingRobotSimulatorTest {
     fun examplePartOne() {
         assertThat(simulator.simulate()).isEqualTo(33)
     }
+
+    @Test
+    fun examplePartTwo() {
+        assertThat(simulator.simulate2()).isEqualTo(62)
+    }
 }
