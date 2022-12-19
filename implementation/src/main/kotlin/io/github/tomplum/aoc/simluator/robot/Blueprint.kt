@@ -42,4 +42,8 @@ data class Blueprint(
     fun canAffordGeodeCrackingRobot(ore: Int, obsidian: Int): Boolean {
         return ore >= geodeRobotCost.first && obsidian >= geodeRobotCost.second
     }
+
+    fun canAffordClayRobot(ore: Int): Boolean {
+        return ore >= clayRobotCost
+    }
 }
