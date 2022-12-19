@@ -36,6 +36,24 @@ class VolcanoCaveMap(scan: List<String>) {
         return pressuresReleased.max()
     }
 
+    fun findMaximumReleasablePressureWithElephant(): Int {
+        val valves = valveRelationships.keys.toList()
+
+        val distances = valves.fold(mutableMapOf<Valve, MutableMap<Valve, Int>>()) { sources, start ->
+            valves.forEach { end ->
+                val targets = sources.getOrPut(start) { mutableMapOf() }
+                targets[end] = findShortestPath(start, end).size - 1
+                sources[start] = targets
+            }
+            sources
+        }
+
+        val flowingValves = valves.filter { valve -> valve.flowRate > 0 }
+        val times = calculateValveOpenTime(distances, Valve("AA"), 26, flowingValves)
+
+        return 0
+    }
+
     private fun calculateValveOpenTime(
         distances: Map<Valve, Map<Valve, Int>>,
         source: Valve,
