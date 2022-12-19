@@ -11,21 +11,19 @@ class OreCollectingRobotSimulator(data: List<String>) {
     private var maxGeodesFound = 0
 
     fun simulate(): Int {
-        val start = InventoryState(0, 1, 0, 0, 0, 0, 0, 0)
         val geodes = blueprints.asSequence().map { blueprint ->
             maxGeodesFound = 0
             cache.clear()
-            blueprint.id to calculateGeodesSmashed(blueprint, 24, start)
+            blueprint.id to calculateGeodesSmashed(blueprint, 24, InventoryState.fromScratch())
         }
         return geodes.sumOf { (id, geodes) -> id * geodes }
     }
 
     fun simulate2(): Int {
-        val start = InventoryState(0, 1, 0, 0, 0, 0, 0, 0)
         val geodes = blueprints.take(3).map { blueprint ->
             maxGeodesFound = 0
             cache.clear()
-            calculateGeodesSmashed(blueprint, 32, start)
+            calculateGeodesSmashed(blueprint, 32, InventoryState.fromScratch())
         }
         return geodes.product()
     }
@@ -104,6 +102,12 @@ class OreCollectingRobotSimulator(data: List<String>) {
         var openGeodes: Int,
         private var geodeCrackingRobots: Int
     ) {
+        companion object {
+            fun fromScratch(): InventoryState {
+                return InventoryState(0, 1, 0, 0, 0, 0, 0, 0)
+            }
+        }
+
         fun createGeodeCrackingRobot(oreCost: Int, obsidianCost: Int): InventoryState {
             val state = this.copy()
             state.ore = ore - oreCost
