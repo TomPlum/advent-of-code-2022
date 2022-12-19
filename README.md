@@ -1,6 +1,6 @@
 # :christmas_tree: Advent of Code 2022
 
-![GitHub](https://img.shields.io/badge/stars-36%2F50-yellow)
+![GitHub](https://img.shields.io/badge/stars-37%2F50-yellow)
 
 ## What is Advent of Code?
 
@@ -60,10 +60,10 @@ tests in the `common`, `implementation` and `solutions` Gradle sub-projects as w
 | 13  | 6072          | 3ms      | 22184         | 12ms     | [Distress Signal](docs/DAY13.MD)         |
 | 14  | 692           | 37ms     | 31706         | 2s 401ms | [Regolith Reservoir](docs/DAY14.MD)      |
 | 15  | -             | -        | -             | -        | [](docs/DAY15.MD)                        |
-| 16  | -             | -        | -             | -        | [](docs/DAY16.MD)                        |
+| 16  | 1767          | 344ms    | 2528          | 7s 93ms  | [Proboscidea Volcanium](docs/DAY16.MD)   |
 | 17  | -             | -        | -             | -        | [](docs/DAY17.MD)                        |
 | 18  | 3576          | 5ms      | 2066          | 37ms     | [Boiling Boulders](docs/DAY18.MD)        |
-| 19  | 1365          | 3s 114ms | 4864          | 1s 93ms  | [Not Enough Minerals](docs/DAY19.MD)     |
+| 19  | 1365          | 2s 353ms | 4864          | 971ms    | [Not Enough Minerals](docs/DAY19.MD)     |
 | 20  | -             | -        | -             | -        | [](docs/DAY20.MD)                        |
 | 21  | -             | -        | -             | -        | [](docs/DAY21.MD)                        |
 | 22  | -             | -        | -             | -        | [](docs/DAY22.MD)                        |
@@ -71,6 +71,6 @@ tests in the `common`, `implementation` and `solutions` Gradle sub-projects as w
 | 24  | -             | -        | -             | -        | [](docs/DAY24.MD)                        |
 | 25  | -             | -        | -             | -        | [](docs/DAY25.MD)                        |
 
-Average Execution Time: 292ms \
-Total Execution Time: 4s 89ms \
+Average Execution Time: 1s 53ms \
+Total Execution Time: 18s 965ms \
 i7 5820K - OpenJDK 17.0.4 - Ubuntu 22.04
