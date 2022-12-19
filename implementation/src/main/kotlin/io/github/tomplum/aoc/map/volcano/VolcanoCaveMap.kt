@@ -51,7 +51,26 @@ class VolcanoCaveMap(scan: List<String>) {
         val flowingValves = valves.filter { valve -> valve.flowRate > 0 }
         val times = calculateValveOpenTime(distances, Valve("AA"), 26, flowingValves)
 
-        return 0
+        val maxScores = mutableMapOf<List<String>, Int>()
+        times.forEach { time ->
+            val key = time.keys.sortedBy { it.flowRate }.map { valve -> valve.label }
+            val score = time.entries.fold(0) { acc, entry -> acc + valves.find { it == entry.key }!!.flowRate * entry.value }
+
+            val maxScore = maxScores.getOrPut(key) { Int.MIN_VALUE }
+            maxScores[key] = maxOf(score, maxScore)
+        }
+
+        var highest = Int.MIN_VALUE
+        maxScores.keys.forEach { us ->
+            maxScores.keys.forEach { elephant ->
+                val distinctValves = (us + elephant).distinct().size
+                if (distinctValves == (us.size + elephant.size)) {
+                    highest = maxOf(maxScores[us]!! + maxScores[elephant]!!, highest)
+                }
+            }
+        }
+
+        return highest // 2528
     }
 
     private fun calculateValveOpenTime(
