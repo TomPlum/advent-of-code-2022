@@ -9,6 +9,6 @@ class Day19Test {
 
     @Test
     fun partOne() {
-        assertThat(solution.part1()).isEqualTo(2820) // 2820 too high, 741 too low
+        assertThat(solution.part1()).isEqualTo(1365)
     }
 }

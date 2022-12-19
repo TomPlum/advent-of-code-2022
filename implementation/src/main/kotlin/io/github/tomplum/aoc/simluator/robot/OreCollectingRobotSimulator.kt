@@ -9,15 +9,11 @@ class OreCollectingRobotSimulator(data: List<String>) {
     private val cache = mutableMapOf<String, Int>()
     private var maxGeodesFound = 0
 
-    /**
-     * 549 is too low for the solution
-     */
     fun simulate(): Int {
         val start = InventoryState(0, 1, 0, 0, 0, 0, 0, 0)
         val geodes = blueprints.map { blueprint ->
-            val maxGeodes = calculateGeodesSmashed(blueprint, 24, start)
             maxGeodesFound = 0
-            blueprint.id to maxGeodes
+            blueprint.id to calculateGeodesSmashed(blueprint, 24, start)
         }
         return geodes.sumOf { (id, geodes) -> id * geodes }
     }
@@ -37,7 +33,15 @@ class OreCollectingRobotSimulator(data: List<String>) {
                 blueprint.geodeRobotCost.first,
                 blueprint.geodeRobotCost.second
             )
-            return  searchDeeper(blueprint, minute, updatedInventory)
+            return searchDeeper(blueprint, minute, updatedInventory)
+        }
+
+        if (inventory.producesEnoughClayToMakeObsidianRobots(blueprint) && inventory.canAffordClayRobot(blueprint)) {
+            val updatedInventory = inventory.createObsidianCollectingRobot(
+                blueprint.obsidianRobotCost.first,
+                blueprint.obsidianRobotCost.second
+            )
+            return searchDeeper(blueprint, minute, updatedInventory)
         }
 
         var highest = 0
@@ -63,7 +67,7 @@ class OreCollectingRobotSimulator(data: List<String>) {
             highest = searchDeeper(blueprint, minute, updatedInventory, highest)
         }
 
-        if (!hasEnoughOre || !hasEnoughClay || !hasEnoughObsidian) {
+        if (!hasEnoughOre) {
             val updatedInventory = inventory.createNothing()
             highest = searchDeeper(blueprint, minute, updatedInventory, highest)
         }
@@ -72,9 +76,9 @@ class OreCollectingRobotSimulator(data: List<String>) {
     }
 
     private fun searchDeeper(blueprint: Blueprint, minute: Int, inventory: InventoryState, compare: Int = maxGeodesFound): Int {
-        val geodes = cache.getOrPut("${blueprint.id}${inventory.key()}") {
+        val geodes = //cache.getOrPut("${blueprint.id}${inventory.key()}") {
             calculateGeodesSmashed(blueprint, minute - 1, inventory)
-        }
+        //}
         return maxOf(compare, geodes)
     }
 
