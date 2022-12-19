@@ -70,7 +70,7 @@ class VolcanoCaveMap(scan: List<String>) {
             }
         }
 
-        return highest // 2528
+        return highest
     }
 
     private fun calculateValveOpenTime(

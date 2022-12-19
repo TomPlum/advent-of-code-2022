@@ -1,6 +1,5 @@
 package io.github.tomplum.aoc.solutions
 
-import io.github.tomplum.aoc.map.volcano.OldVolcanoMap
 import io.github.tomplum.aoc.map.volcano.VolcanoCaveMap
 import io.github.tomplum.libs.input.Day
 import io.github.tomplum.libs.input.InputReader
@@ -11,7 +10,10 @@ class Day16 : Solution<Int, Int> {
     private val volcanoCaveMap = VolcanoCaveMap(scan)
 
     override fun part1(): Int {
-        val oldMap = OldVolcanoMap(scan)
         return volcanoCaveMap.findMaximumReleasablePressure()
+    }
+
+    override fun part2(): Int {
+        return volcanoCaveMap.findMaximumReleasablePressureWithElephant()
     }
 }
