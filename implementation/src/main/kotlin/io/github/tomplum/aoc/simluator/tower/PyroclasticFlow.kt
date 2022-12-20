@@ -9,7 +9,7 @@ class PyroclasticFlow(data: String) {
 
     private val rockPositions = mutableMapOf<Point2D, Char>()
 
-    val jetPattern = data.map { direction ->
+    private val jetPattern = data.map { direction ->
         when (direction) {
             '>' -> Direction.RIGHT
             '<' -> Direction.LEFT
@@ -18,14 +18,10 @@ class PyroclasticFlow(data: String) {
     }.toTypedArray()
 
     var jetIndex = 0
-    var jetIsCycling = false
+    private var jetIsCycling = false
 
     var rockIndex = 0
-    var rockAreCycling = false
-
-    val maxHeights = LongArray(7) { 0L }
-
-    val lcm = listOf(5, jetPattern.size).map { it.toLong() }.lcm()
+    private var rockAreCycling = false
 
     private val rocks = listOf(
         HorizontalRock(),
@@ -65,19 +61,6 @@ class PyroclasticFlow(data: String) {
         return rock
     }
 
-    fun ceiling(): List<Int> = rockPositions.keys
-        .groupBy { pos -> pos.x }
-        .entries
-        .sortedBy { (x, _) -> x }
-        .map { points -> points.value.maxBy { point -> point.y } }
-        .let { points ->
-            if (points.isEmpty()) {
-                return listOf(0, 0, 0, 0, 0, 0, 0)
-            }
-            val normalTo = points.maxOf { pos -> pos.y }
-            points.map { point -> normalTo - point.y }
-        }
-
     fun hasAnyRocksResting(positions: List<Point2D>) = positions.any { pos ->
         rockPositions.containsKey(pos)
     }
@@ -86,7 +69,6 @@ class PyroclasticFlow(data: String) {
         if (pos.y > highestRockPosition) {
             highestRockPosition = pos.y
         }
-        maxHeights[pos.x - 1] = maxHeights[pos.x - 1] + pos.y
         rockPositions[pos] = '#'
     }
 
