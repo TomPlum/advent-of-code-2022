@@ -7,22 +7,24 @@ class PyroclasticFlowSimulator(data: String) {
     private val flow = PyroclasticFlow(data)
 
     fun simulate(quantity: Long): Long {
-        var currentRock = flow.getNextRock()
         var count = 0
         var rocks = 0L
-        var x = 3 // Starts 2 units in (left wall == x=1)
-        var y = 4 // Starts 3 units above the floor (floor == y=0)
+
+        var x = 3
+        var y = 4
+
+        var currentRock = flow.getNextRock()
 
         var extrapolatedHeight = 0L
-        val heightsWhenCycling = mutableMapOf<Pair<Int, Int>, Pair<Int, Int>>()
+        val states = mutableMapOf<StateKey, StateValue>()
 
         while(rocks < quantity) {
 
             if (rocks > 1000) {
-                val cacheKey = Pair(flow.rockIndex, flow.jetIndex)
+                val stateKey = StateKey(flow.rockIndex, flow.jetIndex)
 
-                if (cacheKey in heightsWhenCycling) {
-                    val (previousRocks, previousHeight) = heightsWhenCycling[cacheKey]!!
+                if (stateKey in states) {
+                    val (previousRocks, previousHeight) = states[stateKey]!!
                     val period = rocks - previousRocks
                     if (period > 0 && rocks % period == quantity % period) {
                         val cycleHeight = flow.highestRockPosition - previousHeight
@@ -32,7 +34,7 @@ class PyroclasticFlowSimulator(data: String) {
                         rocks += extrapolatedRocks
                     }
                 } else {
-                    heightsWhenCycling[cacheKey] = rocks.toInt() to flow.highestRockPosition
+                    states[stateKey] = StateValue(rocks.toInt(), flow.highestRockPosition)
                 }
             }
 
@@ -72,4 +74,8 @@ class PyroclasticFlowSimulator(data: String) {
 
         return flow.highestRockPosition.toLong() + extrapolatedHeight
     }
+
+    data class StateKey(val rockTypeIndex: Int, val jetStreamIndex: Int)
+
+    data class StateValue(val previousRockCount: Int, val previousFlowHeight: Int)
 }
