@@ -7,15 +7,17 @@ class EncryptedFile(private val contents: List<Int>) {
         val mixed = values.toMutableList()
 
         repeat(quantity) {
-            values.forEach { iv ->
-                val i = mixed.indexOf(iv)
-                mixed.removeAt(i)
-                mixed.add((i + iv.second).mod(mixed.size), iv)
+            values.forEach { source ->
+                val currentValueIndex = mixed.indexOf(source)
+                mixed.removeAt(currentValueIndex)
+
+                val targetIndex = currentValueIndex + source.second
+                val shiftedIndex = targetIndex.mod(mixed.size)
+                mixed.add(shiftedIndex, source)
             }
         }
 
-        val mixedValues = mixed.map { iv -> iv.second }
-        return listOf(1000, 2000, 3000).sumOf { value -> mixedValues.toGroveCoordinate(value) }
+        return listOf(1000, 2000, 3000).sumOf { value -> mixed.map { iv -> iv.second }.toGroveCoordinate(value) }
     }
 
     private fun List<Long>.toGroveCoordinate(value: Int) = this[((value + this.indexOf(0)) % this.size)]
