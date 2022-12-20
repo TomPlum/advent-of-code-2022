@@ -1,32 +1,17 @@
 package io.github.tomplum.aoc.communication.encryption
 
-import io.github.tomplum.libs.logging.AdventLogger
-import kotlin.math.abs
+class EncryptedFile(private val contents: List<Int>) {
 
-class EncryptedFile(contents: List<Int>) {
+    fun decrypt(quantity: Int = 1, decryptionKey: Long = 1): Long {
+        val values = contents.mapIndexed { index, value -> index.toLong() to value * decryptionKey }
+        var mixed = values.toMutableList()
 
-    private val values = contents.mapIndexed { index, value -> index to value }
-    private var mixed = values.toMutableList()
-
-    init {
-        //contents.forEachIndexed { index, value -> values[index] = value }
-        //contents.forEachIndexed { index, value -> mixed[index] = value }
-    }
-
-    fun mix(): Int {
-        AdventLogger.debug("Initial arrangement:\n$values")
-        values.forEach { (index, value) ->
-           // if (value != 0) {
+        repeat(quantity) {
+            values.forEach { (index, value) ->
                 val i = mixed.indexOf(Pair(index, value))
                 mixed.removeAt(i)
                 mixed.add((i + value).mod(mixed.size), Pair(index, value))
-               /* val targetIndex = (mixed.indexOf(value) + value)
-                val normalisedIndex = if (targetIndex < 0) targetIndex.toFileIndexFromMinus() else targetIndex.toFileIndex()
-                //AdventLogger.debug("$value moves between ${mixed[targetIndex]} and ${mixed[if (targetIndex + 1 > mixed.size) 0 else targetIndex + 1]}")
-                mixed.remove(value)
-                mixed.insertAt(normalisedIndex, value)*/
-                //AdventLogger.debug("$mixed\n")
-           // }
+            }
         }
 
         val mixedValues = mixed.map { it.second }
@@ -39,25 +24,4 @@ class EncryptedFile(contents: List<Int>) {
     }
 
     private fun List<Int>.toGroveCoordinate(value: Int) = (value + this.indexOf(0)) % this.size
-
-   /* private fun IntArray.insertAt(index: Int, key: Int) {
-        val result = this.toMutableList()
-        result.add(index, key)
-        mixed = result.toIntArray();
-    }
-
-    private fun IntArray.remove(value: Int) {
-        mixed = this.toMutableList().filterNot { it == value }.toIntArray()
-    }*/
-
-    private fun Int.toFileIndex() = if (this <= values.lastIndex) this else this % values.lastIndex
-
-    private fun Int.toFileIndexFromMinus(): Int {
-        if (abs(this) <= values.lastIndex) {
-            return values.lastIndex - (abs(this) - 1) - 1
-        } else {
-            return (abs(this) % values.size) - (abs(this) - 1) - 1
-        }
-    }
-
 }

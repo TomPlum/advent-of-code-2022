@@ -10,6 +10,6 @@ class Day20 : Solution<Int, Int> {
     private val file = EncryptedFile(contents)
 
     override fun part1(): Int {
-        return file.mix()
+        return file.decrypt()
     }
 }

@@ -11,6 +11,11 @@ class EncryptedFileTest {
 
     @Test
     fun examplePartOne() {
-        assertThat(file.mix()).isEqualTo(3)
+        assertThat(file.decrypt()).isEqualTo(3)
+    }
+
+    @Test
+    fun examplePartTwo() {
+        assertThat(file.decrypt(10, 811589153)).isEqualTo(1623178306)
     }
 }
