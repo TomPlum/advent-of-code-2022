@@ -1,6 +1,6 @@
 # :christmas_tree: Advent of Code 2022
 
-![GitHub](https://img.shields.io/badge/stars-39%2F50-yellow)
+![GitHub](https://img.shields.io/badge/stars-40%2F50-yellow)
 
 ## What is Advent of Code?
 
@@ -61,7 +61,7 @@ tests in the `common`, `implementation` and `solutions` Gradle sub-projects as w
 | 14  | 692           | 37ms     | 31706          | 2s 401ms | [Regolith Reservoir](docs/DAY14.MD)       |
 | 15  | 5564017       | 1s 84ms  | 11558423398893 | 3s 519ms | [Beacon Exclusion Zone](docs/DAY15.MD)    |
 | 16  | 1767          | 344ms    | 2528           | 7s 93ms  | [Proboscidea Volcanium](docs/DAY16.MD)    |
-| 17  | -             | -        | -              | -        | [](docs/DAY17.MD)                         |
+| 17  | 3239          | 38ms     | 1594842406882  | 39ms     | [Pyroclastic Flow](docs/DAY17.MD)         |
 | 18  | 3576          | 5ms      | 2066           | 37ms     | [Boiling Boulders](docs/DAY18.MD)         |
 | 19  | 1365          | 2s 353ms | 4864           | 971ms    | [Not Enough Minerals](docs/DAY19.MD)      |
 | 20  | 3466          | 91ms     | 9995532008348  | 1s 461ms | [Grove Positioning System](docs/DAY20.MD) |
@@ -71,6 +71,8 @@ tests in the `common`, `implementation` and `solutions` Gradle sub-projects as w
 | 24  | -             | -        | -              | -        | [](docs/DAY24.MD)                         |
 | 25  | -             | -        | -              | -        | [](docs/DAY25.MD)                         |
 
-Average Execution Time: 1s 27ms \
-Total Execution Time: 19s 526ms \
+Average Execution Time: 1s 14ms \
+Total Execution Time: 20s 280ms \
 i7 5820K - OpenJDK 17.0.4 - Ubuntu 22.04
+
+# Advent Calendar
