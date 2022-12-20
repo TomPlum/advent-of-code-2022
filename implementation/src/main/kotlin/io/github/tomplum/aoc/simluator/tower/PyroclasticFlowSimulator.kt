@@ -16,6 +16,8 @@ class PyroclasticFlowSimulator(data: String) {
         var y = 4 // Starts 3 units above the floor (floor == y=0)
         val snapshots = mutableListOf<Int>()
 
+        val translationCache = mutableMapOf<Pair<RockType, Int>, List<Point2D>>()
+
         var hasJustCycled = false
         var lastCycleHeight = 0
         var rocksAtLastCycle = 0L
@@ -78,6 +80,8 @@ class PyroclasticFlowSimulator(data: String) {
             } else {
                 val yNew = y - 1
                 val newRockPositions = currentRock.positions(Point2D(x, yNew)).reversed()
+                //translationCache[Pair(currentRock.type, x)] = newRockPositions
+
                 val rockWillHitRestingPoint = flow.hasAnyRocksResting(newRockPositions) || newRockPositions.any { pos -> pos.y == 0 }
                 if (rockWillHitRestingPoint) {
                     flow.addRestingRock(currentRock.positions(Point2D(x, y)))

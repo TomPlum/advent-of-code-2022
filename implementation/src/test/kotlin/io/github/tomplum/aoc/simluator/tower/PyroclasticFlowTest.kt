@@ -58,7 +58,7 @@ class PyroclasticFlowTest {
             assertThat(second).isEqualTo(PLUS)
 
             val third = flow.getNextRock()
-            assertThat(third).isEqualTo(L)
+            assertThat(third).isEqualTo(ANGLE)
 
             val fourth = flow.getNextRock()
             assertThat(fourth).isEqualTo(VERTICAL)

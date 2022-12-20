@@ -1,9 +1,14 @@
 package io.github.tomplum.aoc.simluator.tower.rocks
 
 import io.github.tomplum.aoc.simluator.tower.Rock
+import io.github.tomplum.aoc.simluator.tower.RockType
 import io.github.tomplum.libs.math.point.Point2D
 
 class VerticalRock : Rock {
+
+    override val type: RockType
+        get() = RockType.VERTICAL
+
     override fun positions(start: Point2D): List<Point2D> {
         return (start.y downTo start.y - 3).map { y -> Point2D(start.x, y) }
     }

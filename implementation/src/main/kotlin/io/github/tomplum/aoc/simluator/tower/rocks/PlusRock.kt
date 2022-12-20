@@ -1,10 +1,15 @@
 package io.github.tomplum.aoc.simluator.tower.rocks
 
 import io.github.tomplum.aoc.simluator.tower.Rock
+import io.github.tomplum.aoc.simluator.tower.RockType
 import io.github.tomplum.libs.math.Direction
 import io.github.tomplum.libs.math.point.Point2D
 
 class PlusRock : Rock {
+
+    override val type: RockType
+        get() = RockType.PLUS
+
     override fun positions(start: Point2D): List<Point2D> {
         val top = start.shift(Direction.RIGHT)
         val left = start.shift(Direction.DOWN)
