@@ -25,10 +25,30 @@ class PyroclasticFlowSimulator(data: String) {
         var cycleFound = false
         var heightBeforeExtrapolation = 0
         var extrapolatedHeight = 0L
+        val flowStates = mutableMapOf<FlowState, Pair<Int, Int>>()
+        val heightsWhenCycling = mutableMapOf<Pair<Int, Int>, Pair<Int, Int>>()
 
         while(rocks < quantity) {
 
-            val lastTwoCycles = cycleHeightDeltas.takeLast(4)
+            if (rocks > 1000) {
+                val cacheKey = Pair(flow.rockIndex, flow.jetIndex)
+
+                if (cacheKey in heightsWhenCycling) {
+                    val (previousRocks, previousHeight) = heightsWhenCycling[cacheKey]!!
+                    val period = rocks - previousRocks
+                    if (period > 0 && rocks % period == quantity % period) {
+                        val cycleHeight = flow.highestRockPosition - previousHeight
+                        val remainingFullCycles = (quantity - rocks) / period
+                        val extrapolatedRocks = remainingFullCycles * period
+                        extrapolatedHeight = cycleHeight * remainingFullCycles
+                        rocks += extrapolatedRocks
+                    }
+                } else {
+                    heightsWhenCycling[cacheKey] = rocks.toInt() to flow.highestRockPosition
+                }
+            }
+
+      /*      val lastTwoCycles = cycleHeightDeltas.takeLast(4)
             if (!cycleFound && lastTwoCycles.size == 4 && lastTwoCycles[0] == lastTwoCycles[2] && lastTwoCycles[1] == lastTwoCycles[3]) {
                 heightBeforeExtrapolation = flow.highestRockPosition
                 cycleFound = true
@@ -38,7 +58,7 @@ class PyroclasticFlowSimulator(data: String) {
                 val extrapolatedRocks = remainingFullCycles * rocksInCycle
                 extrapolatedHeight = cycleHeight * remainingFullCycles
                 rocks += extrapolatedRocks
-            }
+            }*/
 
             val isInfluencedByJetStream = count % 2 == 0
             if (isInfluencedByJetStream) {
@@ -66,8 +86,9 @@ class PyroclasticFlowSimulator(data: String) {
                     y = flow.highestRockPosition + currentRock.height() + 3
                     rocks += 1
 
-                    if (hasJustCycled) {
-                        //snapshots.add(flow.getTopTwentyRows())
+                    //val flowState = FlowState(flow.ceiling(), rocks.toInt() % 5, flow.jetIndex % flow.jetPattern.size)
+          /*          val flowState = FlowState(flow.rockIndex, flow.jetIndex)
+                    if (flowState in flowStates) {
                         rockDeltas.add(rocks - rocksAtLastCycle)
                         rocksAtLastCycle = rocks
 
@@ -75,25 +96,31 @@ class PyroclasticFlowSimulator(data: String) {
                         val cycleHeightDelta = cycleHeight - lastCycleHeight
                         cycleHeightDeltas.add(cycleHeightDelta)
 
-                        /*if (cycleHeightDelta == 26) {
-                            cycleMarkers.addAll(flow.getCycleMarkers(y))
-                            AdventLogger.debug("Height before first cycle = ${flow.getHighestRockPosition()}")
-                        }*/
-                        AdventLogger.debug("Cycled at $rocks rocks with height delta $cycleHeightDelta")
                         lastCycleHeight = cycleHeight
                         hasJustCycled = false
-                        //return (quantity / rocks) * cycleHeight
                     }
-                    //AdventLogger.debug(flow)
+                    flowStates[flowState] = (rocks.toInt()) to flow.highestRockPosition*/
+
+
+                    if (hasJustCycled) {
+                        rockDeltas.add(rocks - rocksAtLastCycle)
+                        rocksAtLastCycle = rocks
+
+                        val cycleHeight = flow.highestRockPosition
+                        val cycleHeightDelta = cycleHeight - lastCycleHeight
+                        cycleHeightDeltas.add(cycleHeightDelta)
+
+                        lastCycleHeight = cycleHeight
+                        hasJustCycled = false
+                    }
                 } else {
                     y = yNew
                 }
             }
 
-
-            if (flow.jetIsCycling && flow.rockAreCycling) {
+            /*if (flow.jetIsCycling && flow.rockAreCycling) {
                 hasJustCycled = true
-            }
+            }*/
 
             count++
         }
@@ -102,4 +129,7 @@ class PyroclasticFlowSimulator(data: String) {
 
         return (flow.highestRockPosition.toLong() - heightBeforeExtrapolation) + extrapolatedHeight + heightBeforeExtrapolation
     }
+
+    //data class FlowState(val ceiling: List<Int>, val rockType: Int, val jetStream: Int)
+    data class FlowState(val rockType: Int, val jetStream: Int)
 }
