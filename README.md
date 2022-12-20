@@ -1,6 +1,6 @@
 # :christmas_tree: Advent of Code 2022
 
-![GitHub](https://img.shields.io/badge/stars-37%2F50-yellow)
+![GitHub](https://img.shields.io/badge/stars-39%2F50-yellow)
 
 ## What is Advent of Code?
 
@@ -64,13 +64,13 @@ tests in the `common`, `implementation` and `solutions` Gradle sub-projects as w
 | 17  | -             | -        | -              | -        | [](docs/DAY17.MD)                        |
 | 18  | 3576          | 5ms      | 2066           | 37ms     | [Boiling Boulders](docs/DAY18.MD)        |
 | 19  | 1365          | 2s 353ms | 4864           | 971ms    | [Not Enough Minerals](docs/DAY19.MD)     |
-| 20  | -             | -        | -              | -        | [](docs/DAY20.MD)                        |
+| 20  | 3466          | 91ms     | 9995532008348  | 1s 461ms | [](docs/DAY20.MD)                        |
 | 21  | -             | -        | -              | -        | [](docs/DAY21.MD)                        |
 | 22  | -             | -        | -              | -        | [](docs/DAY22.MD)                        |
 | 23  | -             | -        | -              | -        | [](docs/DAY23.MD)                        |
 | 24  | -             | -        | -              | -        | [](docs/DAY24.MD)                        |
 | 25  | -             | -        | -              | -        | [](docs/DAY25.MD)                        |
 
-Average Execution Time: 1s 53ms \
-Total Execution Time: 18s 965ms \
+Average Execution Time: 1s 27ms \
+Total Execution Time: 19s 526ms \
 i7 5820K - OpenJDK 17.0.4 - Ubuntu 22.04
