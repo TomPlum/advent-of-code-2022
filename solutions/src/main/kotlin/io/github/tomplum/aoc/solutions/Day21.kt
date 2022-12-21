@@ -11,7 +11,7 @@ class Day21: Solution<Long, Long> {
     private val riddle = MonkeyRiddle(monkeys)
 
     override fun part1(): Long {
-        return riddle.solve()
+        return riddle.numberYelledByRootMonkey()
     }
 
     override fun part2(): Long {

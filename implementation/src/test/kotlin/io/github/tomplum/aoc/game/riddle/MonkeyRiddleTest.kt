@@ -11,11 +11,11 @@ class MonkeyRiddleTest {
 
     @Test
     fun examplePartOne() {
-        assertThat(riddle.solve()).isEqualTo(152)
+        assertThat(riddle.numberYelledByRootMonkey()).isEqualTo(152)
     }
 
     @Test
     fun examplePartTwo() {
-        assertThat(riddle.solve2()).isEqualTo(301)
+        assertThat(riddle.numberYelledByUs()).isEqualTo(301)
     }
 }

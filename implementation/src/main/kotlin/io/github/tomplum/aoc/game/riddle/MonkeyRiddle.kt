@@ -2,66 +2,55 @@ package io.github.tomplum.aoc.game.riddle
 
 class MonkeyRiddle(jobs: List<String>) {
 
-    private val monkeys = jobs.associate { job ->
-        val parts = job.split(":")
-        val name = parts.first()
-        val operation = parts[1].trim()
-        var dependencies: Pair<String, String>? = null
-        val action = if (operation.contains("+")) {
-            val values = operation.split(" + ")
-            dependencies = Pair(values[0], values[1])
-            Add()
-        } else if (operation.contains("-")) {
-            val values = operation.split(" - ")
-            dependencies = Pair(values[0], values[1])
-            Subtract()
-        } else if (operation.contains("*")) {
-            val values = operation.split(" * ")
-            dependencies = Pair(values[0], values[1])
-            Multiply()
-        } else if (operation.contains("/")) {
-            val values = operation.split(" / ")
-            dependencies = Pair(values[0], values[1])
-            Divide()
+    private val monkeys = jobs.map { job ->
+        val split = job.split(": ")
+        val name = split.first()
+        val action = split[1]
+        if (action.all { char -> char.isDigit() }) {
+            Monkey(name).apply {
+                number = action.toLong()
+            }
         } else {
-            val value = operation.trim().toLong()
-            Yell(value)
+            Monkey(name).apply {
+                val parts = action.split(" ")
+                equation = Equation(parts[1].first())
+                dependencies += listOf(parts[0], parts[2])
+            }
         }
-
-        name to Monkey(name, action, dependencies)
-    }
+    }.associateBy { monkey -> monkey.name }
 
     private val mathMonkeys = jobs
         .map { job -> MathMonkey.fromJobString(job) }
         .associateBy { monkey -> monkey.name }
 
-    fun solve(): Long {
-        return find(monkeys["root"]!!)
+    fun numberYelledByRootMonkey(): Long {
+        return solveMonkeyEquation(monkeys["root"]!!)
     }
 
-    fun solve2(): Long {
+    fun numberYelledByUs(): Long {
         val equation = createEquation("root")
         return 0
     }
 
-    private fun find(source: Monkey): Long {
-        if(!source.canYell()) {
-            val deps = source.dependencies
-            if (deps != null) {
-                val firstDependentMonkey = monkeys[deps.first]!!
-                if (!firstDependentMonkey.canYell()) {
-                    source.first = find(firstDependentMonkey)
-                } else {
-                    source.first = firstDependentMonkey.yell()
-                }
+    private fun solveMonkeyEquation(source: Monkey): Long {
+        val deps = source.dependencies
 
-                val secondDependentMonkey = monkeys[deps.second]!!
-                if (!secondDependentMonkey.canYell()) {
-                    source.second = find(secondDependentMonkey)
-                } else {
-                    source.second = secondDependentMonkey.yell()
-                }
-            }
+        if (deps.isEmpty()) {
+            return source.yell()
+        }
+
+        val first = monkeys[deps.first()]!!
+        if (!first.canYell()) {
+            source.left = solveMonkeyEquation(first)
+        } else {
+            source.left = first.yell()
+        }
+
+        val second = monkeys[deps.last()]!!
+        if (!second.canYell()) {
+            source.right = solveMonkeyEquation(second)
+        } else {
+            source.right = second.yell()
         }
 
         return source.yell()
@@ -83,17 +72,21 @@ class MonkeyRiddle(jobs: List<String>) {
         return "(${monkey.first}${monkey.operator}${monkey.second})"
     }
 
-    data class Monkey(val name: String, var equation: Equation, val dependencies: Pair<String, String>?) {
-        var first: Long = -1
-        var second: Long = -1
+    data class Monkey(val name: String, ) {
+        var left: Long = -1
+        var right: Long = -1
+        var number = -1L
+        var equation: Equation? = null
+        val dependencies = mutableListOf<String>()
 
-        fun canYell() = equation is Yell || (first != -1L && second != -1L)
+        fun canYell() = equation != null && (left != -1L && right != -1L)
 
         fun yell(): Long {
-            if (canYell()) {
-                return equation.solve(first, second)
+            return if (number != -1L) {
+                number
+            } else {
+                equation!!.solve(left, right)
             }
-            throw IllegalStateException("Monkey $name cannot yell as it doesn't have both values")
         }
     }
 
@@ -115,62 +108,13 @@ class MonkeyRiddle(jobs: List<String>) {
         }
     }
 
-    interface Equation {
-        val op: String
-        fun solve(a: Long, b: Long): Long
-    }
-
-    inner class Add : Equation {
-        override val op: String
-            get() = "+"
-        override fun solve(a: Long, b: Long): Long {
-            return a + b
-        }
-    }
-
-    inner class Subtract : Equation {
-        override val op: String
-            get() = "-"
-
-        override fun solve(a: Long, b: Long): Long {
-            return a - b
-        }
-    }
-
-    inner class Divide : Equation {
-        override val op: String
-            get() = "/"
-
-        override fun solve(a: Long, b: Long): Long {
-            return a / b
-        }
-    }
-
-    inner class Multiply : Equation {
-        override val op: String
-            get() = "*"
-
-        override fun solve(a: Long, b: Long): Long {
-            return a * b
-        }
-    }
-
-    inner class Equals : Equation {
-        override val op: String
-            get() = "="
-
-        override fun solve(a: Long, b: Long): Long {
-            return if (a == b) 1 else 0
-        }
-
-    }
-
-    inner class Yell(var value: Long) : Equation {
-        override val op: String
-            get() = ""
-
-        override fun solve(a: Long, b: Long): Long {
-            return value
+    class Equation(private val operator: Char) {
+        fun solve(a: Long, b: Long) = when(operator) {
+            '+' -> a + b
+            '-' -> a - b
+            '*' -> a * b
+            '/' -> a / b
+            else -> throw IllegalArgumentException("Unknown Equation Operation [$operator]")
         }
     }
 }
