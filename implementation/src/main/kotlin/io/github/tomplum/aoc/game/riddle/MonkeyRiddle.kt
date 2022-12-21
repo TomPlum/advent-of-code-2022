@@ -12,21 +12,21 @@ class MonkeyRiddle(jobs: List<String>) {
         val action = if (operation.contains("+")) {
             val values = operation.split(" + ")
             dependencies = Pair(values[0], values[1])
-            Add(values[0], values[1])
+            Add()
         } else if (operation.contains("-")) {
             val values = operation.split(" - ")
             dependencies = Pair(values[0], values[1])
-            Subtract(values[0], values[1])
+            Subtract()
         } else if (operation.contains("*")) {
             val values = operation.split(" * ")
             dependencies = Pair(values[0], values[1])
-            Multiply(values[0], values[1])
+            Multiply()
         } else if (operation.contains("/")) {
             val values = operation.split(" / ")
             dependencies = Pair(values[0], values[1])
-            Divide(values[0], values[1])
+            Divide()
         } else {
-            val value = if (name == "humn") 2037 else operation.trim().toLong()
+            val value = operation.trim().toLong()
             Yell(value)
         }
 
@@ -48,34 +48,14 @@ class MonkeyRiddle(jobs: List<String>) {
     }
 
     fun solve(): Long {
-        find(monkeys["root"]!!)
-        val root = monkeys["root"]!!
-        val initialHumanValue = (monkeys["humn"]!!.equation as Yell).value
-        var closest = Pair(initialHumanValue, root.first)
-        val answer = root.second
-        var lastGuess = initialHumanValue
-        while (true) {
-            val guess = lastGuess + 10000
-            lastGuess = guess
-            (monkeys["humn"]!!.equation as Yell).value = guess
-            find(monkeys["root"]!!)
-            val newRoot = monkeys["root"]!!
-            val closestCandidate = newRoot.first
-            if (abs(closestCandidate - answer) < abs(closest.second - answer)) {
-                closest = Pair(guess, closestCandidate)
-            }
-
-            if (closestCandidate == answer) {
-                return guess
-            }
-        }
-        return answer
+        return find(monkeys["root"]!!)
     }
 
     fun solve2(): Long {
         monkeys["root"]!!.equation = Equals()
 
         val equation = buildEquation("root")
+
         return find(monkeys["root"]!!)
     }
 
@@ -112,7 +92,7 @@ class MonkeyRiddle(jobs: List<String>) {
             return monkey.number
         }
 
-        monkey!!.first = buildEquation(monkey.first)
+        monkey.first = buildEquation(monkey.first)
         monkey.second = buildEquation(monkey.second)
 
         return "(${monkey.first}${monkey.operator}${monkey.second})"
@@ -121,7 +101,6 @@ class MonkeyRiddle(jobs: List<String>) {
     data class Monkey(val name: String, var equation: Equation, val dependencies: Pair<String, String>?) {
         var first: Long = -1
         var second: Long = -1
-        var equationString =  ""
 
         fun canYell() = equation is Yell || (first != -1L && second != -1L)
 
@@ -140,7 +119,7 @@ class MonkeyRiddle(jobs: List<String>) {
         fun solve(a: Long, b: Long): Long
     }
 
-    inner class Add(val aDependent: String, val bDependent: String) : Equation {
+    inner class Add : Equation {
         override val op: String
             get() = "+"
         override fun solve(a: Long, b: Long): Long {
@@ -148,7 +127,7 @@ class MonkeyRiddle(jobs: List<String>) {
         }
     }
 
-    inner class Subtract(val aDependent: String, val bDependent: String) : Equation {
+    inner class Subtract : Equation {
         override val op: String
             get() = "-"
 
@@ -157,7 +136,7 @@ class MonkeyRiddle(jobs: List<String>) {
         }
     }
 
-    inner class Divide(val aDependent: String, val bDependent: String) : Equation {
+    inner class Divide : Equation {
         override val op: String
             get() = "/"
 
@@ -166,7 +145,7 @@ class MonkeyRiddle(jobs: List<String>) {
         }
     }
 
-    inner class Multiply(val aDependent: String, val bDependent: String) : Equation {
+    inner class Multiply : Equation {
         override val op: String
             get() = "*"
 
