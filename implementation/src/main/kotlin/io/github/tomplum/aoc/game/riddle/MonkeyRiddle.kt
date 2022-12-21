@@ -24,17 +24,17 @@ class MonkeyRiddle(jobs: List<String>) {
             dependencies = Pair(values[0], values[1])
             Divide(values[0], values[1])
         } else {
-            Yell(operation.trim().toInt())
+            Yell(operation.trim().toLong())
         }
 
         name to Monkey(name, action, dependencies)
     }
 
-    fun solve(): Int {
+    fun solve(): Long {
         return find(monkeys["root"]!!)
     }
 
-    private fun find(source: Monkey): Int {
+    private fun find(source: Monkey): Long {
         if(!source.canYell()) {
             val deps = source.dependencies
             if (deps != null) {
@@ -58,12 +58,12 @@ class MonkeyRiddle(jobs: List<String>) {
     }
 
     data class Monkey(val name: String, private val equation: Equation, val dependencies: Pair<String, String>?) {
-        var first: Int = -1
-        var second: Int = -1
+        var first: Long = -1
+        var second: Long = -1
 
-        fun canYell() = equation is Yell || (first != -1 && second != -1)
+        fun canYell() = equation is Yell || (first != -1L && second != -1L)
 
-        fun yell(): Int {
+        fun yell(): Long {
             if (canYell()) {
                 return equation.solve(first, second)
             }
@@ -72,35 +72,35 @@ class MonkeyRiddle(jobs: List<String>) {
     }
 
     interface Equation {
-        fun solve(a: Int, b: Int): Int
+        fun solve(a: Long, b: Long): Long
     }
 
     inner class Add(val aDependent: String, val bDependent: String) : Equation {
-        override fun solve(a: Int, b: Int): Int {
+        override fun solve(a: Long, b: Long): Long {
             return a + b
         }
     }
 
     inner class Subtract(val aDependent: String, val bDependent: String) : Equation {
-        override fun solve(a: Int, b: Int): Int {
+        override fun solve(a: Long, b: Long): Long {
             return a - b
         }
     }
 
     inner class Divide(val aDependent: String, val bDependent: String) : Equation {
-        override fun solve(a: Int, b: Int): Int {
+        override fun solve(a: Long, b: Long): Long {
             return a / b
         }
     }
 
     inner class Multiply(val aDependent: String, val bDependent: String) : Equation {
-        override fun solve(a: Int, b: Int): Int {
+        override fun solve(a: Long, b: Long): Long {
             return a * b
         }
     }
 
-    inner class Yell(private val value: Int) : Equation {
-        override fun solve(a: Int, b: Int): Int {
+    inner class Yell(private val value: Long) : Equation {
+        override fun solve(a: Long, b: Long): Long {
             return value
         }
     }
