@@ -1,7 +1,5 @@
 package io.github.tomplum.aoc.game.riddle
 
-import kotlin.math.abs
-
 class MonkeyRiddle(jobs: List<String>) {
 
     private val monkeys = jobs.associate { job ->
@@ -33,30 +31,17 @@ class MonkeyRiddle(jobs: List<String>) {
         name to Monkey(name, action, dependencies)
     }
 
-    private val mathMonkeys = jobs.associate { job ->
-        val parts = job.split(": ")
-        val name = parts.first()
-        val operation = parts[1].trim().split(" ")
-        val monkey = if (operation.size == 1)  {
-            val constant = if (name == "humn") "x" else operation[0]
-            MathMonkey(name, constant, "", "", "")
-        } else {
-            val operator = if (name == "root") "=" else operation[1]
-            MathMonkey(name, "", operation[0], operation[2], operator)
-        }
-        name to monkey
-    }
+    private val mathMonkeys = jobs
+        .map { job -> MathMonkey.fromJobString(job) }
+        .associateBy { monkey -> monkey.name }
 
     fun solve(): Long {
         return find(monkeys["root"]!!)
     }
 
     fun solve2(): Long {
-        monkeys["root"]!!.equation = Equals()
-
-        val equation = buildEquation("root")
-
-        return find(monkeys["root"]!!)
+        val equation = createEquation("root")
+        return 0
     }
 
     private fun find(source: Monkey): Long {
@@ -82,7 +67,7 @@ class MonkeyRiddle(jobs: List<String>) {
         return source.yell()
     }
 
-    private fun buildEquation(source: String): String {
+    private fun createEquation(source: String): String {
         val monkey = mathMonkeys[source]!!
         if (monkey.number.isNotBlank() && monkey.number.all { it.isDigit() }) {
             return monkey.number
@@ -92,8 +77,8 @@ class MonkeyRiddle(jobs: List<String>) {
             return monkey.number
         }
 
-        monkey.first = buildEquation(monkey.first)
-        monkey.second = buildEquation(monkey.second)
+        monkey.first = createEquation(monkey.first)
+        monkey.second = createEquation(monkey.second)
 
         return "(${monkey.first}${monkey.operator}${monkey.second})"
     }
@@ -112,7 +97,23 @@ class MonkeyRiddle(jobs: List<String>) {
         }
     }
 
-    data class MathMonkey(val name: String, val number: String, var first: String, var second: String, val operator: String)
+    data class MathMonkey(val name: String, val number: String, var first: String, var second: String, val operator: String) {
+        companion object {
+            fun fromJobString(job: String): MathMonkey {
+                val parts = job.split(": ")
+                val name = parts.first()
+                val operation = parts[1].trim().split(" ")
+                val monkey = if (operation.size == 1)  {
+                    val constant = if (name == "humn") "x" else operation[0]
+                    MathMonkey(name, constant, "", "", "")
+                } else {
+                    val operator = if (name == "root") "=" else operation[1]
+                    MathMonkey(name, "", operation[0], operation[2], operator)
+                }
+                return monkey
+            }
+        }
+    }
 
     interface Equation {
         val op: String
