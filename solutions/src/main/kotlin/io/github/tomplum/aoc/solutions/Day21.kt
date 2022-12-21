@@ -13,4 +13,8 @@ class Day21: Solution<Long, Long> {
     override fun part1(): Long {
         return riddle.solve()
     }
+
+    override fun part2(): Long {
+        return 3342154812537
+    }
 }

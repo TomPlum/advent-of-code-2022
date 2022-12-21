@@ -13,4 +13,9 @@ class MonkeyRiddleTest {
     fun examplePartOne() {
         assertThat(riddle.solve()).isEqualTo(152)
     }
+
+    @Test
+    fun examplePartTwo() {
+        assertThat(riddle.solve2()).isEqualTo(301)
+    }
 }
