@@ -1,5 +1,9 @@
 package io.github.tomplum.aoc.game.riddle
 
+import com.fathzer.soft.javaluator.DoubleEvaluator
+import com.fathzer.soft.javaluator.Parameters
+import com.fathzer.soft.javaluator.StaticVariableSet
+
 class MonkeyRiddle(jobs: List<String>) {
 
     private val monkeys = jobs.map { job ->
@@ -29,6 +33,8 @@ class MonkeyRiddle(jobs: List<String>) {
 
     fun numberYelledByUs(): Long {
         val equation = createEquation("root")
+        val variables = StaticVariableSet<Double>()
+        val result = DoubleEvaluator().evaluate(equation)
         return 0
     }
 
