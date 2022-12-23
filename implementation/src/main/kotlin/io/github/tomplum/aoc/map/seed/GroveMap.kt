@@ -25,8 +25,9 @@ class GroveMap(scan: List<String>) : AdventMap2D<GrovePatch>() {
 
     fun moveElf(source: Point2D, target: Point2D) {
         removeTile(source)
+        addTile(source, GrovePatch('.'))
         addTile(target, GrovePatch('#'))
     }
 
-    fun getPatch(pos: Point2D) = getTile(pos)
+    fun getPatch(pos: Point2D) = getTile(pos, GrovePatch('.'))
 }
