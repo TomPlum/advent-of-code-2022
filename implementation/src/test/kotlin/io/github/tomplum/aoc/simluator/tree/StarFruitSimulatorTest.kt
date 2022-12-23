@@ -21,4 +21,11 @@ class StarFruitSimulatorTest {
         val simulator = StarFruitSimulator(scan)
         assertThat(simulator.findElvenBoundingRectangle(5)).isEqualTo(110)
     }
+
+    @Test
+    fun examplePartTwo() {
+        val scan = TestInputReader.read<String>("day23/example.txt").value
+        val simulator = StarFruitSimulator(scan)
+        assertThat(simulator.findRoundWithNoMovement()).isEqualTo(20)
+    }
 }
