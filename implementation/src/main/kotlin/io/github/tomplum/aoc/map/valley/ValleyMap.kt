@@ -34,6 +34,20 @@ class ValleyMap(data: List<String>) : AdventMap2D<ValleyTile>() {
     }
 
     fun traverseBlizzards(): Int {
+        val start = filterTiles { tile -> tile.isClear() }.minBy { (pos, _) -> pos.y }.key
+        val goal = filterTiles { tile -> tile.isClear() }.maxBy { (pos, _) -> pos.y }.key
+        return traverse(start, goal)
+    }
+
+    fun traverseValleyWithSnacks(): Int {
+        val start = filterTiles { tile -> tile.isClear() }.minBy { (pos, _) -> pos.y }.key
+        val goal = filterTiles { tile -> tile.isClear() }.maxBy { (pos, _) -> pos.y }.key
+        val expedition = traverse(start, goal)
+        val snackBacktrack = traverse(goal, start)
+        return (expedition * 2) + snackBacktrack
+    }
+
+    private fun traverse(start: Point2D, goal: Point2D): Int {
         val blizzardTimeLcm = 600//listOf(xMax - 2L, yMax - 2L).lcm().toInt()
         val initialState = filterTiles { it.isClear() }.keys
         AdventLogger.debug("Intitial State \n$this\n")
@@ -70,10 +84,9 @@ class ValleyMap(data: List<String>) : AdventMap2D<ValleyTile>() {
             filterTiles { tile -> tile.isClear() }.keys
         }.toMutableMap()
         clearTiles[0] = initialState
-        val start = filterTiles { tile -> tile.isClear() }.minBy { (pos, _) -> pos.y }.key
-        val goal = filterTiles { tile -> tile.isClear() }.maxBy { (pos, _) -> pos.y }.key
+
         //addTile(Point2D(start.x, start.y - 1), ValleyTile(listOf('#')))
-       // addTile(Point2D(goal.x, goal.y + 1), ValleyTile(listOf('#')))
+        // addTile(Point2D(goal.x, goal.y + 1), ValleyTile(listOf('#')))
 
         var minutesElapsed = 0
         var clearIndex = 0

@@ -13,4 +13,9 @@ class ValleyMapTest {
     fun examplePartOne() {
         assertThat(map.traverseBlizzards()).isEqualTo(18)
     }
+
+    @Test
+    fun examplePartTwo() {
+        assertThat(map.traverseValleyWithSnacks()).isEqualTo(54)
+    }
 }
