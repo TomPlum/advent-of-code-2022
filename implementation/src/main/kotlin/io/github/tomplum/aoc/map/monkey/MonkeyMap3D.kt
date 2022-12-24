@@ -5,9 +5,8 @@ import io.github.tomplum.extension.splitNewLine
 import io.github.tomplum.libs.math.Direction
 import io.github.tomplum.libs.math.Direction.*
 import io.github.tomplum.libs.math.map.AdventMap2D
-import io.github.tomplum.libs.math.map.AdventMap3D
 import io.github.tomplum.libs.math.point.Point2D
-import io.github.tomplum.libs.math.point.Point3D
+import kotlin.math.abs
 
 class MonkeyMap3D(notes: List<String>): AdventMap2D<MonkeyMapTile>() {
     private val path = mutableListOf<Pair<Direction?, Int>>()
@@ -86,36 +85,17 @@ class MonkeyMap3D(notes: List<String>): AdventMap2D<MonkeyMapTile>() {
             .minBy { pos -> pos.y }
 
         var facing = RIGHT
-        val face = A
+        var currentFace = A
 
         path.forEach { (direction, distance) ->
             for (i in 0 until distance) {
                 val normalisedDirection = if (facing == DOWN) UP else if (facing == UP) DOWN else facing
                 var candidatePos = position.shift(normalisedDirection)
                 if (getTile(candidatePos, MonkeyMapTile(' ')).isVoid()) {
-                    if (facing == RIGHT) {
-                        candidatePos = filterTiles { tile -> !tile.isVoid() }.keys
-                            .filter { pos -> pos.y == position.y }
-                            .minBy { pos -> pos.x }
-                    }
-
-                    if (facing == LEFT) {
-                        candidatePos = filterTiles { tile -> !tile.isVoid() }.keys
-                            .filter { pos -> pos.y == position.y }
-                            .maxBy { pos -> pos.x }
-                    }
-
-                    if (facing == UP) {
-                        candidatePos = filterTiles { tile -> !tile.isVoid() }.keys
-                            .filter { pos -> pos.x == position.x }
-                            .maxBy { pos -> pos.y }
-                    }
-
-                    if (facing == DOWN) {
-                        candidatePos = filterTiles { tile -> !tile.isVoid() }.keys
-                            .filter { pos -> pos.x == position.x }
-                            .minBy { pos -> pos.y }
-                    }
+                    val (newFace, newFacing) = candidatePos.getTargetFace(currentFace, facing)
+                    currentFace = newFace
+                    facing = newFacing
+                    candidatePos = newFacePos
                 }
 
                 if (getTile(candidatePos).isWall()) {
@@ -136,50 +116,55 @@ class MonkeyMap3D(notes: List<String>): AdventMap2D<MonkeyMapTile>() {
         return (1000 * (position.y + 1)) + (4 * (position.x + 1)) + facing.value()
     }
 
-    private fun Point2D.getTargetFace(currentFace: Face, facing: Direction): Pair<Face, Direction> = when(currentFace) {
+    private fun Point2D.getTargetFace(currentFace: Face, currentPosition: Point2D,  facing: Direction): Triple<Face, Point2D, Direction> = when(currentFace) {
         A -> when(facing) {
-            RIGHT -> Pair(B, RIGHT)
-            DOWN -> Pair(F, RIGHT)
-            LEFT -> Pair(E, RIGHT)
-            UP -> Pair(C, UP)
-            else -> throw IllegalArgumentException("You can be facing $facing")
+            RIGHT -> Triple(B, Point2D(bFace.xLeftMost(), currentPosition.y), RIGHT)
+            DOWN -> Triple(F, Point2D(fFace.xLeftMost(), currentPosition.x), RIGHT)
+            LEFT -> Triple(E, Point2D(eFace.xLeftMost(), abs(currentPosition.y - 49)), RIGHT)
+            UP -> Triple(C, Point2D(currentPosition.x, cFace.yBottomMost()), UP)
+            else -> throw IllegalArgumentException("You can't be facing $facing")
         }
         B -> when(facing) {
-            RIGHT -> Pair(D, LEFT)
-            DOWN -> Pair(F, DOWN)
-            LEFT -> Pair(A, LEFT)
-            UP -> Pair(C, LEFT)
-            else -> throw IllegalArgumentException("You can be facing $facing")
+            RIGHT -> Triple(D, Point2D(dFace.xRightMost(), abs(currentPosition.y - 49)), LEFT)
+            DOWN -> Triple(F, Point2D(currentPosition.x, fFace.yTopMost()), DOWN)
+            LEFT -> Triple(A, Point2D(aFace.xRightMost(), currentPosition.y), LEFT)
+            UP -> Triple(C, Point2D(cFace.xRightMost(), currentPosition.x), LEFT)
+            else -> throw IllegalArgumentException("You can't be facing $facing")
         }
         C -> when(facing) {
-            RIGHT -> Pair(B, DOWN)
-            DOWN -> Pair(D, UP)
-            LEFT -> Pair(E, UP)
-            UP -> Pair(D, UP)
-            else -> throw IllegalArgumentException("You can be facing $facing")
+            RIGHT -> Triple(B, Point2D(currentPosition.y, bFace.yTopMost()), DOWN)
+            DOWN -> Triple(A, Point2D(currentPosition.x, aFace.yTopMost()), DOWN)
+            LEFT -> Triple(E, Point2D(currentPosition.y, eFace.yBottomMost()), UP)
+            UP -> Triple(D, Point2D(currentPosition.x, dFace.yBottomMost()), UP)
+            else -> throw IllegalArgumentException("You can't be facing $facing")
         }
         D -> when(facing) {
-            RIGHT -> Pair(B, LEFT)
-            DOWN -> Pair(C, DOWN)
-            LEFT -> Pair(E, LEFT)
-            UP -> Pair(F, LEFT)
-            else -> throw IllegalArgumentException("You can be facing $facing")
+            RIGHT -> Triple(B, Point2D(bFace.xRightMost(), abs(currentPosition.y - 49)), LEFT)
+            DOWN -> Triple(C, Point2D(currentPosition.x, cFace.yTopMost()), DOWN)
+            LEFT -> Triple(E, Point2D(eFace.xRightMost(), currentPosition.y), LEFT)
+            UP -> Triple(F, Point2D(fFace.xRightMost(), currentPosition.x), LEFT)
+            else -> throw IllegalArgumentException("You can't be facing $facing")
         }
         E -> when(facing) {
-            RIGHT -> Pair(D, RIGHT)
-            DOWN -> Pair(C, RIGHT)
-            LEFT -> Pair(A, RIGHT)
-            UP -> Pair(F, UP)
-            else -> throw IllegalArgumentException("You can be facing $facing")
+            RIGHT -> Triple(D, Point2D(dFace.xLeftMost(), currentPosition.y), RIGHT)
+            DOWN -> Triple(C, Point2D(cFace.xLeftMost(), currentPosition.x), RIGHT)
+            LEFT -> Triple(A, Point2D(aFace.xLeftMost(), abs(currentPosition.y - 49)), RIGHT)
+            UP -> Triple(F, Point2D(currentPosition.x, fFace.yBottomMost()), UP)
+            else -> throw IllegalArgumentException("You can't be facing $facing")
         }
         F -> when(facing) {
-            RIGHT -> Pair(D, DOWN)
-            DOWN -> Pair(E, DOWN)
-            LEFT -> Pair(A, UP)
-            UP -> Pair(B, UP)
-            else -> throw IllegalArgumentException("You can be facing $facing")
+            RIGHT -> Triple(D, Point2D(currentPosition.y, dFace.yTopMost()), DOWN)
+            DOWN -> Triple(E, Point2D(currentPosition.x, eFace.yTopMost()), DOWN)
+            LEFT -> Triple(A, Point2D(currentPosition.y, aFace.yBottomMost()), UP)
+            UP -> Triple(B, Point2D(currentPosition.x, bFace.yBottomMost()), UP)
+            else -> throw IllegalArgumentException("You can't be facing $facing")
         }
     }
+
+    private fun MutableMap<Point2D, MonkeyMapTile>.xLeftMost() = this.keys.minBy { pos -> pos.x }.x
+    private fun MutableMap<Point2D, MonkeyMapTile>.xRightMost() = this.keys.maxBy { pos -> pos.x }.x
+    private fun MutableMap<Point2D, MonkeyMapTile>.yBottomMost() = this.keys.minBy { pos -> pos.y }.y
+    private fun MutableMap<Point2D, MonkeyMapTile>.yTopMost() = this.keys.maxBy { pos -> pos.y }.y
 
     private fun Direction.value() = when (this) {
         RIGHT -> 0

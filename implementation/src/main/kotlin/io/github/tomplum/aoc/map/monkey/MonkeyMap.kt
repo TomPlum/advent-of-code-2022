@@ -41,8 +41,6 @@ class MonkeyMap(notes: List<String>) : AdventMap2D<MonkeyMapTile>() {
             .keys.sortedBy { pos -> pos.x }
             .minBy { pos -> pos.y }
 
-        //addTile(position, MonkeyMapTile(facing.symbol()))
-
         path.forEach { (direction, distance) ->
             for (i in 0 until distance) {
                 val normalisedDirection = if (facing == DOWN) UP else if (facing == UP) DOWN else facing
@@ -79,14 +77,12 @@ class MonkeyMap(notes: List<String>) : AdventMap2D<MonkeyMapTile>() {
 
                 if (hasRecorded(candidatePos) && getTile(candidatePos).isTraversable()) {
                     position = candidatePos
-                    //addTile(position, MonkeyMapTile(facing.symbol()))
                 }
             }
 
             if (direction != null) {
                 val angle = if (direction == LEFT) -90 else 90
                 facing = facing.rotate(angle)
-                //addTile(position, MonkeyMapTile(facing.symbol()))
             }
         }
 
