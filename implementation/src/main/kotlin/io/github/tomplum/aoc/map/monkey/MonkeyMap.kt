@@ -97,14 +97,6 @@ class MonkeyMap(notes: List<String>) : AdventMap2D<MonkeyMapTile>() {
         else -> throw IllegalArgumentException("Cannot get value for direction $this")
     }
 
-    private fun Direction.symbol() = when (this) {
-        RIGHT -> '>'
-        DOWN -> 'v'
-        LEFT -> '<'
-        UP -> '^'
-        else -> throw IllegalArgumentException("Cannot get symbol for direction $this")
-    }
-
     private fun getNextPathSegment(string: String): Pair<Pair<Direction?, Int>, String> {
         val distance = string.takeWhile { char -> char.isDigit() }
         val remaining = string.removePrefix(distance)

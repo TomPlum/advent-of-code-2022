@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 
 class MonkeyMap3DTest {
     private val notes = TestInputReader.read<String>("day22/example.txt").value
-    private val map = MonkeyMap3D(notes, 4)
+    private val map = MonkeyMap3D(notes)
 
     @Test
     fun examplePartTwo() {
