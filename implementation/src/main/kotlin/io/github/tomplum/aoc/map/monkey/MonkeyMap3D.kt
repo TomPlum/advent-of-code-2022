@@ -98,7 +98,7 @@ class MonkeyMap3D(notes: List<String>): AdventMap2D<MonkeyMapTile>() {
                 var potentialNewFace = currentFace
                 var candidatePosition = position.shift(facing)
 
-                if (!candidatePosition.inside(currentFace)) {
+                if (!candidatePosition.isInside(currentFace)) {
                     val (newFace, newPosition, newFacing) = position.stepRoundEdge(currentFace, facing)
                     potentialNewFace = newFace
                     potentialNewFacingDirection = newFacing
@@ -145,7 +145,7 @@ class MonkeyMap3D(notes: List<String>): AdventMap2D<MonkeyMapTile>() {
         F -> Point2D(this.x, abs(thirdRow.last - y))
     }
 
-    private fun Point2D.inside(face: Face) = when(face) {
+    private fun Point2D.isInside(face: Face) = when(face) {
         A -> this in aFace
         B -> this in bFace
         C -> this in cFace
@@ -158,7 +158,7 @@ class MonkeyMap3D(notes: List<String>): AdventMap2D<MonkeyMapTile>() {
         A -> when(facing) {
             RIGHT -> Triple(B, Point2D(this.x + 1, this.y), RIGHT)
             DOWN -> Triple(F, Point2D(0, fFace.yBottomMost() + (this.x - 50)), RIGHT)
-            LEFT -> Triple(E, Point2D(0, eFace.yTopMost() - this.x), RIGHT)
+            LEFT -> Triple(E, Point2D(0, eFace.yTopMost() - this.y), RIGHT)
             UP -> Triple(C, Point2D(this.x, this.y + 1), UP)
             else -> throw IllegalArgumentException("You can't be facing $facing")
         }
@@ -170,7 +170,7 @@ class MonkeyMap3D(notes: List<String>): AdventMap2D<MonkeyMapTile>() {
             else -> throw IllegalArgumentException("You can't be facing $facing")
         }
         C -> when(facing) {
-            RIGHT -> Triple(B, Point2D(aFace.xRightMost() + (this.y - 50), bFace.yTopMost()), DOWN)
+            RIGHT -> Triple(B, Point2D(bFace.xLeftMost() + (this.y - 50), bFace.yTopMost()), DOWN)
             DOWN -> Triple(A, Point2D(this.x, this.y - 1), DOWN)
             LEFT -> Triple(E, Point2D((this.y - 50), eFace.yBottomMost()), UP)
             UP -> Triple(D, Point2D(this.x, this.y + 1), UP)
@@ -194,7 +194,7 @@ class MonkeyMap3D(notes: List<String>): AdventMap2D<MonkeyMapTile>() {
             RIGHT -> Triple(D, Point2D(dFace.xLeftMost() + (this.y - 150), dFace.yTopMost()), DOWN)
             DOWN -> Triple(E, Point2D(this.x, this.y - 1), DOWN)
             LEFT -> Triple(A, Point2D(aFace.xLeftMost() + (this.y - 150), 0), UP)
-            UP -> Triple(B, Point2D(bFace.xLeftMost() + (this.y - 150), 0), UP)
+            UP -> Triple(B, Point2D(this.x + 100, 0), UP)
             else -> throw IllegalArgumentException("You can't be facing $facing")
         }
     }
