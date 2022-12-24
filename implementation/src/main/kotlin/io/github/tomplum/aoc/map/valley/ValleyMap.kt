@@ -13,6 +13,10 @@ class ValleyMap(data: List<String>) : AdventMap2D<ValleyTile>() {
     private var yMin: Int
     private var yMax: Int
 
+    private var clearTiles = mutableMapOf<Int, Set<Point2D>>()
+    var clearIndex = 0
+    val blizzardTimeLcm = 600//listOf(xMax - 2L, yMax - 2L).lcm().toInt()
+
     init {
         var x = 0
         var y = 0
@@ -31,28 +35,10 @@ class ValleyMap(data: List<String>) : AdventMap2D<ValleyTile>() {
         xMax = xMax()!!
         yMin = yMin()!!
         yMax = yMax()!!
-    }
 
-    fun traverseBlizzards(): Int {
-        val start = filterTiles { tile -> tile.isClear() }.minBy { (pos, _) -> pos.y }.key
-        val goal = filterTiles { tile -> tile.isClear() }.maxBy { (pos, _) -> pos.y }.key
-        return traverse(start, goal)
-    }
-
-    fun traverseValleyWithSnacks(): Int {
-        val start = filterTiles { tile -> tile.isClear() }.minBy { (pos, _) -> pos.y }.key
-        val goal = filterTiles { tile -> tile.isClear() }.maxBy { (pos, _) -> pos.y }.key
-        val expedition = traverse(start, goal)
-        val snackBacktrack = traverse(goal, start)
-        return (expedition * 2) + snackBacktrack
-    }
-
-    private fun traverse(start: Point2D, goal: Point2D): Int {
-        val blizzardTimeLcm = 600//listOf(xMax - 2L, yMax - 2L).lcm().toInt()
         val initialState = filterTiles { it.isClear() }.keys
-        AdventLogger.debug("Intitial State \n$this\n")
         val seen = mutableListOf(initialState)
-        val clearTiles = (1..blizzardTimeLcm).associateWith {
+        clearTiles = (1..blizzardTimeLcm).associateWith {
             // Calculate new blizzard positions
             val currentBlizzardPositions = filterTiles { tile -> tile.hasBlizzard() }
             val newBlizzardPositions = currentBlizzardPositions.flatMap { (pos, tile) ->
@@ -83,13 +69,33 @@ class ValleyMap(data: List<String>) : AdventMap2D<ValleyTile>() {
 
             filterTiles { tile -> tile.isClear() }.keys
         }.toMutableMap()
+
         clearTiles[0] = initialState
+    }
+
+    fun traverseBlizzards(): Int {
+        val start = filterTiles { tile -> tile.isClear() }.minBy { (pos, _) -> pos.y }.key
+        val goal = filterTiles { tile -> tile.isClear() }.maxBy { (pos, _) -> pos.y }.key
+        return traverse(start, goal)
+    }
+
+    fun traverseValleyWithSnacks(): Int {
+        val start = filterTiles { tile -> tile.isClear() }.minBy { (pos, _) -> pos.y }.key
+        val goal = filterTiles { tile -> tile.isClear() }.maxBy { (pos, _) -> pos.y }.key
+        val expedition = traverse(start, goal)
+        val snackBacktrack = traverse(goal, start)
+        val backAgain = traverse(start, goal)
+        return expedition + snackBacktrack + backAgain + 1
+    }
+
+    private fun traverse(start: Point2D, goal: Point2D): Int {
+
 
         //addTile(Point2D(start.x, start.y - 1), ValleyTile(listOf('#')))
         // addTile(Point2D(goal.x, goal.y + 1), ValleyTile(listOf('#')))
 
         var minutesElapsed = 0
-        var clearIndex = 0
+
 
         var currentPositions = mutableSetOf<Point2D>()
         currentPositions.add(start)

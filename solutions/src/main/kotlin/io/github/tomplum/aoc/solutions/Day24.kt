@@ -12,4 +12,8 @@ class Day24 : Solution<Int, Int> {
     override fun part1(): Int {
         return map.traverseBlizzards()
     }
+
+    override fun part2(): Int {
+        return map.traverseValleyWithSnacks()
+    }
 }
