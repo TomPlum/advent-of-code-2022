@@ -14,8 +14,11 @@ class ValleyMap(data: List<String>) : AdventMap2D<ValleyTile>() {
     private var yMax: Int
 
     private var clearTiles = mutableMapOf<Int, Set<Point2D>>()
-    var clearIndex = 0
-    val blizzardTimeLcm = 600//listOf(xMax - 2L, yMax - 2L).lcm().toInt()
+    private var clearIndex = 0
+    private val blizzardTimeLcm = 600//listOf(xMax - 2L, yMax - 2L).lcm().toInt()
+
+    private var start: Point2D
+    private var goal: Point2D
 
     init {
         var x = 0
@@ -65,23 +68,21 @@ class ValleyMap(data: List<String>) : AdventMap2D<ValleyTile>() {
             }
 
             seen.add(filterTiles { it.isClear() }.keys)
-            //AdventLogger.debug("Minute $it\n$this\n")
 
             filterTiles { tile -> tile.isClear() }.keys
         }.toMutableMap()
 
         clearTiles[0] = initialState
+
+        start = filterTiles { tile -> tile.isClear() }.minBy { (pos, _) -> pos.y }.key
+        goal = filterTiles { tile -> tile.isClear() }.maxBy { (pos, _) -> pos.y }.key
     }
 
     fun traverseBlizzards(): Int {
-        val start = filterTiles { tile -> tile.isClear() }.minBy { (pos, _) -> pos.y }.key
-        val goal = filterTiles { tile -> tile.isClear() }.maxBy { (pos, _) -> pos.y }.key
         return traverse(start, goal)
     }
 
     fun traverseValleyWithSnacks(): Int {
-        val start = filterTiles { tile -> tile.isClear() }.minBy { (pos, _) -> pos.y }.key
-        val goal = filterTiles { tile -> tile.isClear() }.maxBy { (pos, _) -> pos.y }.key
         val expedition = traverse(start, goal)
         val snackBacktrack = traverse(goal, start)
         val backAgain = traverse(start, goal)
@@ -89,13 +90,7 @@ class ValleyMap(data: List<String>) : AdventMap2D<ValleyTile>() {
     }
 
     private fun traverse(start: Point2D, goal: Point2D): Int {
-
-
-        //addTile(Point2D(start.x, start.y - 1), ValleyTile(listOf('#')))
-        // addTile(Point2D(goal.x, goal.y + 1), ValleyTile(listOf('#')))
-
         var minutesElapsed = 0
-
 
         var currentPositions = mutableSetOf<Point2D>()
         currentPositions.add(start)
@@ -121,23 +116,9 @@ class ValleyMap(data: List<String>) : AdventMap2D<ValleyTile>() {
             }
 
             currentPositions = newPositionCandidates
-            //val nextPositions = adjacentPositions.filter { pos -> pos in clearAfterBlizzardsMoved }
-            //newPositionCandidates.addAll(nextPositions)
-
-            // Can we wait in any of the current?
-            //currentPositions.filter {  }
-
-
-            //val allCandidates =  currentPositions.toMutableSet() + adjacentPositions
-
-            //val lastPositions =.filter { pos -> pos in clearAfterBlizzardsMoved }
-
-            //currentPositions.addAll(nextPositions)
-            //currentPositions.addAll(lastPositions)
 
             minutesElapsed += 1
             clearIndex += 1
-            //AdventLogger.debug("Minute $minutesElapsed\n$this\n")
         }
     }
 
