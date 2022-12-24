@@ -18,27 +18,28 @@ class MonkeyMap3D(notes: List<String>): AdventMap2D<MonkeyMapTile>() {
     private var eFace = mutableMapOf<Point2D, MonkeyMapTile>()
     private var fFace = mutableMapOf<Point2D, MonkeyMapTile>()
 
-    val firstColumn = 0..49
-    val middleColumn = 50..99
-    val lastColumn = 100..149
-    val firstRow = 0..49
-    val secondRow = 50..99
-    val thirdRow = 100..149
-    val fourthRow = 150..199
+    private val firstColumn = 0..49
+    private val middleColumn = 50..99
+    private val lastColumn = 100..149
+
+    private val firstRow = 0..49
+    private val secondRow = 50..99
+    private val thirdRow = 100..149
+    private val fourthRow = 150..199
 
     init {
         val parts = notes.splitNewLine()
         val mapData = parts[0]
 
-        var x = 0
-        var y = 0
+        var xNet = 0
+        var yNet = 0
         mapData.forEach { row ->
             row.forEach { column ->
-                addTile(Point2D(x, y), MonkeyMapTile(column))
-                x++
+                addTile(Point2D(xNet, yNet), MonkeyMapTile(column))
+                xNet++
             }
-            x = 0
-            y++
+            xNet = 0
+            yNet++
         }
 
         aFace = (middleColumn).flatMap { x ->
@@ -46,26 +47,31 @@ class MonkeyMap3D(notes: List<String>): AdventMap2D<MonkeyMapTile>() {
                 Point2D(x, y)
             }
         }.associateWith { pos -> getTile(pos) }.toMutableMap()
+
         bFace = (lastColumn).flatMap { x ->
             (firstRow).map { y ->
                 Point2D(x, y)
             }
         }.associateWith { pos -> getTile(pos) }.toMutableMap()
+
         cFace = (middleColumn).flatMap { x ->
             (secondRow).map { y ->
                 Point2D(x, y)
             }
         }.associateWith { pos -> getTile(pos) }.toMutableMap()
+
         dFace = (middleColumn).flatMap { x ->
             (thirdRow).map { y ->
                 Point2D(x, y)
             }
         }.associateWith { pos -> getTile(pos) }.toMutableMap()
+
         eFace = (firstColumn).flatMap { x ->
             (thirdRow).map { y ->
                 Point2D(x, y)
             }
         }.associateWith { pos -> getTile(pos) }.toMutableMap()
+
         fFace = (firstColumn).flatMap { x ->
             (fourthRow).map { y ->
                 Point2D(x, y)
@@ -88,7 +94,6 @@ class MonkeyMap3D(notes: List<String>): AdventMap2D<MonkeyMapTile>() {
 
         path.forEach { (rotationDirection, distance) ->
             for (i in 0 until distance) {
-                //val normalisedDirection = if (facing == DOWN) UP else if (facing == UP) DOWN else facing
                 var potentialNewFacingDirection = facing
                 var potentialNewFace = currentFace
                 var candidatePosition = position.shift(facing)
@@ -113,7 +118,9 @@ class MonkeyMap3D(notes: List<String>): AdventMap2D<MonkeyMapTile>() {
 
             if (rotationDirection != null) {
                 val angle = if (rotationDirection == LEFT) -90 else 90
-                facing = facing.rotate(angle)
+                val rotated = facing.rotate(angle)
+                val normalisedDirection = if (rotated == DOWN) UP else if (rotated == UP) DOWN else rotated
+                facing = normalisedDirection
             }
         }
 
