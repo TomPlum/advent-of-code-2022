@@ -151,12 +151,12 @@ class MonkeyMap3D(notes: List<String>): AdventMap2D<MonkeyMapTile>() {
         A -> when(facing) {
             RIGHT -> Triple(B, Point2D(this.x + 1, this.y), RIGHT)
             DOWN -> Triple(F, Point2D(0, fFace.yBottomMost() + (this.x - 50)), RIGHT)
-            LEFT -> Triple(E, Point2D(0, 150 - this.x), RIGHT)
+            LEFT -> Triple(E, Point2D(0, eFace.yTopMost() - this.x), RIGHT)
             UP -> Triple(C, Point2D(this.x, this.y + 1), UP)
             else -> throw IllegalArgumentException("You can't be facing $facing")
         }
         B -> when(facing) {
-            RIGHT -> Triple(D, Point2D(dFace.xRightMost(), 150 - this.y), LEFT)
+            RIGHT -> Triple(D, Point2D(dFace.xRightMost(), dFace.yTopMost() - this.y), LEFT)
             DOWN -> Triple(F, Point2D(this.x - 100, fFace.yTopMost()), DOWN)
             LEFT -> Triple(A, Point2D(this.x - 1, this.y), LEFT)
             UP -> Triple(C, Point2D(cFace.xRightMost(), cFace.yBottomMost() + (this.x - 100)), LEFT)
@@ -170,16 +170,16 @@ class MonkeyMap3D(notes: List<String>): AdventMap2D<MonkeyMapTile>() {
             else -> throw IllegalArgumentException("You can't be facing $facing")
         }
         D -> when(facing) {
-            RIGHT -> Triple(B, Point2D(bFace.xRightMost(), this.y - 100), LEFT)
+            RIGHT -> Triple(B, Point2D(bFace.xRightMost(), bFace.yTopMost() - (this.y - 100)), LEFT)
             DOWN -> Triple(C, Point2D(this.x, this.y - 1), DOWN)
             LEFT -> Triple(E, Point2D(this.x - 1, this.y), LEFT)
-            UP -> Triple(F, Point2D(fFace.xRightMost(), 149 + (this.x - 50)), LEFT)
+            UP -> Triple(F, Point2D(fFace.xRightMost(), fFace.yBottomMost() + (this.x - 50)), LEFT)
             else -> throw IllegalArgumentException("You can't be facing $facing")
         }
         E -> when(facing) {
             RIGHT -> Triple(D, Point2D(this.x + 1, this.y), RIGHT)
             DOWN -> Triple(C, Point2D(cFace.xLeftMost(), cFace.yBottomMost() + this.x), RIGHT)
-            LEFT -> Triple(A, Point2D(aFace.xLeftMost(), this.y - 100), RIGHT)
+            LEFT -> Triple(A, Point2D(aFace.xLeftMost(), aFace.yTopMost() - (this.y - 100)), RIGHT)
             UP -> Triple(F, Point2D(this.x, this.y + 1), UP)
             else -> throw IllegalArgumentException("You can't be facing $facing")
         }
