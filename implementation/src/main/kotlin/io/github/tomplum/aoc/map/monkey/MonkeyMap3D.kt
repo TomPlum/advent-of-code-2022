@@ -157,15 +157,15 @@ class MonkeyMap3D(notes: List<String>): AdventMap2D<MonkeyMapTile>() {
     /**
      * Calculates the new position in the 2D net representation
      * of the cube faces.
-     *       ┌───┬───┐
-     *       │ A │ B │
-     *       ├───│───┘
-     *       │ C │
-     *   ┌───┼───┤
-     *   │ E │ D │
-     *   ├───┼───┘
-     *   │ F │
-     *   └───┘
+     *   ╭╌╌╌┌───┬───┐
+     *   ┊   │ A │ B │
+     *   ┊╌╌╌├───┼───┘
+     *   ┊   │ C │   ┊
+     *   ┌───┼───┤╌╌╌┊
+     *   │ E │ D │   ┊
+     *   ├───┼───┘╌╌╌┊
+     *   │ F │   ┊   ┊
+     *   └───┘╌╌╌ ╌╌╌╯
      *   @receiver The current position of the player
      *   @param currentFace The current face of the player
      *   @param facing The direction in which the player is currently facing
