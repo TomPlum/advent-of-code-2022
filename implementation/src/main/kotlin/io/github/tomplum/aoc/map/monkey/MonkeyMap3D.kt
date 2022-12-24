@@ -154,6 +154,24 @@ class MonkeyMap3D(notes: List<String>): AdventMap2D<MonkeyMapTile>() {
         F -> this in fFace
     }
 
+    /**
+     * Calculates the new position in the 2D net representation
+     * of the cube faces.
+     *       ┌───┬───┐
+     *       │ A │ B │
+     *       ├───│───┘
+     *       │ C │
+     *   ┌───┼───┤
+     *   │ E │ D │
+     *   ├───┼───┘
+     *   │ F │
+     *   └───┘
+     *   @receiver The current position of the player
+     *   @param currentFace The current face of the player
+     *   @param facing The direction in which the player is currently facing
+     *   @throws IllegalArgumentException if the facing direction is not cartesian.
+     *   @return A triple of (Face stepped on to, new position, new facing direction) relative to the net
+     */
     private fun Point2D.stepRoundEdge(currentFace: Face, facing: Direction): Triple<Face, Point2D, Direction> = when(currentFace) {
         A -> when(facing) {
             RIGHT -> Triple(B, Point2D(this.x + 1, this.y), RIGHT)
