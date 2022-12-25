@@ -66,13 +66,13 @@ tests in the `common`, `implementation` and `solutions` Gradle sub-projects as w
 | 19  | 1365                 | 2s 353ms | 4864           | 971ms    | [Not Enough Minerals](docs/DAY19.MD)      |
 | 20  | 3466                 | 91ms     | 9995532008348  | 1s 461ms | [Grove Positioning System](docs/DAY20.MD) |
 | 21  | 4302                 | 50ms     | 1025           | 8s 883ms | [Unstable Diffusion](docs/DAY21.MD)       |
-| 22  | -                    | -        | -              | -        | [](docs/DAY22.MD)                         |
-| 23  | -                    | -        | -              | -        | [](docs/DAY23.MD)                         |
+| 22  | 97356                | 1s 419ms | 120175         | 147ms    | [Monkey Map](docs/DAY22.MD)               |
+| 23  | 4302                 | 230ms    | 1025           | 9s 844ms | [Unstable Diffusion](docs/DAY23.MD)       |
 | 24  | 266                  | 105ms    | 853            | 233ms    | [Blizzard Basin](docs/DAY24.MD)           |
 | 25  | 2=000=22-0-102=-1001 | 1ms      | 49 Stars       | 6μs      | [Full of Hot Air](docs/DAY25.MD)          |
 
-Average Execution Time: 1s 14ms \
-Total Execution Time: 20s 280ms \
+Average Execution Time: 1s 161ms \
+Total Execution Time: 29s 42ms \
 i7 5820K - OpenJDK 17.0.4 - Ubuntu 22.04
 
 # Advent Calendar
