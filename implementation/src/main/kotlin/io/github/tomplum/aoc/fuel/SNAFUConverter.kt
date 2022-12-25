@@ -20,37 +20,37 @@ class SNAFUConverter(private val input: List<String>) {
         return convertToSnafu(decimal)
     }
 
-    private fun convertToDecimal(snafu: String): Double = snafu
+    private fun convertToDecimal(snafu: String): Long = snafu
         .reversed()
         .mapIndexed { i, char ->
-            5.0.pow(i) * when (char) {
+            (5.0.pow(i) * when (char) {
                 '-' -> -1
                 '=' -> -2
                 else -> char.toString().toInt()
-            }
+            }).toLong()
         }.sum()
 
-    private fun convertToSnafu(decimal: Double): String {
+    private fun convertToSnafu(decimal: Long): String {
         var snafu = ""
-        var remaining = decimal.toInt()
-        while(remaining > 0) {
+        var remaining = decimal
+        while(remaining != 0L) {
             when(remaining % 5) {
-                0 -> {
+                0L -> {
                     snafu = "0$snafu"
                 }
-                1 -> {
+                1L -> {
                     snafu = "1$snafu"
                     remaining += -1
                 }
-                2 -> {
+                2L -> {
                     snafu = "2$snafu"
                     remaining += -2
                 }
-                3 -> {
+                3L -> {
                     snafu = "=$snafu"
                     remaining += 2
                 }
-                4 -> {
+                4L -> {
                     snafu = "-$snafu"
                     remaining += 1
                 }
