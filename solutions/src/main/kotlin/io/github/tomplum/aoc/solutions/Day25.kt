@@ -12,4 +12,8 @@ class Day25 : Solution<String, Int> {
     override fun part1(): String {
         return converter.getConsoleInput()
     }
+
+    override fun part2(): Int {
+        return 49
+    }
 }
