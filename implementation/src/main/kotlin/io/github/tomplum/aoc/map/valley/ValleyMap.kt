@@ -15,7 +15,7 @@ class ValleyMap(data: List<String>) : AdventMap2D<ValleyTile>() {
 
     private var clearTiles = mutableMapOf<Int, Set<Point2D>>()
     private var clearIndex = 0
-    private val blizzardTimeLcm = 600//listOf(xMax - 2L, yMax - 2L).lcm().toInt()
+    private val blizzardTimeLcm = 600//listOf(xMax - 2L, yMax - 2L).lcm().toInt() TODO: Figure out how to calculate when it repeats
 
     private var start: Point2D
     private var goal: Point2D
