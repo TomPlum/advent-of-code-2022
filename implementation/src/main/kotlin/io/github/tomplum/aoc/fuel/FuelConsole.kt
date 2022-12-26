@@ -1,7 +1,7 @@
 package io.github.tomplum.aoc.fuel
 
-class FuelConsole(private val values: List<String>) {
-    fun getConsoleInput(): String {
-        return SNAFU.fromDecimal(values.sumOf { value -> SNAFU(value).toDecimal() })
-    }
+class FuelConsole(private val fuelRequirements: List<String>) {
+    fun getConsoleInput(): String = fuelRequirements
+        .sumOf { value -> SNAFU(value).toDecimal() }
+        .toSNAFU()
 }

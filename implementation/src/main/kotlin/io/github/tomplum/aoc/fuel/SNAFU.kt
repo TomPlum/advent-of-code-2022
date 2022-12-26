@@ -2,32 +2,30 @@ package io.github.tomplum.aoc.fuel
 
 import kotlin.math.pow
 
-class SNAFU(private val value: String) {
+private val mappings = listOf(
+    SNAFU.Mapping('0', 0),
+    SNAFU.Mapping('1', -1),
+    SNAFU.Mapping('2', -2),
+    SNAFU.Mapping('=', 2),
+    SNAFU.Mapping('-', 1)
+)
 
-    companion object {
-        private val mappings = listOf(
-            Mapping('0', 0),
-            Mapping('1', -1),
-            Mapping('2', -2),
-            Mapping('=', 2),
-            Mapping('-', 1)
-        )
+fun Long.toSNAFU(): String {
+    var snafu = ""
+    var decimal = this
 
-        fun fromDecimal(decimal: Long): String {
-            var snafu = ""
-            var remaining = decimal
-
-            while (remaining != 0L) {
-                val remainder = (remaining % 5).toInt()
-                val mapping = mappings[remainder]
-                snafu = "${mapping.prefix}$snafu"
-                remaining += mapping.offset
-                remaining /= 5
-            }
-
-            return snafu
-        }
+    while (decimal != 0L) {
+        val remainder = (decimal % 5).toInt()
+        val mapping = mappings[remainder]
+        snafu = "${mapping.prefix}$snafu"
+        decimal += mapping.offset
+        decimal /= 5
     }
+
+    return snafu
+}
+
+class SNAFU(private val value: String) {
 
     fun toDecimal(): Long = value.reversed()
         .mapIndexed { i, char ->
