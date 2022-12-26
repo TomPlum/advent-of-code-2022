@@ -1,6 +1,6 @@
 package io.github.tomplum.aoc.map.monkey
 
-import io.github.tomplum.aoc.map.monkey.MonkeyMap3D.Face.*
+import io.github.tomplum.aoc.map.monkey.CubeFace.*
 import io.github.tomplum.extension.splitNewLine
 import io.github.tomplum.libs.math.Direction
 import io.github.tomplum.libs.math.Direction.*
@@ -99,7 +99,7 @@ class MonkeyMap3D(notes: List<String>): AdventMap2D<MonkeyMapTile>() {
                 var candidatePosition = position.shift(facing)
 
                 if (!candidatePosition.isInside(currentFace)) {
-                    val (newFace, newPosition, newFacing) = position.stepRoundEdge(currentFace, facing)
+                    val (newFace, newPosition, newFacing) = stepRoundEdge(position, currentFace, facing)
                     potentialNewFace = newFace
                     potentialNewFacingDirection = newFacing
                     candidatePosition = newPosition
@@ -127,7 +127,7 @@ class MonkeyMap3D(notes: List<String>): AdventMap2D<MonkeyMapTile>() {
         return (1000 * (position.y + 1)) + (4 * (position.x + 1)) + facing.value()
     }
 
-    private fun Point2D.offsetRelativeToNet(face: Face) = when(face) {
+    private fun Point2D.offsetRelativeToNet(face: CubeFace) = when(face) {
         A -> Point2D(this.x + middleColumn.last, this.y)
         B -> Point2D(this.x + lastColumn.last, this.y)
         C -> Point2D(this.x + middleColumn.last, this.y + firstRow.last)
@@ -136,7 +136,7 @@ class MonkeyMap3D(notes: List<String>): AdventMap2D<MonkeyMapTile>() {
         F -> Point2D(this.x, this.y + thirdRow.last)
     }
 
-    private fun Point2D.offsetRelativeToFace(face: Face) = when(face) {
+    private fun Point2D.offsetRelativeToFace(face: CubeFace) = when(face) {
         A -> Point2D(abs(firstColumn.last - this.x), this.y)
         B -> Point2D(abs(middleColumn.last - this.x), this.y)
         C -> Point2D(abs(firstColumn.last - this.x), abs(firstRow.last - y))
@@ -145,7 +145,7 @@ class MonkeyMap3D(notes: List<String>): AdventMap2D<MonkeyMapTile>() {
         F -> Point2D(this.x, abs(thirdRow.last - y))
     }
 
-    private fun Point2D.isInside(face: Face) = when(face) {
+    private fun Point2D.isInside(face: CubeFace) = when(face) {
         A -> this in aFace
         B -> this in bFace
         C -> this in cFace
@@ -166,53 +166,53 @@ class MonkeyMap3D(notes: List<String>): AdventMap2D<MonkeyMapTile>() {
      *   ├───┼───┘╌╌╌┊
      *   │ F │   ┊   ┊
      *   └───┘╌╌╌ ╌╌╌╯
-     *   @receiver The current position of the player
+     *   @param position The current position of the player
      *   @param currentFace The current face of the player
      *   @param facing The direction in which the player is currently facing
      *   @throws IllegalArgumentException if the facing direction is not cartesian.
      *   @return A triple of (Face stepped on to, new position, new facing direction) relative to the net
      */
-    private fun Point2D.stepRoundEdge(currentFace: Face, facing: Direction): Triple<Face, Point2D, Direction> = when(currentFace) {
+    fun stepRoundEdge(position: Point2D, currentFace: CubeFace, facing: Direction): Triple<CubeFace, Point2D, Direction> = when(currentFace) {
         A -> when(facing) {
-            RIGHT -> Triple(B, Point2D(this.x + 1, this.y), RIGHT)
-            DOWN -> Triple(F, Point2D(0, fFace.yBottomMost() + (this.x - 50)), RIGHT)
-            LEFT -> Triple(E, Point2D(0, eFace.yTopMost() - this.y), RIGHT)
-            UP -> Triple(C, Point2D(this.x, this.y + 1), UP)
+            RIGHT -> Triple(B, Point2D(position.x + 1, position.y), RIGHT)
+            DOWN -> Triple(F, Point2D(0, fFace.yBottomMost() + (position.x - 50)), RIGHT)
+            LEFT -> Triple(E, Point2D(0, eFace.yTopMost() - position.y), RIGHT)
+            UP -> Triple(C, Point2D(position.x, position.y + 1), UP)
             else -> throw IllegalArgumentException("You can't be facing $facing")
         }
         B -> when(facing) {
-            RIGHT -> Triple(D, Point2D(dFace.xRightMost(), dFace.yTopMost() - this.y), LEFT)
-            DOWN -> Triple(F, Point2D(this.x - 100, fFace.yTopMost()), DOWN)
-            LEFT -> Triple(A, Point2D(this.x - 1, this.y), LEFT)
-            UP -> Triple(C, Point2D(cFace.xRightMost(), cFace.yBottomMost() + (this.x - 100)), LEFT)
+            RIGHT -> Triple(D, Point2D(dFace.xRightMost(), dFace.yTopMost() - position.y), LEFT)
+            DOWN -> Triple(F, Point2D(position.x - 100, fFace.yTopMost()), DOWN)
+            LEFT -> Triple(A, Point2D(position.x - 1, position.y), LEFT)
+            UP -> Triple(C, Point2D(cFace.xRightMost(), cFace.yBottomMost() + (position.x - 100)), LEFT)
             else -> throw IllegalArgumentException("You can't be facing $facing")
         }
         C -> when(facing) {
-            RIGHT -> Triple(B, Point2D(bFace.xLeftMost() + (this.y - 50), bFace.yTopMost()), DOWN)
-            DOWN -> Triple(A, Point2D(this.x, this.y - 1), DOWN)
-            LEFT -> Triple(E, Point2D((this.y - 50), eFace.yBottomMost()), UP)
-            UP -> Triple(D, Point2D(this.x, this.y + 1), UP)
+            RIGHT -> Triple(B, Point2D(bFace.xLeftMost() + (position.y - 50), bFace.yTopMost()), DOWN)
+            DOWN -> Triple(A, Point2D(position.x, position.y - 1), DOWN)
+            LEFT -> Triple(E, Point2D((position.y - 50), eFace.yBottomMost()), UP)
+            UP -> Triple(D, Point2D(position.x, position.y + 1), UP)
             else -> throw IllegalArgumentException("You can't be facing $facing")
         }
         D -> when(facing) {
-            RIGHT -> Triple(B, Point2D(bFace.xRightMost(), bFace.yTopMost() - (this.y - 100)), LEFT)
-            DOWN -> Triple(C, Point2D(this.x, this.y - 1), DOWN)
-            LEFT -> Triple(E, Point2D(this.x - 1, this.y), LEFT)
-            UP -> Triple(F, Point2D(fFace.xRightMost(), fFace.yBottomMost() + (this.x - 50)), LEFT)
+            RIGHT -> Triple(B, Point2D(bFace.xRightMost(), bFace.yTopMost() - (position.y - 100)), LEFT)
+            DOWN -> Triple(C, Point2D(position.x, position.y - 1), DOWN)
+            LEFT -> Triple(E, Point2D(position.x - 1, position.y), LEFT)
+            UP -> Triple(F, Point2D(fFace.xRightMost(), fFace.yBottomMost() + (position.x - 50)), LEFT)
             else -> throw IllegalArgumentException("You can't be facing $facing")
         }
         E -> when(facing) {
-            RIGHT -> Triple(D, Point2D(this.x + 1, this.y), RIGHT)
-            DOWN -> Triple(C, Point2D(cFace.xLeftMost(), cFace.yBottomMost() + this.x), RIGHT)
-            LEFT -> Triple(A, Point2D(aFace.xLeftMost(), aFace.yTopMost() - (this.y - 100)), RIGHT)
-            UP -> Triple(F, Point2D(this.x, this.y + 1), UP)
+            RIGHT -> Triple(D, Point2D(position.x + 1, position.y), RIGHT)
+            DOWN -> Triple(C, Point2D(cFace.xLeftMost(), cFace.yBottomMost() + position.x), RIGHT)
+            LEFT -> Triple(A, Point2D(aFace.xLeftMost(), aFace.yTopMost() - (position.y - 100)), RIGHT)
+            UP -> Triple(F, Point2D(position.x, position.y + 1), UP)
             else -> throw IllegalArgumentException("You can't be facing $facing")
         }
         F -> when(facing) {
-            RIGHT -> Triple(D, Point2D(dFace.xLeftMost() + (this.y - 150), dFace.yTopMost()), DOWN)
-            DOWN -> Triple(E, Point2D(this.x, this.y - 1), DOWN)
-            LEFT -> Triple(A, Point2D(aFace.xLeftMost() + (this.y - 150), 0), UP)
-            UP -> Triple(B, Point2D(this.x + 100, 0), UP)
+            RIGHT -> Triple(D, Point2D(dFace.xLeftMost() + (position.y - 150), dFace.yTopMost()), DOWN)
+            DOWN -> Triple(E, Point2D(position.x, position.y - 1), DOWN)
+            LEFT -> Triple(A, Point2D(aFace.xLeftMost() + (position.y - 150), 0), UP)
+            UP -> Triple(B, Point2D(position.x + 100, 0), UP)
             else -> throw IllegalArgumentException("You can't be facing $facing")
         }
     }
@@ -252,9 +252,5 @@ class MonkeyMap3D(notes: List<String>): AdventMap2D<MonkeyMapTile>() {
         }
 
         return Pair(direction, distance.toInt()) to string.removePrefix("$distance${remaining.first()}")
-    }
-
-    enum class Face {
-        A, B, C, D, E, F
     }
 }
