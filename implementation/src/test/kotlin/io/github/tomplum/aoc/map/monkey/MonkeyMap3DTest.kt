@@ -109,6 +109,33 @@ class MonkeyMap3DTest {
                     assertThat(newFacing).isEqualTo(RIGHT)
                 }
             }
+
+            @Nested
+            inner class FacingDown {
+                @Test
+                fun `When stepping off the LEFT of the edge of Face A while facing DOWN`() {
+                    val (newFace, newPosition, newFacing) = map.stepRoundEdge(Point2D(50, 0), A, DOWN)
+                    assertThat(newFace).isEqualTo(F)
+                    assertThat(newPosition).isEqualTo(Point2D(0, 150))
+                    assertThat(newFacing).isEqualTo(RIGHT)
+                }
+
+                @Test
+                fun `When stepping off the MIDDLE of the edge of Face A while facing DOWN`() {
+                    val (newFace, newPosition, newFacing) = map.stepRoundEdge(Point2D(75, 0), A, DOWN)
+                    assertThat(newFace).isEqualTo(F)
+                    assertThat(newPosition).isEqualTo(Point2D(0, 175))
+                    assertThat(newFacing).isEqualTo(RIGHT)
+                }
+
+                @Test
+                fun `When stepping off the RIGHT of the edge of Face A while facing DOWN`() {
+                    val (newFace, newPosition, newFacing) = map.stepRoundEdge(Point2D(99, 0), A, DOWN)
+                    assertThat(newFace).isEqualTo(F)
+                    assertThat(newPosition).isEqualTo(Point2D(0, 199))
+                    assertThat(newFacing).isEqualTo(RIGHT)
+                }
+            }
         }
     }
 }
