@@ -137,5 +137,62 @@ class MonkeyMap3DTest {
                 }
             }
         }
+
+        @Nested
+        inner class CurrentFaceB {
+            @Nested
+            inner class FacingRight {
+                @Test
+                fun `When stepping off the TOP of the edge of Face B while facing RIGHT`() {
+                    val (newFace, newPosition, newFacing) = map.stepRoundEdge(Point2D(149, 49), B, RIGHT)
+                    assertThat(newFace).isEqualTo(D)
+                    assertThat(newPosition).isEqualTo(Point2D(99, 100))
+                    assertThat(newFacing).isEqualTo(LEFT)
+                }
+
+                @Test
+                fun `When stepping off the MIDDLE of the edge of Face B while facing RIGHT`() {
+                    val (newFace, newPosition, newFacing) = map.stepRoundEdge(Point2D(149, 25), B, RIGHT)
+                    assertThat(newFace).isEqualTo(D)
+                    assertThat(newPosition).isEqualTo(Point2D(99, 124))
+                    assertThat(newFacing).isEqualTo(LEFT)
+                }
+
+                @Test
+                fun `When stepping off the BOTTOM of the edge of Face B while facing RIGHT`() {
+                    val (newFace, newPosition, newFacing) = map.stepRoundEdge(Point2D(149, 0), B, RIGHT)
+                    assertThat(newFace).isEqualTo(D)
+                    assertThat(newPosition).isEqualTo(Point2D(99, 149))
+                    assertThat(newFacing).isEqualTo(LEFT)
+                }
+            }
+
+            @Nested
+            inner class FacingUp {
+                @Test
+                fun `When stepping off the RIGHT of the edge of Face B while facing UP`() {
+                    val (newFace, newPosition, newFacing) = map.stepRoundEdge(Point2D(149, 49), B, UP)
+                    assertThat(newFace).isEqualTo(C)
+                    assertThat(newPosition).isEqualTo(Point2D(99, 99))
+                    assertThat(newFacing).isEqualTo(LEFT)
+                }
+
+                @Test
+                fun `When stepping off the MIDDLE of the edge of Face B while facing UP`() {
+                    val (newFace, newPosition, newFacing) = map.stepRoundEdge(Point2D(125, 49), B, UP)
+                    assertThat(newFace).isEqualTo(C)
+                    assertThat(newPosition).isEqualTo(Point2D(99, 75))
+                    assertThat(newFacing).isEqualTo(LEFT)
+                }
+
+                @Test
+                fun `When stepping off the LEFT of the edge of Face B while facing UP`() {
+                    val (newFace, newPosition, newFacing) = map.stepRoundEdge(Point2D(100, 49), B, UP)
+                    assertThat(newFace).isEqualTo(C)
+                    assertThat(newPosition).isEqualTo(Point2D(99, 50))
+                    assertThat(newFacing).isEqualTo(LEFT)
+                }
+            }
+        }
     }
 }
